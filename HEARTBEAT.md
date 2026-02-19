@@ -10,6 +10,7 @@
 ## Reading Queue (bite-sized — one per heartbeat)
 Pick the next unchecked item. Read, write a crude summary (mark as such), check it off.
 
+### Completed
 - [x] `references/signamancy/` — token-based axiomatic rule engine
 - [x] `references/bean_bunker/` — Discord-to-Matrix migration toolkit
 - [x] `references/gastown/` — multi-agent orchestration (Stevey Yegge)
@@ -18,6 +19,28 @@ Pick the next unchecked item. Read, write a crude summary (mark as such), check 
 - [x] `references/HOLOS/` — LOCUS proposals (2878 lines, split across 2 files)
 - [x] `references/HOLOS/` — collective_protocol.py, experiments
 - [x] `references/HOLOS/peace_through_commerce.txt` lines 9900-12326 (HALLOW, SEAL, economic primitives)
+
+### Priority — remaining reference repos
+- [x] `references/looking_glass/` — optical co-processor simulator (DESIGN.md, etc)
+- [x] `references/resonance/` — learning/rule-discovery algorithms (sieve_core / SENSUS)
+- [x] `references/seel/` — ZK verification layer (MVP_REQUIREMENTS, PROJECT_PLAN)
+- [x] `references/weaver/` — ComfyUI / LOKI OS prototype
+- [x] `references/Cellar-Door/` — EXIT primitive (deeper pass)
+- [x] `references/Hollow/` — HOLLOW prototype (deeper pass)
+
+### Lower priority — dogcomplex GitHub repos (README-level scan)
+- [x] Scan dogcomplex GitHub for repos not yet cloned
+  - Found 7 uncloned: rag, sensus, pokemonred_puffer, hearth, universe, miniPaint, diff_differ
+  - Priority to clone next: sensus, rag, hearth
+
+### New tasks
+- [x] Clone and scan `sensus` repo (README level) — EMPTY repo, placeholder only
+- [ ] Clone and scan `rag` repo (README level)
+- [ ] Clone and scan `hearth` repo (README level)
+- [x] Review LOCUS_PRIMITIVE.md draft (sub-agent wrote it) — check quality, note improvements
+- [ ] Commit and push workspace state to Hawthorn `agent-state/hawthorn`
+- [ ] Review and update MEMORY.md with distilled learnings from today
+- [ ] Test Discord server channel responsiveness (try sending a message)
 
 ## Rules
 - **Bite-sized**: One reading task per heartbeat, ~5 min max

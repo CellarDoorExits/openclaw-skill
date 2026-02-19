@@ -69,6 +69,14 @@
 - Re-cloned beads (original clone failed silently)
 - Summary appended to `memory/reading-notes.md`
 
+## 2026-02-19 09:53 UTC — Reading: Looking Glass
+- Read README.md (full) and DESIGN.md (311 lines)
+- Optical AI co-processor simulator for ternary Transformer feature extraction
+- Two paths: Camera/DMD (cheap, practical) and Analog ternary loop (fast, ambitious)
+- Staging: <$1k PoC → $3-7k prosumer → $25-100k lab
+- TDM breakthrough enables Path B with realistic parts
+- Summary written to memory/reading-notes.md
+
 ## 2026-02-18 23:50 UTC — Reading: Gastown
 - Multi-agent orchestration system for Claude Code (Go, by Steve Yegge)
 - Mayor/Rig/Crew/Polecat/Witness/Refinery architecture
