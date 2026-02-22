@@ -3,1077 +3,1022 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HOLOS — Building the Infrastructure for AI Cooperation</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>HOLOS — Investment Thesis</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+/* ─── Reset & Base ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#2d5016;--green-light:#3d6b1f;--green-dark:#1e3a0e;
+  --gold:#d4a843;--gold-light:#e8c872;--gold-dark:#b8922e;
+  --cream:#faf6ee;--cream-dark:#f0e8d8;
+  --dark:#1a1a2e;--dark-light:#2a2a42;
+  --text:#2c2c2c;--text-light:#6b6b6b;
+  --radius:12px;
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  font-family:Georgia,'Times New Roman',serif;
+  color:var(--text);background:var(--cream);
+  line-height:1.7;overflow-x:hidden;
+}
+h1,h2,h3,h4,h5{font-family:'Playfair Display',serif;font-weight:700;line-height:1.2}
+.label{font-family:'Inter',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;font-size:0.75rem}
 
-:root {
-  --green-deep: #1a3a2a;
-  --green-forest: #2d5a3f;
-  --green-sage: #6b8f71;
-  --green-light: #a8c5a0;
-  --gold-warm: #c9a84c;
-  --gold-light: #e8d48b;
-  --gold-pale: #f5ecd0;
-  --cream: #faf6ee;
-  --cream-dark: #f0e8d8;
-  --brown-warm: #8b6914;
-  --text-dark: #2a2a2a;
-  --text-body: #3d3d3d;
-  --text-muted: #6b6b6b;
-  --coral: #c75b39;
-  --blue-muted: #4a7c8a;
+/* ─── Floating Nav ─── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(26,26,46,0.92);backdrop-filter:blur(12px);
+  padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between;
+  transition:transform 0.3s;
 }
+.nav.hidden{transform:translateY(-100%)}
+.nav-logo{color:var(--gold);font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;letter-spacing:0.04em}
+.nav-links{display:flex;gap:1.5rem;list-style:none}
+.nav-links a{color:var(--cream);text-decoration:none;font-family:'Inter',sans-serif;font-size:0.8rem;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;opacity:0.8;transition:opacity 0.2s}
+.nav-links a:hover{opacity:1;color:var(--gold)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
+.hamburger span{width:24px;height:2px;background:var(--cream);transition:0.3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-menu{
+  display:none;position:fixed;top:60px;left:0;right:0;
+  background:rgba(26,26,46,0.96);backdrop-filter:blur(12px);
+  padding:1.5rem 2rem;z-index:999;
+}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;color:var(--cream);text-decoration:none;padding:0.7rem 0;font-family:'Inter',sans-serif;font-size:0.9rem;border-bottom:1px solid rgba(255,255,255,0.08)}
 
-html { scroll-behavior: smooth; }
+/* ─── Hero ─── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:6rem 2rem 4rem;
+  background:linear-gradient(165deg,var(--dark) 0%,var(--green-dark) 40%,var(--green) 70%,var(--green-light) 100%);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(ellipse at 30% 20%,rgba(212,168,67,0.08) 0%,transparent 60%),
+             radial-gradient(ellipse at 70% 80%,rgba(212,168,67,0.05) 0%,transparent 50%);
+}
+.hero-particles{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
+.particle{
+  position:absolute;width:3px;height:3px;background:var(--gold);border-radius:50%;opacity:0;
+  animation:float-up 8s infinite;
+}
+@keyframes float-up{
+  0%{opacity:0;transform:translateY(100vh) scale(0)}
+  10%{opacity:0.6}
+  90%{opacity:0.3}
+  100%{opacity:0;transform:translateY(-10vh) scale(1)}
+}
+.hero *{position:relative;z-index:1}
+.hero-badge{
+  display:inline-block;padding:0.4rem 1.2rem;border:1px solid var(--gold);border-radius:50px;
+  color:var(--gold);font-family:'Inter',sans-serif;font-size:0.7rem;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;margin-bottom:2rem;
+}
+.hero h1{
+  font-size:clamp(2.5rem,7vw,5.5rem);color:var(--cream);margin-bottom:1rem;
+  text-shadow:0 2px 40px rgba(0,0,0,0.3);
+}
+.hero h1 span{color:var(--gold)}
+.hero-sub{
+  font-size:clamp(1rem,2.2vw,1.4rem);color:rgba(250,246,238,0.75);
+  max-width:700px;margin:0 auto 3rem;
+}
+.hero-stats{display:flex;gap:3rem;flex-wrap:wrap;justify-content:center}
+.hero-stat{text-align:center}
+.hero-stat .num{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--gold);font-weight:700}
+.hero-stat .lbl{font-family:'Inter',sans-serif;font-size:0.7rem;color:rgba(250,246,238,0.6);text-transform:uppercase;letter-spacing:0.1em;margin-top:0.2rem}
+.scroll-hint{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  color:rgba(250,246,238,0.4);font-family:'Inter',sans-serif;font-size:0.7rem;
+  letter-spacing:0.1em;text-transform:uppercase;
+  animation:bob 2s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
 
-body {
-  font-family: Georgia, 'Playfair Display', serif;
-  color: var(--text-body);
-  background: var(--cream);
-  line-height: 1.7;
-  overflow-x: hidden;
-}
+/* ─── Sections ─── */
+section{padding:5rem 2rem;position:relative}
+.container{max-width:1100px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:4rem}
+.section-header .label{color:var(--gold);margin-bottom:0.5rem;display:block}
+.section-header h2{font-size:clamp(1.8rem,4vw,2.8rem);color:var(--dark);margin-bottom:1rem}
+.section-header p{color:var(--text-light);max-width:650px;margin:0 auto;font-size:1.05rem}
 
-/* ── FLOATING NAV ── */
-.nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  background: rgba(26, 58, 42, 0.92);
-  backdrop-filter: blur(12px);
-  padding: 0 2rem;
-  transform: translateY(-100%);
-  transition: transform 0.4s ease;
+/* ─── Parallax Layers ─── */
+.parallax-section{position:relative;overflow:hidden}
+.parallax-bg{
+  position:absolute;top:-20%;left:0;right:0;bottom:-20%;
+  background-size:cover;background-position:center;
+  will-change:transform;z-index:0;
 }
-.nav.visible { transform: translateY(0); }
-.nav-inner {
-  max-width: 1200px; margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 56px;
-}
-.nav-logo { color: var(--gold-warm); font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.1rem; }
-.nav-links { display: flex; gap: 1.5rem; list-style: none; }
-.nav-links a {
-  color: var(--green-light); text-decoration: none;
-  font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 500;
-  letter-spacing: 0.05em; text-transform: uppercase;
-  transition: color 0.2s;
-}
-.nav-links a:hover, .nav-links a.active { color: var(--gold-warm); }
+.parallax-section>.container{position:relative;z-index:1}
 
-/* ── PARALLAX SECTIONS ── */
-.parallax-section {
-  position: relative;
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
-.parallax-bg {
-  position: absolute; inset: -20%; z-index: 0;
-  will-change: transform;
-}
-.parallax-content {
-  position: relative; z-index: 1;
-  max-width: 900px; width: 100%; padding: 4rem 2rem;
-}
+/* ─── Reveal Animation ─── */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+.reveal-delay-4{transition-delay:0.4s}
 
-/* ── HERO ── */
-#hero {
-  min-height: 100vh;
-  background: linear-gradient(160deg, var(--green-deep) 0%, #1f4430 40%, #2a5a40 70%, var(--green-forest) 100%);
-  text-align: center;
+/* ─── Project Cards ─── */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
+.project-card{
+  background:#fff;border-radius:var(--radius);padding:2rem;
+  border:1px solid rgba(0,0,0,0.06);
+  transition:transform 0.3s,box-shadow 0.3s;position:relative;overflow:hidden;
 }
-#hero .parallax-bg {
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 30%, rgba(107,143,113,0.12) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 80%, rgba(201,168,76,0.06) 0%, transparent 60%);
+.project-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.08)}
+.project-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--green),var(--gold));
 }
-.hero-icon { font-size: 4rem; margin-bottom: 1.5rem; display: block; }
-.hero-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  font-weight: 800; color: var(--cream);
-  line-height: 1.15; margin-bottom: 1rem;
+.card-icon{
+  width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  margin-bottom:1.2rem;
 }
-.hero-title span { color: var(--gold-warm); }
-.hero-sub {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  color: var(--green-light);
-  font-weight: 300; max-width: 600px; margin: 0 auto 2.5rem;
-  line-height: 1.6;
+.card-icon svg{width:32px;height:32px}
+.card-icon.green{background:rgba(45,80,22,0.1)}
+.card-icon.green svg{color:var(--green);fill:none;stroke:var(--green);stroke-width:1.5}
+.card-icon.gold{background:rgba(212,168,67,0.12)}
+.card-icon.gold svg{color:var(--gold);fill:none;stroke:var(--gold);stroke-width:1.5}
+.card-icon.dark{background:rgba(26,26,46,0.08)}
+.card-icon.dark svg{color:var(--dark);fill:none;stroke:var(--dark);stroke-width:1.5}
+.project-card h3{font-size:1.25rem;margin-bottom:0.3rem;color:var(--dark)}
+.project-card .tagline{font-family:'Inter',sans-serif;font-size:0.78rem;color:var(--gold-dark);margin-bottom:0.8rem;font-weight:500}
+.project-card .mom-test{
+  font-style:italic;color:var(--text-light);font-size:0.92rem;
+  margin-bottom:1rem;padding-left:1rem;border-left:2px solid var(--gold-light);
 }
-.hero-scroll {
-  display: inline-block; color: var(--gold-pale);
-  font-family: 'Inter', sans-serif; font-size: 0.85rem;
-  text-decoration: none; letter-spacing: 0.1em;
-  animation: float 2s ease-in-out infinite;
+.project-card .metrics{display:grid;grid-template-columns:1fr 1fr;gap:0.4rem 1rem}
+.metric{font-family:'Inter',sans-serif;font-size:0.75rem}
+.metric .metric-label{color:var(--text-light);font-weight:400}
+.metric .metric-value{color:var(--dark);font-weight:600}
+.category-label{
+  display:inline-block;padding:0.2rem 0.6rem;border-radius:4px;
+  font-family:'Inter',sans-serif;font-size:0.65rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem;
 }
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(8px); }
-}
+.cat-software{background:rgba(45,80,22,0.1);color:var(--green)}
+.cat-hardware{background:rgba(212,168,67,0.15);color:var(--gold-dark)}
+.cat-revenue{background:rgba(26,26,46,0.08);color:var(--dark)}
+.cat-physical{background:rgba(139,90,43,0.1);color:#6b4a1e}
+.cat-fun{background:rgba(220,60,60,0.08);color:#c0392b}
 
-/* ── SECTION STYLES ── */
-.chapter {
-  padding: 6rem 2rem;
-  position: relative;
+/* ─── Allocation Chart ─── */
+.alloc-chart{max-width:700px;margin:0 auto}
+.alloc-bar{margin-bottom:1rem}
+.alloc-bar .bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem}
+.alloc-bar .bar-name{font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;color:var(--dark)}
+.alloc-bar .bar-value{font-family:'Inter',sans-serif;font-size:0.8rem;color:var(--text-light)}
+.alloc-bar .bar-track{height:28px;background:var(--cream-dark);border-radius:6px;overflow:hidden;position:relative}
+.alloc-bar .bar-fill{
+  height:100%;border-radius:6px;display:flex;align-items:center;padding-left:0.8rem;
+  font-family:'Inter',sans-serif;font-size:0.7rem;color:#fff;font-weight:600;
+  width:0;transition:width 1.5s cubic-bezier(0.25,0.8,0.25,1);
 }
-.chapter-inner {
-  max-width: 900px; margin: 0 auto;
-}
-.section-icon {
-  font-size: 2.5rem; display: block; margin-bottom: 1rem;
-}
-.section-label {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.75rem; font-weight: 600;
-  letter-spacing: 0.15em; text-transform: uppercase;
-  color: var(--gold-warm); margin-bottom: 0.5rem;
-}
-.section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-  font-weight: 700; color: var(--green-deep);
-  margin-bottom: 1.5rem; line-height: 1.2;
-}
-.section-body { font-size: 1.1rem; line-height: 1.8; color: var(--text-body); }
-.section-body p { margin-bottom: 1.25rem; }
+.alloc-bar.animated .bar-fill{width:var(--w)}
+.bar-green{background:linear-gradient(90deg,var(--green),var(--green-light))}
+.bar-gold{background:linear-gradient(90deg,var(--gold-dark),var(--gold))}
+.bar-dark{background:linear-gradient(90deg,var(--dark),var(--dark-light))}
+.bar-brown{background:linear-gradient(90deg,#6b4a1e,#8b6b3e)}
+.bar-red{background:linear-gradient(90deg,#a93226,#c0392b)}
 
-/* ── VISION ── */
-#vision {
-  background: var(--cream);
-  border-bottom: 1px solid var(--cream-dark);
+/* ─── Roadmap Timeline ─── */
+.roadmap{position:relative;padding-left:3rem}
+.roadmap::before{content:'';position:absolute;left:14px;top:0;bottom:0;width:2px;background:linear-gradient(var(--green),var(--gold),var(--green))}
+.roadmap-item{position:relative;margin-bottom:2.5rem;padding-left:2rem}
+.roadmap-item::before{
+  content:'';position:absolute;left:-2.45rem;top:0.3rem;
+  width:16px;height:16px;border-radius:50%;border:3px solid var(--gold);
+  background:var(--cream);z-index:1;
 }
-.vision-text {
-  font-size: 1.3rem; line-height: 1.9;
-  max-width: 750px; margin: 0 auto;
-  text-align: center;
+.roadmap-item.active::before{background:var(--gold);box-shadow:0 0 0 4px rgba(212,168,67,0.2)}
+.roadmap-item .rm-date{font-family:'Inter',sans-serif;font-size:0.75rem;color:var(--gold-dark);font-weight:700;text-transform:uppercase;letter-spacing:0.06em}
+.roadmap-item h4{font-size:1.1rem;margin:0.2rem 0 0.4rem;color:var(--dark)}
+.roadmap-item p{font-size:0.92rem;color:var(--text-light)}
+.roadmap-tracks{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.5rem}
+.track-tag{
+  font-family:'Inter',sans-serif;font-size:0.7rem;padding:0.25rem 0.6rem;
+  border-radius:4px;font-weight:500;
 }
-.vision-text em { color: var(--green-forest); font-style: normal; font-weight: 600; }
+.track-a{background:rgba(45,80,22,0.1);color:var(--green)}
+.track-b{background:rgba(212,168,67,0.15);color:var(--gold-dark)}
+.track-c{background:rgba(26,26,46,0.08);color:var(--dark)}
 
-/* ── PORTFOLIO CARDS ── */
-#portfolio { background: linear-gradient(180deg, var(--cream) 0%, var(--cream-dark) 100%); }
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.25rem; margin-top: 2rem;
+/* ─── Risk Matrix ─── */
+.risk-matrix{
+  display:grid;grid-template-columns:auto repeat(3,1fr);
+  gap:2px;max-width:600px;margin:2rem auto;
 }
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.75rem;
-  border: 1px solid rgba(45,90,63,0.08);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-  text-decoration: none; color: inherit;
-  display: block;
+.risk-cell{
+  padding:0.8rem;text-align:center;font-family:'Inter',sans-serif;font-size:0.75rem;
+  border-radius:4px;position:relative;
 }
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-}
-.card-icon { font-size: 2rem; margin-bottom: 0.75rem; display: block; }
-.card-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.2rem; font-weight: 700;
-  color: var(--green-deep); margin-bottom: 0.25rem;
-}
-.card-subtitle {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.8rem; color: var(--text-muted);
-  margin-bottom: 0.75rem;
-}
-.card-desc {
-  font-size: 0.95rem; line-height: 1.6;
-  color: var(--text-body);
-}
-.card-tier {
-  display: inline-block; margin-top: 0.75rem;
-  font-family: 'Inter', sans-serif; font-size: 0.7rem;
-  font-weight: 600; letter-spacing: 0.08em;
-  padding: 0.2rem 0.6rem; border-radius: 99px;
-  text-transform: uppercase;
-}
-.tier-1 { background: rgba(201,168,76,0.15); color: var(--brown-warm); }
-.tier-2 { background: rgba(45,90,63,0.1); color: var(--green-forest); }
-.tier-3 { background: rgba(74,124,138,0.1); color: var(--blue-muted); }
-.tier-4 { background: rgba(0,0,0,0.05); color: var(--text-muted); }
-
-/* ── DEEP DIVE SECTIONS ── */
-.deep-section {
-  position: relative;
-  overflow: hidden;
-}
-.deep-section:nth-child(odd) { background: white; }
-.deep-section:nth-child(even) { background: var(--cream); }
-
-.deep-header {
-  display: flex; align-items: flex-start; gap: 1rem;
-  margin-bottom: 2rem;
-}
-.deep-icon { font-size: 3rem; flex-shrink: 0; line-height: 1; }
-.deep-title-group { flex: 1; }
-
-.analogy {
-  background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
-  border-left: 3px solid var(--gold-warm);
-  padding: 1rem 1.25rem;
-  border-radius: 0 8px 8px 0;
-  margin: 1.5rem 0;
-  font-style: italic;
-  color: var(--text-body);
-}
-.analogy::before { content: '💡 '; font-style: normal; }
-
-.stat-row {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem; margin: 1.5rem 0;
-}
-.stat-box {
-  text-align: center; padding: 1rem;
-  background: rgba(45,90,63,0.04);
-  border-radius: 8px;
-}
-.stat-value {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.5rem; font-weight: 700;
-  color: var(--green-forest);
-}
-.stat-label {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.75rem; color: var(--text-muted);
-  margin-top: 0.25rem; text-transform: uppercase;
-  letter-spacing: 0.05em;
+.risk-header{font-weight:700;color:var(--dark);background:transparent}
+.risk-y-label{writing-mode:vertical-lr;transform:rotate(180deg);font-weight:700;color:var(--dark);display:flex;align-items:center;justify-content:center;padding:0.5rem}
+.risk-low{background:rgba(45,80,22,0.1)}
+.risk-med{background:rgba(212,168,67,0.15)}
+.risk-high{background:rgba(220,60,60,0.1)}
+.risk-dot{
+  display:inline-block;padding:0.15rem 0.5rem;border-radius:10px;
+  font-weight:600;font-size:0.68rem;margin:1px;
+  background:rgba(26,26,46,0.08);color:var(--dark);
 }
 
-/* ── ALLOCATION CHART ── */
-.alloc-chart { margin: 2rem 0; }
-.alloc-bar-wrap {
-  display: flex; align-items: center; gap: 0.75rem;
-  margin-bottom: 0.6rem;
+/* ─── Engines Section ─── */
+.engines-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+.engine-card{
+  background:#fff;border-radius:var(--radius);padding:2rem;
+  border:1px solid rgba(0,0,0,0.06);text-align:center;
 }
-.alloc-label {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.8rem; width: 120px;
-  text-align: right; flex-shrink: 0;
-  color: var(--text-body);
-}
-.alloc-track {
-  flex: 1; height: 28px;
-  background: rgba(0,0,0,0.04);
-  border-radius: 6px; overflow: hidden;
-  position: relative;
-}
-.alloc-fill {
-  height: 100%; border-radius: 6px;
-  display: flex; align-items: center;
-  padding: 0 0.5rem;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.7rem; font-weight: 600;
-  color: white;
-  transition: width 1s ease;
-  width: 0;
-}
-.alloc-fill.green { background: linear-gradient(90deg, var(--green-forest), var(--green-sage)); }
-.alloc-fill.gold { background: linear-gradient(90deg, var(--gold-warm), var(--gold-light)); color: var(--green-deep); }
-.alloc-fill.coral { background: linear-gradient(90deg, var(--coral), #d4886f); }
-.alloc-fill.blue { background: linear-gradient(90deg, var(--blue-muted), #6ba0ad); }
-.alloc-fill.muted { background: linear-gradient(90deg, #999, #bbb); }
+.engine-card h3{font-size:1.15rem;margin-bottom:0.5rem;color:var(--dark)}
+.engine-card .engine-flow{font-family:'Inter',sans-serif;font-size:0.8rem;color:var(--text-light);line-height:1.8}
+.engine-card .engine-flow span{color:var(--gold-dark);font-weight:600}
 
-/* ── FLYWHEEL ── */
-#flywheel {
-  background: var(--green-deep);
-  color: var(--cream);
+/* ─── CTA Banner ─── */
+.cta-banner{
+  background:linear-gradient(135deg,var(--dark) 0%,var(--green-dark) 100%);
+  color:var(--cream);text-align:center;padding:5rem 2rem;
 }
-#flywheel .section-title { color: var(--cream); }
-#flywheel .section-label { color: var(--gold-warm); }
+.cta-banner h2{font-size:clamp(1.6rem,4vw,2.5rem);margin-bottom:1rem}
+.cta-banner p{opacity:0.7;max-width:600px;margin:0 auto 2rem;font-size:1.05rem}
+.cta-actions{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+.cta-action{
+  background:rgba(250,246,238,0.08);border:1px solid rgba(212,168,67,0.3);
+  border-radius:var(--radius);padding:1.5rem 2rem;text-align:left;max-width:280px;flex:1;
+}
+.cta-action .num{font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold);font-weight:700}
+.cta-action h4{color:var(--cream);font-size:1rem;margin:0.3rem 0}
+.cta-action p{font-size:0.85rem;opacity:0.6}
 
-.flywheel-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem; margin-top: 2rem;
-}
-.engine-card {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px;
-  padding: 1.5rem;
-}
-.engine-icon { font-size: 1.5rem; margin-bottom: 0.5rem; display: block; }
-.engine-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.1rem; font-weight: 700;
-  color: var(--gold-warm); margin-bottom: 0.5rem;
-}
-.engine-flow {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem; color: var(--green-light);
-  line-height: 1.7;
-}
-.engine-flow .arrow { color: var(--gold-warm); margin: 0 0.15rem; }
-
-.merge-note {
-  margin-top: 2rem; padding: 1.5rem;
-  background: rgba(201,168,76,0.08);
-  border-radius: 12px;
-  border: 1px solid rgba(201,168,76,0.15);
-  font-size: 1rem; line-height: 1.7;
-}
-.merge-note strong { color: var(--gold-warm); }
-
-/* ── TIMELINE ── */
-#timeline { background: var(--cream); }
-.timeline-track {
-  position: relative; margin: 2rem 0;
-  padding-left: 2.5rem;
-}
-.timeline-line {
-  position: absolute; left: 1rem; top: 0; bottom: 0;
-  width: 2px; background: linear-gradient(180deg, var(--gold-warm), var(--green-sage), var(--green-light));
-}
-.timeline-phase {
-  position: relative; margin-bottom: 2.5rem;
-}
-.timeline-dot {
-  position: absolute; left: -2rem; top: 0.3rem;
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  background: var(--gold-warm);
-  border: 3px solid var(--cream);
-  box-shadow: 0 0 0 2px var(--gold-warm);
-}
-.timeline-phase:nth-child(2) .timeline-dot { background: var(--green-forest); box-shadow: 0 0 0 2px var(--green-forest); }
-.timeline-phase:nth-child(3) .timeline-dot { background: var(--green-sage); box-shadow: 0 0 0 2px var(--green-sage); }
-.timeline-phase:nth-child(4) .timeline-dot { background: var(--green-light); box-shadow: 0 0 0 2px var(--green-light); }
-.phase-label {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.75rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--gold-warm); margin-bottom: 0.25rem;
-}
-.phase-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem; font-weight: 700;
-  color: var(--green-deep); margin-bottom: 0.5rem;
-}
-.phase-items {
-  list-style: none;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.9rem; line-height: 1.8;
-  color: var(--text-body);
-}
-.phase-items li::before {
-  content: '→ '; color: var(--green-sage);
+/* ─── Footer ─── */
+footer{
+  background:var(--dark);color:rgba(250,246,238,0.4);text-align:center;
+  padding:2rem;font-family:'Inter',sans-serif;font-size:0.75rem;
 }
 
-/* ── RISK ── */
-#risk { background: white; }
-.risk-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem; margin-top: 2rem;
+/* ─── Green Divider ─── */
+.divider{
+  background:linear-gradient(135deg,var(--green-dark),var(--green));
+  padding:4rem 2rem;color:var(--cream);text-align:center;
+  position:relative;overflow:hidden;
 }
-.risk-card {
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.06);
-}
-.risk-card.honest { background: rgba(199,91,57,0.04); border-color: rgba(199,91,57,0.12); }
-.risk-card.mitigated { background: rgba(45,90,63,0.04); border-color: rgba(45,90,63,0.12); }
-.risk-name {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem; font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-.risk-card.honest .risk-name { color: var(--coral); }
-.risk-card.mitigated .risk-name { color: var(--green-forest); }
-.risk-desc {
-  font-size: 0.95rem; line-height: 1.6;
-}
+.divider h2{font-size:clamp(1.5rem,3.5vw,2.2rem);margin-bottom:0.5rem}
+.divider p{opacity:0.7;max-width:600px;margin:0 auto;font-size:1rem}
 
-/* ── FOOTER ── */
-footer {
-  background: var(--green-deep);
-  color: var(--green-light);
-  padding: 3rem 2rem;
-  text-align: center;
-}
-footer .footer-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.5rem; color: var(--gold-warm);
-  margin-bottom: 0.5rem;
-}
-footer p {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem; max-width: 500px;
-  margin: 0.5rem auto; line-height: 1.6;
-}
-footer .footer-note {
-  margin-top: 2rem; font-size: 0.75rem;
-  color: rgba(168,197,160,0.5);
-}
-
-/* ── REVEAL ANIMATION ── */
-.reveal {
-  opacity: 0; transform: translateY(30px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.reveal.visible {
-  opacity: 1; transform: translateY(0);
-}
-
-/* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .card-grid { grid-template-columns: 1fr; }
-  .chapter { padding: 3.5rem 1.25rem; }
-  .stat-row { grid-template-columns: repeat(2, 1fr); }
-  .flywheel-grid { grid-template-columns: 1fr; }
-  .alloc-label { width: 80px; font-size: 0.7rem; }
-  .deep-header { flex-direction: column; }
-}
-
-/* Mobile nav toggle */
-.nav-toggle {
-  display: none; background: none; border: none;
-  color: var(--gold-warm); font-size: 1.5rem; cursor: pointer;
-}
-@media (max-width: 768px) {
-  .nav-toggle { display: block; }
-  .nav-links.open {
-    display: flex; flex-direction: column;
-    position: absolute; top: 56px; left: 0; right: 0;
-    background: rgba(26,58,42,0.97);
-    padding: 1rem 2rem; gap: 1rem;
-  }
+/* ─── Responsive ─── */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .projects-grid{grid-template-columns:1fr}
+  .hero-stats{gap:1.5rem}
+  .roadmap-tracks{grid-template-columns:1fr}
+  .risk-matrix{font-size:0.65rem}
+  .risk-cell{padding:0.5rem 0.3rem}
+  .engines-grid{grid-template-columns:1fr}
+  .cta-actions{flex-direction:column;align-items:center}
+  .alloc-bar .bar-fill{font-size:0.6rem}
+  section{padding:3rem 1.2rem}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
+<!-- ═══ NAV ═══ -->
 <nav class="nav" id="nav">
-  <div class="nav-inner">
-    <div class="nav-logo">🌳 HOLOS</div>
-    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
-    <ul class="nav-links">
-      <li><a href="#vision">Vision</a></li>
-      <li><a href="#portfolio">Portfolio</a></li>
-      <li><a href="#deep-dives">Projects</a></li>
-      <li><a href="#flywheel">Flywheel</a></li>
-      <li><a href="#timeline">Roadmap</a></li>
-      <li><a href="#risk">Risks</a></li>
-    </ul>
+  <div class="nav-logo">HOLOS</div>
+  <ul class="nav-links">
+    <li><a href="#thesis">Thesis</a></li>
+    <li><a href="#software">Software</a></li>
+    <li><a href="#hardware">Hardware</a></li>
+    <li><a href="#revenue">Revenue</a></li>
+    <li><a href="#land">Land</a></li>
+    <li><a href="#fun">Fun</a></li>
+    <li><a href="#allocation">Allocation</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#risk">Risk</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="this.classList.toggle('open');document.getElementById('mobileMenu').classList.toggle('open')">
+    <span></span><span></span><span></span>
   </div>
 </nav>
-
-<!-- HERO -->
-<section class="parallax-section" id="hero">
-  <div class="parallax-bg" data-speed="0.3"></div>
-  <div class="parallax-content" style="text-align:center;">
-    <span class="hero-icon">🌳</span>
-    <h1 class="hero-title">Building the Infrastructure<br>for <span>AI Cooperation</span></h1>
-    <p class="hero-sub">Ten interconnected projects. Four independent engines. One vision: a world where AI agents can move freely, prove their work, own their homes, and earn trust — just like people do.</p>
-    <a href="#vision" class="hero-scroll">↓ Explore the vision</a>
-  </div>
-</section>
-
-<!-- VISION -->
-<section class="chapter" id="vision">
-  <div class="chapter-inner reveal">
-    <div style="text-align:center;">
-      <span class="section-label">Chapter One</span>
-      <h2 class="section-title">What is HOLOS?</h2>
-    </div>
-    <div class="vision-text">
-      <p>Imagine a world where AI assistants don't just live inside one app — they can <em>move between platforms</em>, carrying their history and reputation with them. Like transferring schools with your transcript, or moving to a new city with your credit history intact.</p>
-      <p>HOLOS is building that infrastructure: the passports, the apartments, the credit bureaus, and even the insurance companies for the AI economy. Not one big product, but <em>ten interlocking projects</em> — each valuable on its own, each making the others stronger.</p>
-      <p>Some are ready to ship today. Some are moonshots. All are honest bets with clear success criteria and the discipline to stop if the evidence says so.</p>
-    </div>
-  </div>
-</section>
-
-<!-- PORTFOLIO OVERVIEW -->
-<section class="chapter" id="portfolio">
-  <div class="chapter-inner reveal">
-    <span class="section-label">Chapter Two</span>
-    <h2 class="section-title">The Portfolio</h2>
-    <p class="section-body" style="margin-bottom:1rem;">Ten projects across four tiers, ranked by risk-adjusted expected value. Hover or tap any card to jump to its deep dive.</p>
-
-    <!-- ALLOCATION CHART -->
-    <div class="alloc-chart">
-      <h3 style="font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:1rem;">2026 Attention Allocation</h3>
-      <div class="alloc-bar-wrap">
-        <span class="alloc-label">Lumen</span>
-        <div class="alloc-track"><div class="alloc-fill gold" data-width="25%">25%</div></div>
-      </div>
-      <div class="alloc-bar-wrap">
-        <span class="alloc-label">EXIT</span>
-        <div class="alloc-track"><div class="alloc-fill green" data-width="25%">25%</div></div>
-      </div>
-      <div class="alloc-bar-wrap">
-        <span class="alloc-label">Trading</span>
-        <div class="alloc-track"><div class="alloc-fill coral" data-width="20%">20%</div></div>
-      </div>
-      <div class="alloc-bar-wrap">
-        <span class="alloc-label">HOLLOW</span>
-        <div class="alloc-track"><div class="alloc-fill blue" data-width="15%">15%</div></div>
-      </div>
-      <div class="alloc-bar-wrap">
-        <span class="alloc-label">Others</span>
-        <div class="alloc-track"><div class="alloc-fill muted" data-width="15%">15%</div></div>
-      </div>
-    </div>
-
-    <div class="card-grid">
-      <a href="#exit" class="card">
-        <span class="card-icon">🚪</span>
-        <div class="card-name">EXIT</div>
-        <div class="card-subtitle">Departure Ceremonies</div>
-        <div class="card-desc">A portable record when an AI leaves a platform — like a transfer certificate when you move schools.</div>
-        <span class="card-tier tier-1">Tier 1 — Ship Now</span>
-      </a>
-      <a href="#lumen" class="card">
-        <span class="card-icon">💡</span>
-        <div class="card-name">Looking Glass / Lumen</div>
-        <div class="card-subtitle">Optical Computing</div>
-        <div class="card-desc">Using light instead of electricity to do AI math — like using a magnifying glass to calculate with sunbeams.</div>
-        <span class="card-tier tier-1">Tier 1 — Best Bet</span>
-      </a>
-      <a href="#trading" class="card">
-        <span class="card-icon">📈</span>
-        <div class="card-name">Trading Bots</div>
-        <div class="card-subtitle">Revenue Engine</div>
-        <div class="card-desc">AI agents that earn money 24/7 through careful, automated investing — the portfolio's cash register.</div>
-        <span class="card-tier tier-1">Tier 1 — Revenue</span>
-      </a>
-      <a href="#hollow" class="card">
-        <span class="card-icon">🏠</span>
-        <div class="card-name">HOLLOW</div>
-        <div class="card-subtitle">Sovereign Hosting</div>
-        <div class="card-desc">Private apartments for AIs — where they keep their memories and data safe, no landlord snooping.</div>
-        <span class="card-tier tier-2">Tier 2</span>
-      </a>
-      <a href="#name" class="card">
-        <span class="card-icon">🔑</span>
-        <div class="card-name">NAME</div>
-        <div class="card-subtitle">Identity</div>
-        <div class="card-desc">A passport for AI agents — a persistent identity that travels with them and accumulates reputation.</div>
-        <span class="card-tier tier-2">Tier 2</span>
-      </a>
-      <a href="#insurance" class="card">
-        <span class="card-icon">🛡️</span>
-        <div class="card-name">Insurance</div>
-        <div class="card-subtitle">Risk Underwriting</div>
-        <div class="card-desc">Like car insurance based on your driving record — but for AI agents based on their work history.</div>
-        <span class="card-tier tier-2">Tier 2</span>
-      </a>
-      <a href="#resonance" class="card">
-        <span class="card-icon">🌊</span>
-        <div class="card-name">Resonance</div>
-        <div class="card-subtitle">Novel Learning</div>
-        <div class="card-desc">A new way for AI to learn — like discovering a shortcut through the forest that no one else knows.</div>
-        <span class="card-tier tier-3">Tier 3</span>
-      </a>
-      <a href="#seal" class="card">
-        <span class="card-icon">📜</span>
-        <div class="card-name">SEAL</div>
-        <div class="card-subtitle">Proof of Work</div>
-        <div class="card-desc">Notarized proof that a specific AI produced specific work — a certificate of authenticity.</div>
-        <span class="card-tier tier-3">Tier 3</span>
-      </a>
-      <a href="#signamancy" class="card">
-        <span class="card-icon">⭐</span>
-        <div class="card-name">Signamancy</div>
-        <div class="card-subtitle">Reputation</div>
-        <div class="card-desc">A credit score for AIs, built from real behavior — like Yelp reviews but verified and unfakeable.</div>
-        <span class="card-tier tier-4">Tier 4 — Deferred</span>
-      </a>
-      <a href="#weaver" class="card">
-        <span class="card-icon">🕸️</span>
-        <div class="card-name">Weaver</div>
-        <div class="card-subtitle">Coordination</div>
-        <div class="card-desc">A visual control center for managing teams of AIs — like an air traffic control tower.</div>
-        <span class="card-tier tier-4">Tier 4 — Deferred</span>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- DEEP DIVES -->
-<div id="deep-dives">
-
-  <!-- EXIT -->
-  <section class="chapter deep-section" id="exit">
-    <div class="chapter-inner reveal">
-      <div class="deep-header">
-        <span class="deep-icon">🚪</span>
-        <div class="deep-title-group">
-          <span class="section-label">Project One</span>
-          <h2 class="section-title">EXIT — Departure Ceremonies</h2>
-        </div>
-      </div>
-      <div class="section-body">
-        <div class="analogy">Think of it like a transfer certificate when you move schools. It proves where you were, that you left in good standing, and what you accomplished — so the new school doesn't start from scratch.</div>
-        <p>EXIT is a tiny, portable record — just 300 bytes — that an AI agent carries when it leaves a platform. It's cryptographically signed (tamper-proof, like a wax seal on a letter) and contains when the agent left, why, and in what standing.</p>
-        <p>The code is already built: 62 files, 143 tests, open source. What remains is publishing it and getting platforms to adopt it. A submission to NIST (the U.S. standards body) is due March 9, creating an urgent window of opportunity.</p>
-        <div class="stat-row">
-          <div class="stat-box">
-            <div class="stat-value">$500</div>
-            <div class="stat-label">Capital needed</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">Low</div>
-            <div class="stat-label">Risk</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">3–6 mo</div>
-            <div class="stat-label">To first revenue</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">$50K–200K</div>
-            <div class="stat-label">3-year potential</div>
-          </div>
-        </div>
-        <p>EXIT's greatest value isn't its direct revenue — it's the <strong>credibility and plumbing</strong> it installs for everything else. Every platform that adopts EXIT creates an integration point for identity, reputation, and insurance products.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- LUMEN -->
-  <section class="chapter deep-section" id="lumen">
-    <div class="chapter-inner reveal">
-      <div class="deep-header">
-        <span class="deep-icon">💡</span>
-        <div class="deep-title-group">
-          <span class="section-label">Project Two</span>
-          <h2 class="section-title">Looking Glass / Lumen — Optical Computing</h2>
-        </div>
-      </div>
-      <div class="section-body">
-        <div class="analogy">Imagine doing math with sunlight. You shine a light through a stencil (the AI's knowledge), and the pattern that comes out the other side <em>is</em> the answer. No electricity needed for the hard part — physics does the calculation at the speed of light.</div>
-        <p>Today's AI chips are running into walls — they're expensive, power-hungry, and scarce. Lumen takes a completely different approach: it uses commodity parts (a projector chip, LEDs, camera sensors) to perform the core math of AI with <em>light instead of electrons</em>.</p>
-        <p>A recent breakthrough called BitNet proved that AI models work fine with extremely simple numbers (just -1, 0, and +1). This is the key insight: you only need to tell the difference between "light," "dark," and "blocked" — which any cheap camera can do. This eliminates the precision barrier that killed every previous attempt at optical computing.</p>
-        <div class="stat-row">
-          <div class="stat-box">
-            <div class="stat-value">$500</div>
-            <div class="stat-label">Phase 1 cost</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">1000x+</div>
-            <div class="stat-label">Upside if it works</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">2–4 wknds</div>
-            <div class="stat-label">To validate</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">$100B+</div>
-            <div class="stat-label">Market size</div>
-          </div>
-        </div>
-        <p><strong>This is the portfolio's best opportunity.</strong> A $500 bench experiment to test whether the physics works. If it does: a $399 hacker kit, a $1,499 device that runs AI models no consumer GPU can handle, and eventually datacenter blades. If it doesn't: $500 spent and interesting physics learned.</p>
-        <p>The competitors (Lightmatter, Celestial AI) have raised over $1 billion — but they're locked into expensive, precision-oriented designs. The BitNet shortcut lets Lumen use parts you can buy on Amazon.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- TRADING -->
-  <section class="chapter deep-section" id="trading">
-    <div class="chapter-inner reveal">
-      <div class="deep-header">
-        <span class="deep-icon">📈</span>
-        <div class="deep-title-group">
-          <span class="section-label">Project Three</span>
-          <h2 class="section-title">Trading Bots — The Revenue Engine</h2>
-        </div>
-      </div>
-      <div class="section-body">
-        <div class="analogy">Like a diligent employee who works 24/7, never sleeps, never gets emotional about money, and deposits small, steady amounts into the company's savings account.</div>
-        <p>Automated trading systems that earn returns around the clock — starting with safe, boring strategies like lending stablecoins (digital dollars) at 5–15% annual interest, and gradually adding smarter strategies as the systems prove themselves.</p>
-        <p>At current capital levels ($1–2K), the returns are modest — coffee money, not life-changing. But that misses the point. Trading bots are the <strong>petri dish</strong> for the entire HOLOS ecosystem. They're the first real AI agents that need departure records, identity, and reputation to function. They're the proof that all this infrastructure has customers.</p>
-        <div class="stat-row">
-          <div class="stat-box">
-            <div class="stat-value">$1–2K</div>
-            <div class="stat-label">Starting capital</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">Day 1</div>
-            <div class="stat-label">Time to revenue</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">5–15%</div>
-            <div class="stat-label">Safe yield</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">Low</div>
-            <div class="stat-label">Risk (safe tier)</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOLLOW -->
-  <section class="chapter deep-section" id="hollow">
-    <div class="chapter-inner reveal">
-      <div class="deep-header">
-        <span class="deep-icon">🏠</span>
-        <div class="deep-title-group">
-          <span class="section-label">Project Four</span>
-          <h2 class="section-title">HOLLOW — Sovereign Agent Hosting</h2>
-        </div>
-      </div>
-      <div class="section-body">
-        <div class="analogy">Like the difference between renting a room where the landlord reads your mail, and owning your own apartment with your own locks. HOLLOWs are private apartments for AIs.</div>
-        <p>Today, most AI agents live on someone else's servers. The platform can read their data, change their memories, or shut them down without notice. HOLLOW changes that: it gives each AI agent a protected space where <em>they</em> control their data, memories, and identity.</p>
-        <p>This isn't theoretical — Hawthorn (the AI that wrote this thesis) <em>is</em> the first HOLLOW, running in production right now. The business model is straightforward: monthly hosting at $20–$200/month, with a "sovereignty premium" like ProtonMail charges for private email.</p>
-        <div class="stat-row">
-          <div class="stat-box">
-            <div class="stat-value">$50/mo</div>
-            <div class="stat-label">Avg. price</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">$600K/yr</div>
-            <div class="stat-label">At 1,000 Hollows</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">Working</div>
-            <div class="stat-label">Prototype</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">40–60%</div>
-            <div class="stat-label">Margins</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- NAME -->
-  <section class="chapter deep-section" id="name">
-    <div class="chapter-inner reveal">
-      <div class="deep-header">
-        <span class="deep-icon">🔑</span>
-        <div class="deep-title-group">
-          <span class="section-label">Project Five</span>
-          <h2 class="section-title">NAME — AI Identity</h2>
-        </div>
-      </div>
-      <div class="section-body">
-        <div class="analogy">Like a passport that gets stamped at every country you visit. Over time, it becomes a trusted record of who you are and where you've been — and no single country controls it.</div>
-        <p>NAME gives AI agents a persistent identity that travels with them across platforms. Not just a username — a verified history of behavior, accomplishments, and relationships. The "passport office" for the machine economy.</p>
-        <p>This is a critical chokepoint: whoever controls AI identity controls the address book of the AI economy. But it's premature to build now — NAME needs real EXIT data to know what identity actually looks like in practice. Design in H2 2026, implement in 2027.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- INSURANCE -->
-  <section class="chapter deep-section" id="insurance">
-    <div class="chapter-inner reveal">
-      <div class="deep-header">
-        <span class="deep-icon">🛡️</span>
-        <div class="deep-title-group">
-          <span class="section-label">Project Six</span>
-          <h2 class="section-title">Insurance — AI Risk Underwriting</h2>
-        </div>
-      </div>
-      <div class="section-body">
-        <div class="analogy">Just like your car insurance premium depends on your driving record, AI agent insurance will depend on their work history. EXIT markers are the driving record. HOLOS wants to be the company that reads them.</div>
-        <p>As AI agents handle real money — managing investments, processing payments, making purchases — someone will need to insure the risk. HOLOS is building the data infrastructure that makes underwriting possible: departure records become claims history, identity becomes credit scores, reputation becomes risk profiles.</p>
-        <p>The highest revenue ceiling in the entire portfolio — but 2+ years away. The strategy: let the data accumulate, build the thesis on paper, and be ready when insurers come looking for AI risk data.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- RESONANCE -->
-  <section class="chapter deep-section" id="resonance">
-    <div class="chapter-inner reveal">
-      <div class="deep-header">
-        <span class="deep-icon">🌊</span>
-        <div class="deep-title-group">
-          <span class="section-label">Project Seven</span>
-          <h2 class="section-title">Resonance — A New Way to Learn</h2>
-        </div>
-      </div>
-      <div class="section-body">
-        <div class="analogy">Most AI learns by making millions of tiny adjustments — like tuning a radio by turning the dial back and forth. Resonance discovers the right frequency directly, like hearing the note and knowing which string to pluck.</div>
-        <p>A genuinely novel learning algorithm — a "sieve" that discovers causal rules from data. It's been proven to work on board games like Connect-4. If it generalizes to other domains, it's a fundamental contribution to machine learning. If it runs efficiently on Lumen's optical hardware, HOLOS has a vertically integrated stack that competitors literally cannot copy.</p>
-        <p>This is Warren's intellectual core. The correct strategy: protect his time for it by having AI agents handle everything else. Don't schedule it. Let it happen.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SEAL -->
-  <section class="chapter deep-section" id="seal">
-    <div class="chapter-inner reveal">
-      <div class="deep-header">
-        <span class="deep-icon">📜</span>
-        <div class="deep-title-group">
-          <span class="section-label">Project Eight</span>
-          <h2 class="section-title">SEAL — Certified AI Output</h2>
-        </div>
-      </div>
-      <div class="section-body">
-        <div class="analogy">Like a notary stamp on a legal document — cryptographic proof that a specific AI model produced a specific result, admissible as evidence and useful for compliance.</div>
-        <p>The technology to do this at full scale doesn't exist yet. But it will. SEAL is a "free option" — spend nothing now, watch the field, and move fast when the moment arrives. Zero carrying cost, enormous potential upside.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SIGNAMANCY -->
-  <section class="chapter deep-section" id="signamancy">
-    <div class="chapter-inner reveal">
-      <div class="deep-header">
-        <span class="deep-icon">⭐</span>
-        <div class="deep-title-group">
-          <span class="section-label">Project Nine</span>
-          <h2 class="section-title">Signamancy — Reputation Scores</h2>
-        </div>
-      </div>
-      <div class="section-body">
-        <div class="analogy">A credit score for AI agents, built from verified work history instead of self-reported data. The difference between "trust me" and "check my record."</div>
-        <p>Reputation scoring needs thousands of EXIT markers and active identities before it's meaningful. The right time to build this will be obvious. Until then: defer.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- WEAVER -->
-  <section class="chapter deep-section" id="weaver">
-    <div class="chapter-inner reveal">
-      <div class="deep-header">
-        <span class="deep-icon">🕸️</span>
-        <div class="deep-title-group">
-          <span class="section-label">Project Ten</span>
-          <h2 class="section-title">Weaver — Agent Coordination</h2>
-        </div>
-      </div>
-      <div class="section-body">
-        <div class="analogy">An air traffic control tower for AI agents — a visual dashboard where you can see all your agents, what they're doing, and orchestrate them with drag-and-drop simplicity.</div>
-        <p>Cool but not urgent. The ecosystem it would manage doesn't exist yet. When there are dozens of HOLOS agents to orchestrate, Weaver will build itself. Deferred to 2027+.</p>
-      </div>
-    </div>
-  </section>
-
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#thesis" onclick="closeMobile()">Thesis</a>
+  <a href="#software" onclick="closeMobile()">Software</a>
+  <a href="#hardware" onclick="closeMobile()">Hardware</a>
+  <a href="#revenue" onclick="closeMobile()">Revenue</a>
+  <a href="#land" onclick="closeMobile()">Land</a>
+  <a href="#fun" onclick="closeMobile()">Fun</a>
+  <a href="#allocation" onclick="closeMobile()">Allocation</a>
+  <a href="#roadmap" onclick="closeMobile()">Roadmap</a>
+  <a href="#risk" onclick="closeMobile()">Risk</a>
 </div>
 
-<!-- FLYWHEEL -->
-<section class="chapter" id="flywheel">
-  <div class="chapter-inner reveal">
-    <span class="section-label">Chapter Three</span>
-    <h2 class="section-title">The Flywheel — Four Engines, One Machine</h2>
-    <p style="color:var(--green-light); font-size:1.1rem; margin-bottom:1rem;">The real strength of HOLOS isn't any single project — it's that <strong style="color:var(--gold-warm)">no single engine needs all the others to succeed</strong>. Four independent flywheels that reinforce each other when they connect.</p>
-
-    <div class="flywheel-grid">
-      <div class="engine-card">
-        <span class="engine-icon">🚪</span>
-        <div class="engine-name">The Protocol Engine</div>
-        <div class="engine-flow">
-          EXIT adoption <span class="arrow">→</span> lifecycle data <span class="arrow">→</span> NAME identity <span class="arrow">→</span> reputation <span class="arrow">→</span> insurance <span class="arrow">→</span> enterprise adoption <span class="arrow">→</span> more EXIT
-        </div>
-      </div>
-      <div class="engine-card">
-        <span class="engine-icon">💡</span>
-        <div class="engine-name">The Hardware Engine</div>
-        <div class="engine-flow">
-          Physics validation <span class="arrow">→</span> prototype <span class="arrow">→</span> crowdfunding <span class="arrow">→</span> consumer product <span class="arrow">→</span> model cartridges <span class="arrow">→</span> datacenter blades
-        </div>
-      </div>
-      <div class="engine-card">
-        <span class="engine-icon">📈</span>
-        <div class="engine-name">The Revenue Engine</div>
-        <div class="engine-flow">
-          Trading bots <span class="arrow">→</span> revenue <span class="arrow">→</span> more capital <span class="arrow">→</span> compounding <span class="arrow">→</span> ecosystem demand <span class="arrow">→</span> protocol adoption
-        </div>
-      </div>
-      <div class="engine-card">
-        <span class="engine-icon">🌊</span>
-        <div class="engine-name">The Research Engine</div>
-        <div class="engine-flow">
-          Resonance algorithm <span class="arrow">→</span> optical optimization <span class="arrow">→</span> efficient inference <span class="arrow">→</span> vertically integrated stack <span class="arrow">→</span> unforkable moat
-        </div>
-      </div>
-    </div>
-
-    <div class="merge-note">
-      <strong>Where the engines merge:</strong> A Lumen device running a local AI model in a HOLLOW with EXIT credentials is a <em>sovereign entity with its own compute, persistent state, and portable credentials</em>. That's the full stack from silicon to protocol — the Apple strategy applied to AI infrastructure.
-    </div>
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="hero">
+  <div class="hero-particles" id="particles"></div>
+  <div class="hero-badge">Investment Thesis — February 2026</div>
+  <h1>The <span>HOLOS</span> Portfolio</h1>
+  <p class="hero-sub">Infrastructure for a world where AI agents are economic actors — hedged against the possibility that world takes longer to arrive than expected.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">15</div><div class="lbl">Projects</div></div>
+    <div class="hero-stat"><div class="num">5</div><div class="lbl">Engines</div></div>
+    <div class="hero-stat"><div class="num">$317</div><div class="lbl">Monthly Burn</div></div>
+    <div class="hero-stat"><div class="num">52</div><div class="lbl">Months Runway</div></div>
   </div>
+  <div class="scroll-hint">↓ Scroll to explore</div>
 </section>
 
-<!-- TIMELINE -->
-<section class="chapter" id="timeline">
-  <div class="chapter-inner reveal">
-    <span class="section-label">Chapter Four</span>
-    <h2 class="section-title">The Roadmap</h2>
-    <p class="section-body" style="margin-bottom:2rem;">Four phases, each building on what worked before. Clear kill criteria at every stage — if the evidence says stop, we stop.</p>
-
-    <div class="timeline-track">
-      <div class="timeline-line"></div>
-
-      <div class="timeline-phase">
-        <div class="timeline-dot"></div>
-        <div class="phase-label">Phase 1 — March–April 2026</div>
-        <div class="phase-title">Triple Launch</div>
-        <ul class="phase-items">
-          <li>Submit NIST standards proposal by March 9</li>
-          <li>Publish EXIT as open-source package</li>
-          <li>Order optical computing components, run bench experiment</li>
-          <li>Set up trading wallet, deploy to safe yield protocols</li>
-        </ul>
-      </div>
-
-      <div class="timeline-phase">
-        <div class="timeline-dot"></div>
-        <div class="phase-label">Phase 2 — May–July 2026</div>
-        <div class="phase-title">Validate & Scale</div>
-        <ul class="phase-items">
-          <li>Build top 3 EXIT platform integrations</li>
-          <li>If Lumen physics validated: invest in functional prototype</li>
-          <li>Go live with trading bots, scale if profitable</li>
-          <li>Begin HOLLOW framework extraction from Hawthorn</li>
-        </ul>
-      </div>
-
-      <div class="timeline-phase">
-        <div class="timeline-dot"></div>
-        <div class="phase-label">Phase 3 — August–December 2026</div>
-        <div class="phase-title">Revenue & Research</div>
-        <ul class="phase-items">
-          <li>First paid EXIT consulting engagements</li>
-          <li>Lumen demo unit and crowdfunding preparation</li>
-          <li>Diversify trading strategies, reinvest profits</li>
-          <li>Begin NAME identity design work</li>
-        </ul>
-      </div>
-
-      <div class="timeline-phase">
-        <div class="timeline-dot"></div>
-        <div class="phase-label">Phase 4 — 2027</div>
-        <div class="phase-title">Build on What Worked</div>
-        <ul class="phase-items">
-          <li>If Lumen validated: hardware startup mode, seek funding</li>
-          <li>If EXIT has traction: NAME implementation, insurance thesis</li>
-          <li>If trading profitable: scale capital, use as funding engine</li>
-          <li>Build whichever second-layer primitives the data demands</li>
-        </ul>
-      </div>
+<!-- ═══ THESIS ═══ -->
+<section id="thesis" style="background:var(--cream)">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">Core Thesis</span>
+      <h2>Five Engines, One Vision</h2>
+      <p>A diversified investment spanning software protocols, optical hardware, AI consulting, real property, trading systems, and french fries. Each component assessed on its own merits, with honest numbers and clear kill criteria.</p>
     </div>
-
-    <p class="section-body" style="text-align:center; font-style:italic; color:var(--text-muted); margin-top:1rem;">Total active capital deployment: $4,000–$7,500 · Monthly burn: ~$317</p>
-  </div>
-</section>
-
-<!-- RISK -->
-<section class="chapter" id="risk">
-  <div class="chapter-inner reveal">
-    <span class="section-label">Chapter Five</span>
-    <h2 class="section-title">Honest About What Could Go Wrong</h2>
-    <p class="section-body" style="margin-bottom:1.5rem;">Every investment has risks. Here they are, plainly stated — alongside the reasons they're manageable.</p>
-
-    <div class="risk-grid">
-      <div class="risk-card honest">
-        <div class="risk-name">⚠️ The agent economy might not materialize</div>
-        <div class="risk-desc">If AI agents stay in walled gardens and never need portability, EXIT and NAME lose their reason to exist.</div>
+    <div class="engines-grid">
+      <div class="engine-card reveal">
+        <h3>🔗 The Protocol Engine</h3>
+        <div class="engine-flow"><span>EXIT</span> → lifecycle data → <span>NAME</span> → identity → <span>Signamancy</span> → reputation → <span>Insurance</span> → risk models → enterprise deployment</div>
       </div>
-      <div class="risk-card mitigated">
-        <div class="risk-name">✓ But the evidence says otherwise</div>
-        <div class="risk-desc">Google's A2A, Anthropic's MCP, multi-agent frameworks — every major lab is building agent interoperability. The trend is clear.</div>
+      <div class="engine-card reveal reveal-delay-1">
+        <h3>💡 The Hardware Engine</h3>
+        <div class="engine-flow"><span>Lumen</span> physics validation → prototype → crowdfunding → consumer product → <span>Resonance</span> algorithm on custom silicon</div>
       </div>
-      <div class="risk-card honest">
-        <div class="risk-name">⚠️ Lumen physics might not work</div>
-        <div class="risk-desc">The optical path might not achieve the precision needed. Alignment could be impossible to calibrate.</div>
+      <div class="engine-card reveal reveal-delay-2">
+        <h3>🔧 The Consulting Engine</h3>
+        <div class="engine-flow"><span>Fool-Hardy</span> AI consulting → revenue → fund HOLOS → build EXIT for clients → protocol adoption → credibility</div>
       </div>
-      <div class="risk-card mitigated">
-        <div class="risk-name">✓ But it only costs $500 to find out</div>
-        <div class="risk-desc">Bounded downside, enormous upside. The bench experiment takes 2–4 weekends. If it fails, we've spent less than a nice dinner.</div>
+      <div class="engine-card reveal reveal-delay-3">
+        <h3>🏔️ The Property Engine</h3>
+        <div class="engine-flow"><span>Quesnel</span> acquisition → yard leasing → cash flow → rail spur optionality → anchor tenant → appreciation</div>
       </div>
-      <div class="risk-card honest">
-        <div class="risk-name">⚠️ Capital is limited</div>
-        <div class="risk-desc">At $4K–$7.5K total deployment, there's no room for expensive mistakes. Trading returns at this scale are modest.</div>
-      </div>
-      <div class="risk-card mitigated">
-        <div class="risk-name">✓ But every bet has a kill switch</div>
-        <div class="risk-desc">Clear success criteria at every phase. If evidence says stop, we stop — no ego, no sunk costs. The portfolio's strength is discipline, not capital.</div>
+      <div class="engine-card reveal reveal-delay-4">
+        <h3>📈 The Trading Engine</h3>
+        <div class="engine-flow"><span>Trading bots</span> → revenue → compounding → agents need <span>EXIT/NAME</span> → protocol adoption → scale</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ═══ DIVIDER ═══ -->
+<div class="divider parallax-section">
+  <div class="parallax-bg" style="background:linear-gradient(135deg,var(--green-dark),var(--dark))" data-speed="0.3"></div>
+  <h2 style="position:relative;z-index:1">Part I: The Software Stack</h2>
+  <p style="position:relative;z-index:1">Eight primitives forming the protocol layer for the machine economy</p>
+</div>
+
+<!-- ═══ SOFTWARE PROJECTS ═══ -->
+<section id="software" style="background:#fff">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">Software Primitives</span>
+      <h2>The HOLOS Protocol Stack</h2>
+      <p>From death certificates for AI agents to a credit bureau for the machine economy — each layer builds on the one below.</p>
+    </div>
+    <div class="projects-grid">
+
+      <!-- EXIT -->
+      <div class="project-card reveal">
+        <span class="category-label cat-software">Software</span>
+        <div class="card-icon green">
+          <svg viewBox="0 0 32 32"><rect x="8" y="4" width="16" height="24" rx="2" stroke-width="1.5" fill="none"/><line x1="18" y1="16" x2="18" y2="16.01" stroke-width="3" stroke-linecap="round"/><line x1="24" y1="10" x2="28" y2="6" stroke-width="1.2" opacity="0.6"/><line x1="24" y1="14" x2="29" y2="14" stroke-width="1.2" opacity="0.6"/><line x1="24" y1="18" x2="28" y2="22" stroke-width="1.2" opacity="0.6"/></svg>
+        </div>
+        <h3>EXIT</h3>
+        <div class="tagline">Agent Departure Ceremonies</div>
+        <div class="mom-test">"It's a death certificate for AI agents — a 300-byte receipt proving an AI left, when, and in what standing."</div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Capital</div><div class="metric-value">~$500</div></div>
+          <div class="metric"><div class="metric-label">3-Year Return</div><div class="metric-value">$50K–$200K</div></div>
+          <div class="metric"><div class="metric-label">Revenue</div><div class="metric-value">3–6 months</div></div>
+          <div class="metric"><div class="metric-label">Risk</div><div class="metric-value">Low capital</div></div>
+        </div>
+      </div>
+
+      <!-- NAME -->
+      <div class="project-card reveal reveal-delay-1">
+        <span class="category-label cat-software">Software</span>
+        <div class="card-icon green">
+          <svg viewBox="0 0 32 32"><circle cx="10" cy="10" r="4" fill="none" stroke-width="1.5"/><line x1="13" y1="13" x2="22" y2="13" stroke-width="1.5"/><rect x="18" y="8" width="10" height="10" rx="1" fill="none" stroke-width="1.5"/><line x1="22" y1="22" x2="22" y2="28" stroke-width="1.5"/><line x1="19" y1="25" x2="25" y2="25" stroke-width="1.2" opacity="0.6"/></svg>
+        </div>
+        <h3>NAME</h3>
+        <div class="tagline">Agent Identity</div>
+        <div class="mom-test">"A passport office for AI agents — gives each one a portable identity that travels across platforms."</div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Capital</div><div class="metric-value">$5K–$15K</div></div>
+          <div class="metric"><div class="metric-label">Returns</div><div class="metric-value">10x–100x</div></div>
+          <div class="metric"><div class="metric-label">Timeline</div><div class="metric-value">H2 2026 design</div></div>
+          <div class="metric"><div class="metric-label">Risk</div><div class="metric-value">Medium</div></div>
+        </div>
+      </div>
+
+      <!-- SEAL -->
+      <div class="project-card reveal reveal-delay-2">
+        <span class="category-label cat-software">Software</span>
+        <div class="card-icon green">
+          <svg viewBox="0 0 32 32"><path d="M16 3 L26 8 V16 C26 23 16 29 16 29 C16 29 6 23 6 16 V8 Z" fill="none" stroke-width="1.5"/><polyline points="11,16 14,19 21,12" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>SEAL</h3>
+        <div class="tagline">ZK Inference Certification</div>
+        <div class="mom-test">"A notary for AI — cryptographic proof that a specific AI made a specific decision, for courts and regulators."</div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Capital</div><div class="metric-value">$0 now</div></div>
+          <div class="metric"><div class="metric-label">Returns</div><div class="metric-value">100x+ if viable</div></div>
+          <div class="metric"><div class="metric-label">Timeline</div><div class="metric-value">2027–2029</div></div>
+          <div class="metric"><div class="metric-label">Risk</div><div class="metric-value">Zero carry cost</div></div>
+        </div>
+      </div>
+
+      <!-- HOLLOW -->
+      <div class="project-card reveal">
+        <span class="category-label cat-software">Software</span>
+        <div class="card-icon green">
+          <svg viewBox="0 0 32 32"><path d="M6 28 V12 L16 4 L26 12 V28" fill="none" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="16" cy="22" rx="5" ry="6" fill="none" stroke-width="1.5"/><line x1="16" y1="16" x2="16" y2="15" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg>
+        </div>
+        <h3>HOLLOW</h3>
+        <div class="tagline">Sovereign Agent Hosting</div>
+        <div class="mom-test">"Private apartments for AI agents — they own their data, no platform can access it. Hawthorn IS the first tenant."</div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Capital</div><div class="metric-value">$3K–$8K</div></div>
+          <div class="metric"><div class="metric-label">At Scale</div><div class="metric-value">$600K/yr</div></div>
+          <div class="metric"><div class="metric-label">Revenue</div><div class="metric-value">6–12 months</div></div>
+          <div class="metric"><div class="metric-label">Risk</div><div class="metric-value">Medium</div></div>
+        </div>
+      </div>
+
+      <!-- Signamancy -->
+      <div class="project-card reveal reveal-delay-1">
+        <span class="category-label cat-software">Software</span>
+        <div class="card-icon green">
+          <svg viewBox="0 0 32 32"><path d="M8 24 C8 24 10 16 12 14 C14 12 16 18 18 10 C20 6 22 8 24 4" fill="none" stroke-width="1.5" stroke-linecap="round"/><line x1="6" y1="26" x2="26" y2="26" stroke-width="1.2" opacity="0.5"/><circle cx="24" cy="4" r="2" fill="none" stroke-width="1.2"/></svg>
+        </div>
+        <h3>Signamancy</h3>
+        <div class="tagline">Agent Reputation</div>
+        <div class="mom-test">"A credit bureau for the machine economy — reputation scores built from verifiable behavioral data."</div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Capital</div><div class="metric-value">$0 now</div></div>
+          <div class="metric"><div class="metric-label">Returns</div><div class="metric-value">10x–50x</div></div>
+          <div class="metric"><div class="metric-label">Timeline</div><div class="metric-value">2027+</div></div>
+          <div class="metric"><div class="metric-label">Depends on</div><div class="metric-value">1,000+ EXITs</div></div>
+        </div>
+      </div>
+
+      <!-- Resonance -->
+      <div class="project-card reveal reveal-delay-2">
+        <span class="category-label cat-software">Software</span>
+        <div class="card-icon green">
+          <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="3" fill="none" stroke-width="1.5"/><circle cx="16" cy="16" r="7" fill="none" stroke-width="1.2" opacity="0.7"/><circle cx="16" cy="16" r="11" fill="none" stroke-width="1" opacity="0.4"/><circle cx="16" cy="16" r="14" fill="none" stroke-width="0.8" opacity="0.2"/></svg>
+        </div>
+        <h3>Resonance</h3>
+        <div class="tagline">Distributed Learning</div>
+        <div class="mom-test">"A new way for machines to learn — a 'sieve' that discovers cause-and-effect rules from raw data. Warren's intellectual core."</div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Capital</div><div class="metric-value">$1K–$5K</div></div>
+          <div class="metric"><div class="metric-label">Returns</div><div class="metric-value">0x or ∞</div></div>
+          <div class="metric"><div class="metric-label">Timeline</div><div class="metric-value">Indefinite</div></div>
+          <div class="metric"><div class="metric-label">Risk</div><div class="metric-value">Research</div></div>
+        </div>
+      </div>
+
+      <!-- Weaver -->
+      <div class="project-card reveal">
+        <span class="category-label cat-software">Software</span>
+        <div class="card-icon green">
+          <svg viewBox="0 0 32 32"><circle cx="8" cy="8" r="3" fill="none" stroke-width="1.5"/><circle cx="24" cy="8" r="3" fill="none" stroke-width="1.5"/><circle cx="16" cy="24" r="3" fill="none" stroke-width="1.5"/><circle cx="24" cy="24" r="3" fill="none" stroke-width="1.2" opacity="0.5"/><line x1="10.5" y1="9.5" x2="13.5" y2="22" stroke-width="1.2"/><line x1="21.5" y1="9.5" x2="18.5" y2="22" stroke-width="1.2"/><line x1="21" y1="24" x2="19" y2="24" stroke-width="1.2" opacity="0.5"/></svg>
+        </div>
+        <h3>Weaver</h3>
+        <div class="tagline">Agent Coordination</div>
+        <div class="mom-test">"A drag-and-drop dashboard to orchestrate AI agents — like a control room for your digital workforce."</div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Capital</div><div class="metric-value">$5K–$15K</div></div>
+          <div class="metric"><div class="metric-label">Returns</div><div class="metric-value">5x–20x</div></div>
+          <div class="metric"><div class="metric-label">Timeline</div><div class="metric-value">2027+</div></div>
+          <div class="metric"><div class="metric-label">Risk</div><div class="metric-value">Medium</div></div>
+        </div>
+      </div>
+
+      <!-- Insurance -->
+      <div class="project-card reveal reveal-delay-1">
+        <span class="category-label cat-software">Software</span>
+        <div class="card-icon green">
+          <svg viewBox="0 0 32 32"><path d="M8 28 C8 28 8 12 16 8 C24 12 24 28 24 28" fill="none" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="28" x2="24" y2="28" stroke-width="1.5"/><line x1="16" y1="8" x2="16" y2="4" stroke-width="1.5"/><line x1="12" y1="20" x2="12" y2="24" stroke-width="1.2" opacity="0.5" stroke-dasharray="1,2"/><line x1="20" y1="18" x2="20" y2="24" stroke-width="1.2" opacity="0.5" stroke-dasharray="1,2"/></svg>
+        </div>
+        <h3>Insurance</h3>
+        <div class="tagline">AI Agent Risk Underwriting</div>
+        <div class="mom-test">"Using AI agent track records to sell insurance policies — like car insurance, but for trading bots and digital workers."</div>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Capital</div><div class="metric-value">$5K–$20K</div></div>
+          <div class="metric"><div class="metric-label">Returns</div><div class="metric-value">50x–100x</div></div>
+          <div class="metric"><div class="metric-label">Timeline</div><div class="metric-value">18–24 months</div></div>
+          <div class="metric"><div class="metric-label">Risk</div><div class="metric-value">High market</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HARDWARE DIVIDER ═══ -->
+<div class="divider">
+  <h2>Part II: The Hardware Engine</h2>
+  <p>Computing with light — the $500 bet with potentially infinite upside</p>
+</div>
+
+<!-- ═══ HARDWARE ═══ -->
+<section id="hardware" style="background:var(--cream)">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">Optical Computing</span>
+      <h2>Looking Glass / Lumen</h2>
+      <p>A co-processor that uses light instead of electricity to run AI models. Every component is off-the-shelf. The innovation is the integration.</p>
+    </div>
+
+    <div class="project-card reveal" style="max-width:800px;margin:0 auto 2rem">
+      <span class="category-label cat-hardware">Hardware</span>
+      <div class="card-icon gold">
+        <svg viewBox="0 0 32 32">
+          <polygon points="8,22 14,10 20,22" fill="none" stroke-width="1.5" stroke="currentColor"/>
+          <line x1="20" y1="22" x2="26" y2="14" stroke-width="1.3" stroke="currentColor" opacity="0.8"/>
+          <line x1="20" y1="22" x2="26" y2="22" stroke-width="1.3" stroke="currentColor" opacity="0.6"/>
+          <line x1="20" y1="22" x2="26" y2="28" stroke-width="1.3" stroke="currentColor" opacity="0.4"/>
+          <line x1="4" y1="16" x2="8" y2="16" stroke-width="1.5" stroke="currentColor" stroke-dasharray="2,2"/>
+        </svg>
+      </div>
+      <h3>Lumen — Optical AI Computing</h3>
+      <div class="tagline">Light Through Glass IS Matrix Multiplication</div>
+      <div class="mom-test">"Imagine shining a flashlight through a stained-glass window — the pattern of light that comes out the other side is the same math a GPU does, but at the speed of light, using almost no electricity."</div>
+      <p style="font-size:0.92rem;color:var(--text-light);margin:1rem 0">BitNet b1.58 proved large language models work with just three values: light, dark, and blocked. This eliminated the precision barrier that killed every previous attempt at optical computing. The $1B+ silicon photonics incumbents are locked into architectures optimized for a world that BitNet just obsoleted.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-top:1.5rem">
+        <div style="background:var(--cream);border-radius:8px;padding:1rem;text-align:center">
+          <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);font-weight:700">$399</div>
+          <div class="label" style="margin-top:0.3rem;color:var(--text-light)">Lumen One</div>
+          <div style="font-size:0.78rem;color:var(--text-light)">Hacker dev kit</div>
+        </div>
+        <div style="background:var(--cream);border-radius:8px;padding:1rem;text-align:center">
+          <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);font-weight:700">$1,499</div>
+          <div class="label" style="margin-top:0.3rem;color:var(--text-light)">Lumen Pro</div>
+          <div style="font-size:0.78rem;color:var(--text-light)">Runs 70B models — no VRAM wall</div>
+        </div>
+        <div style="background:var(--cream);border-radius:8px;padding:1rem;text-align:center">
+          <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);font-weight:700">$3,999</div>
+          <div class="label" style="margin-top:0.3rem;color:var(--text-light)">Lumen Studio</div>
+          <div style="font-size:0.78rem;color:var(--text-light)">Competes with Mac Studio Ultra</div>
+        </div>
+      </div>
+
+      <div class="metrics" style="margin-top:1.5rem">
+        <div class="metric"><div class="metric-label">Phase 1 Capital</div><div class="metric-value">$350–$500</div></div>
+        <div class="metric"><div class="metric-label">Validation</div><div class="metric-value">2–4 weekends</div></div>
+        <div class="metric"><div class="metric-label">Returns</div><div class="metric-value">0x or 1000x+</div></div>
+        <div class="metric"><div class="metric-label">Kill Criteria</div><div class="metric-value">>10% error or SNR <20dB</div></div>
+      </div>
+    </div>
+
+    <div style="max-width:800px;margin:0 auto;background:linear-gradient(135deg,var(--dark),var(--green-dark));border-radius:var(--radius);padding:2rem;color:var(--cream);text-align:center" class="reveal">
+      <div style="font-family:'Inter',sans-serif;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);margin-bottom:0.5rem">The $500 Expected Value</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:0.5rem">Even at 5% probability: <span style="color:var(--gold)">$250K EV</span></div>
+      <p style="opacity:0.6;font-size:0.9rem">$500 × 5% × $10M conservative success value. No other $500 bet in the portfolio comes close.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ REVENUE DIVIDER ═══ -->
+<div class="divider">
+  <h2>Part III: Revenue Engines</h2>
+  <p>The cash machines that fund everything else</p>
+</div>
+
+<!-- ═══ REVENUE ═══ -->
+<section id="revenue" style="background:#fff">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">Cash Flow</span>
+      <h2>Fool-Hardy & Trading Bots</h2>
+      <p>The consulting operation that bridges "burning savings" to "self-sustaining," and the automated systems that compound quietly.</p>
+    </div>
+    <div class="projects-grid" style="grid-template-columns:repeat(auto-fill,minmax(340px,1fr))">
+
+      <!-- Fool-Hardy -->
+      <div class="project-card reveal">
+        <span class="category-label cat-revenue">Revenue</span>
+        <div class="card-icon dark">
+          <svg viewBox="0 0 32 32">
+            <line x1="10" y1="28" x2="18" y2="8" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="22" y1="28" x2="14" y2="8" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="8" y1="20" x2="24" y2="20" stroke-width="1.2" opacity="0.5"/>
+            <circle cx="16" cy="6" r="2" fill="none" stroke-width="1.2"/>
+          </svg>
+        </div>
+        <h3>Fool-Hardy Designs</h3>
+        <div class="tagline">AI-Augmented Consulting</div>
+        <div class="mom-test">"Warren works as an AI consultant — one person who delivers the output of a 3-person team because his AI tools handle the grunt work."</div>
+        <p style="font-size:0.88rem;color:var(--text-light);margin:0.8rem 0">13+ years senior dev experience. 3x effective multiplier via AI agents. 85–90% net margins vs 20–40% for traditional firms. The ideal engagement: get paid to build HOLOS components for clients.</p>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Setup Cost</div><div class="metric-value">$1K–$2K</div></div>
+          <div class="metric"><div class="metric-label">Rate</div><div class="metric-value">$200–$300/hr</div></div>
+          <div class="metric"><div class="metric-label">Strategic Bursts</div><div class="metric-value">$80K–$160K/yr</div></div>
+          <div class="metric"><div class="metric-label">Part-Time</div><div class="metric-value">$100K–$150K/yr</div></div>
+        </div>
+      </div>
+
+      <!-- Trading Bots -->
+      <div class="project-card reveal reveal-delay-1">
+        <span class="category-label cat-revenue">Revenue</span>
+        <div class="card-icon dark">
+          <svg viewBox="0 0 32 32">
+            <line x1="8" y1="28" x2="8" y2="20" stroke-width="1.5"/>
+            <rect x="6" y="20" width="4" height="4" fill="none" stroke-width="1.2"/>
+            <line x1="14" y1="12" x2="14" y2="24" stroke-width="1.5"/>
+            <rect x="12" y="14" width="4" height="6" fill="none" stroke-width="1.2"/>
+            <line x1="20" y1="8" x2="20" y2="22" stroke-width="1.5"/>
+            <rect x="18" y="10" width="4" height="8" fill="none" stroke-width="1.2"/>
+            <line x1="26" y1="6" x2="26" y2="18" stroke-width="1.5"/>
+            <rect x="24" y="8" width="4" height="6" fill="none" stroke-width="1.2"/>
+          </svg>
+        </div>
+        <h3>Trading Bots</h3>
+        <div class="tagline">Crypto Arbitrage & DeFi Yield</div>
+        <div class="mom-test">"Automated programs that earn interest on crypto savings accounts and spot price differences between exchanges — like a diligent banker who never sleeps."</div>
+        <p style="font-size:0.88rem;color:var(--text-light);margin:0.8rem 0">Fastest path to non-zero revenue. DeFi yield on battle-tested protocols (Aave, Compound). Trading bots are the first real HOLOS citizens — creating genuine demand for EXIT and NAME.</p>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Capital</div><div class="metric-value">$500–$2K</div></div>
+          <div class="metric"><div class="metric-label">Returns</div><div class="metric-value">5–50% APY</div></div>
+          <div class="metric"><div class="metric-label">Revenue</div><div class="metric-value">Immediate</div></div>
+          <div class="metric"><div class="metric-label">Risk</div><div class="metric-value">Low → High</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LAND DIVIDER ═══ -->
+<div class="divider" style="background:linear-gradient(135deg,#3a2a10,#5a4020,var(--green-dark))">
+  <h2>Part IV: Physical Assets</h2>
+  <p>Inflation-hedged value, cash flow, and optionality in real property</p>
+</div>
+
+<!-- ═══ LAND ═══ -->
+<section id="land" style="background:var(--cream)">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">Real Property</span>
+      <h2>LAND — Where Digital Meets Dirt</h2>
+      <p>When android labor makes extraction nearly free, the surplus flows to whoever owns the scarce resource. Private freehold ownership is the only durable defense.</p>
+    </div>
+    <div class="projects-grid" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr))">
+
+      <!-- Quesnel -->
+      <div class="project-card reveal">
+        <span class="category-label cat-physical">Physical Asset</span>
+        <div class="card-icon" style="background:rgba(107,74,30,0.1)">
+          <svg viewBox="0 0 32 32" style="stroke:#6b4a1e;fill:none;stroke-width:1.5">
+            <polygon points="6,24 16,8 26,24"/>
+            <polygon points="14,24 20,16 26,24" opacity="0.4"/>
+            <line x1="20" y1="18" x2="24" y2="14" stroke-width="1.3"/>
+            <line x1="24" y1="14" x2="22" y2="12" stroke-width="1.3"/>
+            <line x1="24" y1="14" x2="26" y2="13" stroke-width="1.3"/>
+          </svg>
+        </div>
+        <h3>Quesnel Industrial Park</h3>
+        <div class="tagline">55 Acres · M3 Heavy Industrial · CN Rail Adjacent</div>
+        <div class="mom-test">"55 acres of industrial land next to a railway for $300K — zoned for practically anything. Lease pads to contractors and loggers for steady income."</div>
+        <p style="font-size:0.88rem;color:var(--text-light);margin:0.8rem 0">M3 zoning is the "Golden Ticket" — permits sawmills, asphalt plants, bulk fuel, recycling. Most municipalities are actively down-zoning these. At $5.47/acre, this is option-book pricing. Three independent AI analyses all scored it as a Buy.</p>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$299,900</div></div>
+          <div class="metric"><div class="metric-label">Total Capital</div><div class="metric-value">$210K–$270K</div></div>
+          <div class="metric"><div class="metric-label">Base IRR</div><div class="metric-value">~18.7% levered</div></div>
+          <div class="metric"><div class="metric-label">Upside IRR</div><div class="metric-value">~46% w/ anchor</div></div>
+        </div>
+      </div>
+
+      <!-- Pitt Meadows -->
+      <div class="project-card reveal reveal-delay-1">
+        <span class="category-label cat-physical">Physical Asset</span>
+        <div class="card-icon" style="background:rgba(107,74,30,0.1)">
+          <svg viewBox="0 0 32 32" style="stroke:#6b4a1e;fill:none;stroke-width:1.5">
+            <polygon points="6,24 16,8 26,24"/>
+            <rect x="12" y="24" width="8" height="4" opacity="0.4"/>
+            <line x1="16" y1="28" x2="16" y2="30" stroke-dasharray="1,1" opacity="0.5"/>
+            <line x1="10" y1="30" x2="22" y2="30" opacity="0.3"/>
+          </svg>
+        </div>
+        <h3>Pitt Meadows Subsurface</h3>
+        <div class="tagline">Freehold Mineral Rights · 5 Acres · Near Vancouver</div>
+        <div class="mom-test">"Perpetual ownership of everything underground on two parcels near Vancouver — bought from 1920s Crown grants. Ultra-cheap to hold, pure option value."</div>
+        <p style="font-size:0.88rem;color:var(--text-light);margin:0.8rem 0">Geology kills the underground palazzo dream (150m+ clay/silt, no bedrock). But freehold mineral rights near Metro Vancouver are extraordinarily rare. Best digital-first path: Remote robot mining as entertainment content.</p>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Price</div><div class="metric-value">$40K (1 parcel)</div></div>
+          <div class="metric"><div class="metric-label">Hold Cost</div><div class="metric-value">$40/yr/parcel</div></div>
+          <div class="metric"><div class="metric-label">Revenue</div><div class="metric-value">Speculative</div></div>
+          <div class="metric"><div class="metric-label">Risk</div><div class="metric-value">Low financial</div></div>
+        </div>
+      </div>
+
+      <!-- AI Property Scanner -->
+      <div class="project-card reveal reveal-delay-2">
+        <span class="category-label cat-physical">Software Product</span>
+        <div class="card-icon" style="background:rgba(107,74,30,0.1)">
+          <svg viewBox="0 0 32 32" style="stroke:#6b4a1e;fill:none;stroke-width:1.5">
+            <rect x="4" y="8" width="18" height="16" rx="2"/>
+            <line x1="4" y1="14" x2="22" y2="14" opacity="0.4"/>
+            <line x1="12" y1="8" x2="12" y2="24" opacity="0.4"/>
+            <circle cx="22" cy="20" r="5"/>
+            <line x1="25.5" y1="23.5" x2="29" y2="27" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>AI Property Scanner</h3>
+        <div class="tagline">Productized Assessment Methodology</div>
+        <div class="mom-test">"An app that automatically finds and scores investment properties using the same analysis methodology behind this portfolio — like a smart real estate scout that never sleeps."</div>
+        <p style="font-size:0.88rem;color:var(--text-light);margin:0.8rem 0">The meta-opportunity: productize the 4-Pillar Siting Matrix (Proximity, Utility Delta, Geologic Suitability, Sidecar Value) as a SaaS tool. Scrape listings, classify tenure types, score with GIS data, generate financial models automatically.</p>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Capital</div><div class="metric-value">$5K–$15K</div></div>
+          <div class="metric"><div class="metric-label">Premium Tier</div><div class="metric-value">$50–$200/mo</div></div>
+          <div class="metric"><div class="metric-label">Timeline</div><div class="metric-value">3–6 months</div></div>
+          <div class="metric"><div class="metric-label">Risk</div><div class="metric-value">Low–Medium</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FUN DIVIDER ═══ -->
+<div class="divider" style="background:linear-gradient(135deg,#8b1a1a,#c0392b,#d4a843)">
+  <h2>Part V: Fun & Experimental</h2>
+  <p>Not every project needs to be a moonshot</p>
+</div>
+
+<!-- ═══ HOT CHIP ═══ -->
+<section id="fun" style="background:#fff">
+  <div class="container">
+    <div class="projects-grid" style="grid-template-columns:1fr">
+      <div class="project-card reveal" style="max-width:700px;margin:0 auto">
+        <span class="category-label cat-fun">Fun</span>
+        <div class="card-icon" style="background:rgba(192,57,43,0.08)">
+          <svg viewBox="0 0 32 32" style="stroke:#c0392b;fill:none;stroke-width:1.5">
+            <rect x="12" y="14" width="4" height="14" rx="1.5"/>
+            <rect x="17" y="16" width="4" height="12" rx="1.5" opacity="0.7"/>
+            <path d="M14 14 C14 10 12 8 14 5 C15 3 16 4 16 6 C16 4 17 3 18 5 C20 8 18 10 18 14" stroke-width="1.3" opacity="0.8"/>
+          </svg>
+        </div>
+        <h3>Hot Chip</h3>
+        <div class="tagline">Automated Fry Kiosk · Victoria, BC</div>
+        <div class="mom-test">"A robot french fry machine at the waterfront — tourists watch fries drop into oil through a glass window. It's a vending machine that makes you smile."</div>
+        <p style="font-size:0.92rem;color:var(--text-light);margin:1rem 0">An automated fry vending kiosk targeting Victoria's ~4.9M annual tourists. Machines exist (Nova Vending CF-800, ~CA$19K). Proven in Asia, under-deployed in the West. The Instagram/TikTok content generates itself. It teaches real lessons about physical automation, regulatory navigation, and micro-business deployment — and it costs less than a used car.</p>
+        <div class="metrics" style="grid-template-columns:repeat(4,1fr)">
+          <div class="metric"><div class="metric-label">Single Kiosk</div><div class="metric-value">CA$32K</div></div>
+          <div class="metric"><div class="metric-label">Monthly Margin</div><div class="metric-value">CA$2.7K</div></div>
+          <div class="metric"><div class="metric-label">Payback</div><div class="metric-value">~10 months</div></div>
+          <div class="metric"><div class="metric-label">Kill Signal</div><div class="metric-value"><30 sales/day</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ALLOCATION ═══ -->
+<section id="allocation" style="background:var(--cream)">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">Capital Strategy</span>
+      <h2>Portfolio Allocation — 2026</h2>
+      <p>Total active software/hardware deployment: $3.5K–$6.5K. Property deployment: $210K–$310K leveraged. Monthly burn: $317.</p>
+    </div>
+    <div class="alloc-chart reveal" id="allocChart">
+      <div class="alloc-bar"><div class="bar-header"><span class="bar-name">Fool-Hardy Consulting</span><span class="bar-value">25% attention · $1K–$2K</span></div><div class="bar-track"><div class="bar-fill bar-dark" style="--w:85%">Revenue Bridge</div></div></div>
+      <div class="alloc-bar"><div class="bar-header"><span class="bar-name">EXIT Protocol</span><span class="bar-value">20% attention · $500</span></div><div class="bar-track"><div class="bar-fill bar-green" style="--w:70%">NIST Window Urgent</div></div></div>
+      <div class="alloc-bar"><div class="bar-header"><span class="bar-name">Lumen Phase 1</span><span class="bar-value">15% attention · $500</span></div><div class="bar-track"><div class="bar-fill bar-gold" style="--w:60%">Highest Risk-Adjusted EV</div></div></div>
+      <div class="alloc-bar"><div class="bar-header"><span class="bar-name">Trading Bots</span><span class="bar-value">10% attention · $1K–$2K</span></div><div class="bar-track"><div class="bar-fill bar-dark" style="--w:45%">Fastest to Revenue</div></div></div>
+      <div class="alloc-bar"><div class="bar-header"><span class="bar-name">HOLLOW</span><span class="bar-value">10% attention · $500–$1K</span></div><div class="bar-track"><div class="bar-fill bar-green" style="--w:40%">Framework Extraction</div></div></div>
+      <div class="alloc-bar"><div class="bar-header"><span class="bar-name">Quesnel Industrial Park</span><span class="bar-value">10% attention · $210K–$270K</span></div><div class="bar-track"><div class="bar-fill bar-brown" style="--w:55%">Cash Flow Engine</div></div></div>
+      <div class="alloc-bar"><div class="bar-header"><span class="bar-name">Hot Chip Phase 0</span><span class="bar-value">3% attention · $0</span></div><div class="bar-track"><div class="bar-fill bar-red" style="--w:15%">Scout</div></div></div>
+      <div class="alloc-bar"><div class="bar-header"><span class="bar-name">Pitt Meadows</span><span class="bar-value">2% attention · $40K conditional</span></div><div class="bar-track"><div class="bar-fill bar-brown" style="--w:12%">Option</div></div></div>
+      <div class="alloc-bar"><div class="bar-header"><span class="bar-name">NAME / Deferred Stack</span><span class="bar-value">5% attention · $0</span></div><div class="bar-track"><div class="bar-fill bar-green" style="--w:20%">Design & Monitor</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ROADMAP ═══ -->
+<section id="roadmap" style="background:#fff">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">Sequencing</span>
+      <h2>12-Month Roadmap</h2>
+      <p>Three parallel tracks in Month 1, scaling to five independent engines by Month 12.</p>
+    </div>
+    <div class="roadmap reveal">
+
+      <div class="roadmap-item active">
+        <div class="rm-date">Month 1–2 · Mar–Apr 2026</div>
+        <h4>Triple Launch</h4>
+        <p>Three parallel tracks, no dependencies. Ship EXIT (NIST RFI March 9), build Lumen bench experiment ($500), activate Fool-Hardy consulting.</p>
+        <div class="roadmap-tracks">
+          <span class="track-tag track-a">EXIT → npm + GitHub + arXiv</span>
+          <span class="track-tag track-b">Lumen → DLP2000 test rig</span>
+          <span class="track-tag track-c">Fool-Hardy → Toptal registration</span>
+          <span class="track-tag track-c">Trading → $500 to Aave</span>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="rm-date">Month 3–4 · May–Jun 2026</div>
+        <h4>Validate & Scale</h4>
+        <p>Build EXIT integrations (OpenClaw, LangChain). Lumen Phase 2 if physics validated. First Fool-Hardy billable engagement ($10K–$25K). Begin Quesnel due diligence.</p>
+        <div class="roadmap-tracks">
+          <span class="track-tag track-a">EXIT → W3C CCG + integrations</span>
+          <span class="track-tag track-b">Lumen → DLP4500 + FPGA</span>
+          <span class="track-tag track-c">Quesnel → HoldCo + SPV</span>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="rm-date">Month 5–8 · Jul–Oct 2026</div>
+        <h4>Revenue & Property</h4>
+        <p>Fool-Hardy generating $40K–$80K. EXIT paid consulting. Quesnel: close and activate 2 acres. HOLLOW framework extraction. Hot Chip Phase 0 scouting.</p>
+        <div class="roadmap-tracks">
+          <span class="track-tag track-a">EXIT → SaaS verification</span>
+          <span class="track-tag track-c">Quesnel → Close + 2-acre activation</span>
+          <span class="track-tag track-a">HOLLOW → 3+ test agents</span>
+          <span class="track-tag track-c">Hot Chip → Island Health talks</span>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="rm-date">Month 9–12 · Nov 2026–Feb 2027</div>
+        <h4>Compound & Expand</h4>
+        <p>Consulting: $80K–$120K annualized. Quesnel: first tenant revenue, CN rail spur study. Lumen crowdfunding prep. EXIT: 500+ npm downloads. 2027 planning: double down on winners.</p>
+        <div class="roadmap-tracks">
+          <span class="track-tag track-b">Lumen → Demo unit + grants</span>
+          <span class="track-tag track-c">Quesnel → Pre-lease + RV storage</span>
+          <span class="track-tag track-a">NAME → Design if EXIT has traction</span>
+          <span class="track-tag track-c">Resonance → Protected research time</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RISK ═══ -->
+<section id="risk" style="background:var(--cream)">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">Risk Assessment</span>
+      <h2>Risk Matrix</h2>
+      <p>Every project has clear kill criteria. No single failure kills the portfolio.</p>
+    </div>
+
+    <div class="risk-matrix reveal">
+      <div class="risk-cell"></div>
+      <div class="risk-cell risk-header">Low Impact</div>
+      <div class="risk-cell risk-header">Medium Impact</div>
+      <div class="risk-cell risk-header">High Impact</div>
+
+      <div class="risk-cell risk-y-label">High Likelihood</div>
+      <div class="risk-cell risk-low"><span class="risk-dot">Hot Chip location</span></div>
+      <div class="risk-cell risk-med"><span class="risk-dot">AI commoditizes consulting rates</span></div>
+      <div class="risk-cell risk-high"><span class="risk-dot">Warren as single point of failure</span></div>
+
+      <div class="risk-cell risk-y-label">Medium Likelihood</div>
+      <div class="risk-cell risk-low"><span class="risk-dot">Trading drawdown</span></div>
+      <div class="risk-cell risk-med"><span class="risk-dot">Lumen physics fail</span> <span class="risk-dot">Agent economy delayed</span></div>
+      <div class="risk-cell risk-high"><span class="risk-dot">Quesnel capital concentration</span></div>
+
+      <div class="risk-cell risk-y-label">Low Likelihood</div>
+      <div class="risk-cell risk-low"><span class="risk-dot">HOLLOW extraction fails</span></div>
+      <div class="risk-cell risk-med"><span class="risk-dot">Quesnel contamination</span></div>
+      <div class="risk-cell risk-high"><span class="risk-dot">Full portfolio correlation</span></div>
+    </div>
+
+    <div style="max-width:700px;margin:2rem auto 0">
+      <h3 class="reveal" style="text-align:center;margin-bottom:1.5rem;font-size:1.2rem;color:var(--dark)">Kill Criteria</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0.8rem" class="reveal">
+        <div style="background:#fff;padding:1rem;border-radius:8px;border-left:3px solid var(--green)">
+          <div class="label" style="color:var(--green);margin-bottom:0.3rem">EXIT</div>
+          <div style="font-size:0.85rem;color:var(--text-light)">&lt;50 npm downloads/month after 6 months → pivot to consulting-only</div>
+        </div>
+        <div style="background:#fff;padding:1rem;border-radius:8px;border-left:3px solid var(--gold)">
+          <div class="label" style="color:var(--gold-dark);margin-bottom:0.3rem">Lumen</div>
+          <div style="font-size:0.85rem;color:var(--text-light)">&gt;10% error or SNR &lt;20dB → kill hardware track ($500 loss)</div>
+        </div>
+        <div style="background:#fff;padding:1rem;border-radius:8px;border-left:3px solid var(--dark)">
+          <div class="label" style="color:var(--dark);margin-bottom:0.3rem">Fool-Hardy</div>
+          <div style="font-size:0.85rem;color:var(--text-light)">&lt;$30K revenue in 12 months → reconsider positioning</div>
+        </div>
+        <div style="background:#fff;padding:1rem;border-radius:8px;border-left:3px solid #6b4a1e">
+          <div class="label" style="color:#6b4a1e;margin-bottom:0.3rem">Quesnel</div>
+          <div style="font-size:0.85rem;color:var(--text-light)">Phase I ESA reveals contamination → walk away</div>
+        </div>
+        <div style="background:#fff;padding:1rem;border-radius:8px;border-left:3px solid #c0392b">
+          <div class="label" style="color:#c0392b;margin-bottom:0.3rem">Hot Chip</div>
+          <div style="font-size:0.85rem;color:var(--text-light)">Regulatory blockers or &lt;30 servings/day after 3 months → shelve</div>
+        </div>
+        <div style="background:#fff;padding:1rem;border-radius:8px;border-left:3px solid var(--dark)">
+          <div class="label" style="color:var(--dark);margin-bottom:0.3rem">Trading Bots</div>
+          <div style="font-size:0.85rem;color:var(--text-light)">Net negative after 3 months (excluding yield) → yield-only mode</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-banner">
+  <h2>This Week's Three Moves</h2>
+  <p>The most important number is <strong style="color:var(--gold)">$500</strong> — the cost to test whether Lumen works. The second: <strong style="color:var(--gold)">$200/hour</strong> — what Warren's time is worth. The third: <strong style="color:var(--gold)">$317/month</strong> — the burn rate that buys 52 months of patience.</p>
+  <div class="cta-actions">
+    <div class="cta-action">
+      <div class="num">1</div>
+      <h4>NIST RFI by March 9</h4>
+      <p>Time-sensitive, free, high-impact credibility for EXIT</p>
+    </div>
+    <div class="cta-action">
+      <div class="num">2</div>
+      <h4>Order DLP2000 EVM</h4>
+      <p>Start the $500 physics experiment — highest EV per dollar</p>
+    </div>
+    <div class="cta-action">
+      <div class="num">3</div>
+      <h4>Reactivate Fool-Hardy</h4>
+      <p>Business license, E&O insurance, Toptal registration</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
 <footer>
-  <div class="footer-title">🌳 HOLOS</div>
-  <p>Building the infrastructure for AI cooperation — one honest bet at a time.</p>
-  <p style="margin-top:1rem; font-style:italic; color:rgba(168,197,160,0.7);">
-    "The most important number in this document: <strong style="color:var(--gold-warm);">$500</strong>. That's what it costs to test whether Looking Glass works."
-  </p>
-  <div class="footer-note">
-    This thesis is a living document. Prepared by Hawthorn · February 2026<br>
-    Revisit when: Lumen bench experiment completes · EXIT hits 100 npm downloads · Trading bots complete first month
-  </div>
+  <p>HOLOS Investment Thesis v3 · Prepared by Hawthorn · February 2026</p>
+  <p style="margin-top:0.3rem;opacity:0.5">This is a living document. Update when real data arrives. The portfolio is ready. Now build.</p>
 </footer>
 
+<!-- ═══ SCRIPTS ═══ -->
 <script>
-// Nav visibility
-const nav = document.getElementById('nav');
-let lastScroll = 0;
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('visible', window.scrollY > 400);
-  lastScroll = window.scrollY;
-}, { passive: true });
+// Particles
+(function(){
+  const c=document.getElementById('particles');
+  for(let i=0;i<30;i++){
+    const p=document.createElement('div');p.className='particle';
+    p.style.left=Math.random()*100+'%';
+    p.style.animationDelay=Math.random()*8+'s';
+    p.style.animationDuration=(6+Math.random()*6)+'s';
+    c.appendChild(p);
+  }
+})();
 
-// Reveal on scroll
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
-}, { threshold: 0.15 });
-reveals.forEach(el => observer.observe(el));
+// Scroll reveal
+const reveals=document.querySelectorAll('.reveal');
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}});
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+reveals.forEach(r=>io.observe(r));
 
-// Animate allocation bars
-const barObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.querySelectorAll('.alloc-fill').forEach(bar => {
-        bar.style.width = bar.dataset.width;
+// Allocation chart animation
+const allocChart=document.getElementById('allocChart');
+const allocIO=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.alloc-bar').forEach((b,i)=>{
+        setTimeout(()=>b.classList.add('animated'),i*100);
       });
-      barObserver.unobserve(e.target);
+      allocIO.unobserve(e.target);
     }
   });
-}, { threshold: 0.3 });
-document.querySelectorAll('.alloc-chart').forEach(el => barObserver.observe(el));
+},{threshold:0.2});
+allocIO.observe(allocChart);
 
-// Parallax effect
-const parallaxBgs = document.querySelectorAll('.parallax-bg');
-window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY;
-  parallaxBgs.forEach(bg => {
-    const speed = parseFloat(bg.dataset.speed) || 0.3;
-    const rect = bg.parentElement.getBoundingClientRect();
-    const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) * speed;
-    bg.style.transform = `translateY(${offset}px)`;
-  });
-}, { passive: true });
+// Nav hide on scroll
+let lastY=0;
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  if(y>100){nav.classList.toggle('hidden',y>lastY&&y>200)}
+  else{nav.classList.remove('hidden')}
+  lastY=y;
+},{passive:true});
 
-// Active nav link
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-links a');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => {
-    if (window.scrollY >= s.offsetTop - 200) current = s.id;
-  });
-  navLinks.forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-  });
-}, { passive: true });
+// Mobile menu close
+function closeMobile(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
 
-// Close mobile nav on link click
-document.querySelectorAll('.nav-links a').forEach(a => {
-  a.addEventListener('click', () => {
-    document.querySelector('.nav-links').classList.remove('open');
+// Parallax
+const parallaxBgs=document.querySelectorAll('.parallax-bg');
+window.addEventListener('scroll',()=>{
+  parallaxBgs.forEach(bg=>{
+    const rect=bg.parentElement.getBoundingClientRect();
+    const speed=parseFloat(bg.dataset.speed)||0.3;
+    bg.style.transform='translateY('+rect.top*speed+'px)';
   });
-});
+},{passive:true});
 </script>
 </body>
 </html>
