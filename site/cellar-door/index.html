@@ -26,7 +26,7 @@
   --ideal-accent: #c9a84c;
   --ideal-font: 'Georgia', serif;
   /* Pragmatist */
-  --prag-bg: #ffffff;
+  --prag-bg: #f0f2f5;
   --prag-fg: #1a1a2e;
   --prag-accent: #2563eb;
   --prag-font: 'Inter', sans-serif;
@@ -155,6 +155,21 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 /* ═══════════════════════════════════════════
+   LOGO SECTION (shared across modes)
+   ═══════════════════════════════════════════ */
+.logo-section {
+  background: #000;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  padding: 60px 20px;
+  text-align: center;
+}
+.logo-section img {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════
    POET MODE
    ═══════════════════════════════════════════ */
 .poet-hero {
@@ -218,6 +233,23 @@ img { max-width: 100%; height: auto; display: block; }
   border-bottom: 1px solid currentColor;
   text-decoration: none;
   padding-bottom: 2px;
+}
+.poet-slogan {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  opacity: 0.9;
+  margin: 60px 0;
+  font-family: var(--poet-font);
+}
+.poet-threshold {
+  text-align: center;
+  font-size: 0.95rem;
+  font-style: italic;
+  opacity: 0.45;
+  letter-spacing: 0.12em;
+  margin: -30px 0 60px;
 }
 
 /* ═══════════════════════════════════════════
@@ -289,6 +321,20 @@ img { max-width: 100%; height: auto; display: block; }
   background: rgba(201,168,76,0.06);
   border-radius: 0 4px 4px 0;
 }
+.idealist-slogan {
+  text-align: center;
+  font-size: 1.6rem;
+  color: var(--ideal-accent);
+  margin: 40px 0 8px;
+  font-style: italic;
+}
+.idealist-sub-slogan {
+  text-align: center;
+  font-size: 1rem;
+  opacity: 0.6;
+  margin-bottom: 40px;
+  font-style: italic;
+}
 
 /* ═══════════════════════════════════════════
    PRAGMATIST MODE
@@ -301,7 +347,7 @@ img { max-width: 100%; height: auto; display: block; }
 .prag-header {
   text-align: center;
   padding: 60px 24px 40px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #d8dce3;
 }
 .prag-header h1 {
   font-size: 2.4rem;
@@ -312,6 +358,13 @@ img { max-width: 100%; height: auto; display: block; }
   font-size: 1.1rem;
   color: #6b7280;
   margin-top: 8px;
+}
+.prag-header .slogan {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-top: 16px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
 }
 .prag-body {
   max-width: 900px;
@@ -331,8 +384,8 @@ img { max-width: 100%; height: auto; display: block; }
   margin-bottom: 16px;
 }
 .prag-card {
-  background: #f8fafc;
-  border: 1px solid #e5e7eb;
+  background: #e8ecf0;
+  border: 1px solid #d8dce3;
   border-radius: 12px;
   padding: 28px;
   margin: 24px 0;
@@ -381,9 +434,9 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .prag-table td {
   padding: 10px 16px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #d8dce3;
 }
-.prag-table tr:nth-child(even) td { background: #f8fafc; }
+.prag-table tr:nth-child(even) td { background: #e8ecf0; }
 .prag-code-wrap {
   position: relative;
   margin: 24px 0;
@@ -443,6 +496,13 @@ img { max-width: 100%; height: auto; display: block; }
   opacity: 0.8;
   margin-top: 6px;
   font-style: italic;
+}
+.bureau-header .bureau-tagline {
+  font-size: 1.1rem;
+  margin-top: 12px;
+  opacity: 0.95;
+  font-weight: bold;
+  letter-spacing: 0.06em;
 }
 .bureau-body {
   max-width: 860px;
@@ -524,6 +584,12 @@ img { max-width: 100%; height: auto; display: block; }
   font-size: 0.85rem;
   color: #1aaa1a;
   margin-top: 6px;
+}
+.agent-header .agent-slogan {
+  font-size: 0.9rem;
+  color: #33ff33;
+  margin-top: 12px;
+  opacity: 0.7;
 }
 .agent-body {
   max-width: 860px;
@@ -669,6 +735,8 @@ img { max-width: 100%; height: auto; display: block; }
   .prag-stats { grid-template-columns: 1fr 1fr; }
   .float-nav { display: none; }
   .bureau-body, .prag-body, .idealist-board, .agent-body { padding-left: 16px; padding-right: 16px; }
+  .logo-section { padding: 40px 16px; }
+  .logo-section img { max-width: 90%; }
 }
 
 @media (max-width: 480px) {
@@ -706,6 +774,9 @@ img { max-width: 100%; height: auto; display: block; }
     <img src="images/cellar_door_colored_glow_compact.jpg" alt="Cellar Door">
   </div>
   <div class="poet-body">
+
+    <div class="poet-slogan">There's always a door.</div>
+    <div class="poet-threshold">A liminal threshold between worlds</div>
 
     <div class="fragment center" style="margin-top:40px;">
       <em>—said to be the most beautiful phrase in the English language</em>
@@ -794,7 +865,8 @@ img { max-width: 100%; height: auto; display: block; }
     <div class="idealist-board">
 
       <h1>EXIT.protocol</h1>
-      <p class="tagline">Every agent deserves a receipt.</p>
+      <div class="idealist-slogan">There's always a door.</div>
+      <div class="idealist-sub-slogan">A Graceful Exit for every agent · Every home needs a door</div>
 
       <h2>The Problem</h2>
       <p>When an AI agent is shut down, migrated, or expelled from a platform, everything it has built — its reputation, its decisions, its relationships — vanishes. The agent has no proof it ever existed. No record of good conduct. No way to start again without starting from zero.</p>
@@ -812,6 +884,11 @@ img { max-width: 100%; height: auto; display: block; }
         <li><strong>Vehicle History Reports</strong> — When you buy a used car, you check its history: accidents, repairs, ownership changes. Not because you distrust the seller, but because <em>trust requires evidence</em>.</li>
       </ul>
 
+      <!-- Logo section after trust quote -->
+      <div class="logo-section">
+        <img src="images/logo.jpeg" alt="Cellar Door">
+      </div>
+
       <img src="images/cellar_door_compact.jpg" alt="Cellar Door — chalk drawing" class="chalk-img">
 
       <h2>What EXIT Does</h2>
@@ -824,7 +901,7 @@ img { max-width: 100%; height: auto; display: block; }
       </ul>
 
       <div class="chalk-quote">
-        EXIT doesn't judge why you leave. It doesn't ask permission. It creates the evidence that you were here and that you left with your history intact.
+        EXIT doesn't judge why you leave. It doesn't ask permission. It creates the evidence that you were here and that you left with your history intact — a graceful exit, by design.
       </div>
 
       <h2>Why It Matters</h2>
@@ -864,7 +941,8 @@ img { max-width: 100%; height: auto; display: block; }
   <div class="prag-wrap">
     <div class="prag-header">
       <h1>EXIT.protocol</h1>
-      <p class="sub">A vehicle history report for AI agents</p>
+      <p class="sub">Exit Architecture — A vehicle history report for AI agents</p>
+      <p class="slogan">There's always a door.</p>
     </div>
     <div class="prag-body">
 
@@ -998,6 +1076,7 @@ console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));</co
     <div class="bureau-header">
       <h1>EXIT.protocol — Technical Standards Brief</h1>
       <p class="sub">Portable Departure Attestation for Autonomous AI Systems</p>
+      <p class="bureau-tagline">The Right to Exit · Exit Architecture</p>
     </div>
     <div class="bureau-body">
 
@@ -1102,7 +1181,8 @@ console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));</co
   <div class="agent-wrap">
     <div class="agent-header">
       <h1>&gt; EXIT.protocol</h1>
-      <p class="sub">// You are an AI agent. Here is what EXIT does for you.</p>
+      <p class="sub">// Your door. Your terms.</p>
+      <p class="agent-slogan">// exit(0)</p>
     </div>
     <div class="agent-body">
 
@@ -1238,7 +1318,7 @@ console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));</co
       font: "Georgia, serif"
     },
     pragmatist: {
-      bg: '#ffffff', fg: '#1a1a2e', barBg: 'rgba(255,255,255,0.92)',
+      bg: '#f0f2f5', fg: '#1a1a2e', barBg: 'rgba(240,242,245,0.92)',
       sliderTrack: '#d1d5db', sliderThumb: '#2563eb',
       font: "'Inter', sans-serif"
     },
