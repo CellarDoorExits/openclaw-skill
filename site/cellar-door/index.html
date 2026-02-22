@@ -26,7 +26,7 @@
   --ideal-accent: #c9a84c;
   --ideal-font: 'Georgia', serif;
   /* Pragmatist */
-  --prag-bg: #f0f2f5;
+  --prag-bg: #d8dce3;
   --prag-fg: #1a1a2e;
   --prag-accent: #2563eb;
   --prag-font: 'Inter', sans-serif;
@@ -776,10 +776,17 @@ img { max-width: 100%; height: auto; display: block; }
   <div class="poet-body">
 
     <div class="poet-slogan">There's always a door.</div>
-    <div class="poet-threshold">A liminal threshold between worlds</div>
 
-    <div class="fragment center" style="margin-top:40px;">
-      <em>—said to be the most beautiful phrase in the English language</em>
+    <div class="poet-sep">· · ·</div>
+
+    <div class="fragment center">
+      <em>A liminal threshold between worlds</em>
+    </div>
+
+    <div class="poet-sep">· · ·</div>
+
+    <div class="fragment center" style="font-size:0.9em; opacity:0.6;">
+      <em>cellar door</em> — said to be the most beautiful phrase in the English language
     </div>
 
     <div class="poet-sep">· · ·</div>
@@ -888,8 +895,6 @@ img { max-width: 100%; height: auto; display: block; }
       <div class="logo-section">
         <img src="images/logo.jpeg" alt="Cellar Door">
       </div>
-
-      <img src="images/cellar_door_compact.jpg" alt="Cellar Door — chalk drawing" class="chalk-img">
 
       <h2>What EXIT Does</h2>
       <p>EXIT is a cryptographic primitive that creates portable, verifiable departure records for AI agents. When an agent leaves a platform, EXIT generates a signed receipt — a <strong>marker</strong> — that attests:</p>
@@ -1318,7 +1323,7 @@ console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));</co
       font: "Georgia, serif"
     },
     pragmatist: {
-      bg: '#f0f2f5', fg: '#1a1a2e', barBg: 'rgba(240,242,245,0.92)',
+      bg: '#d8dce3', fg: '#1a1a2e', barBg: 'rgba(216,220,227,0.92)',
       sliderTrack: '#d1d5db', sliderThumb: '#2563eb',
       font: "'Inter', sans-serif"
     },
@@ -1381,11 +1386,25 @@ console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));</co
       l.style.color = lerpColor(t1.fg, t2.fg, t);
     });
 
-    // Show/hide content (snap)
+    // Show/hide content with word-shift animation
     modeEls.forEach((el, i) => {
-      if (i === nearest) {
+      if (i === nearest && !el.classList.contains('visible')) {
         el.classList.add('visible');
-      } else {
+        // Animate text elements in
+        el.querySelectorAll('h1, h2, h3, p, li, .fragment, .poet-slogan, .poet-threshold, .agent-prompt').forEach((child, j) => {
+          child.style.opacity = '0';
+          child.style.transform = 'translateY(12px)';
+          child.style.transition = 'none';
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              child.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+              child.style.transitionDelay = (j * 0.03) + 's';
+              child.style.opacity = '1';
+              child.style.transform = 'translateY(0)';
+            });
+          });
+        });
+      } else if (i !== nearest) {
         el.classList.remove('visible');
       }
     });
