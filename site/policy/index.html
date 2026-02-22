@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXIT Protocol — Agent Transition Standards for Competitive AI Markets</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1a3a6b;--blue-dark:#0f2347;--blue-light:#2563eb;--blue-pale:#dbeafe;--red:#b91c1c;--red-light:#ef4444;--white:#ffffff;--gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;--gray-400:#94a3b8;--gray-600:#475569;--gray-800:#1e293b;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--serif:'Georgia','Times New Roman',serif;--mono:'SF Mono',Consolas,monospace}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--white);color:var(--gray-800);line-height:1.7;overflow-x:hidden}
+a{color:var(--blue-light);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Top bar */
+.topbar{background:var(--blue-dark);color:var(--white);font-size:.75rem;padding:.4rem 2rem;text-align:center;letter-spacing:.05em}
+
+/* Nav */
+nav{position:sticky;top:0;background:var(--white);border-bottom:3px solid var(--red);z-index:100;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+nav .inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.75rem 2rem}
+nav .logo{font-weight:700;font-size:1rem;color:var(--blue-dark)}
+nav .logo .bar{color:var(--red)}
+nav ul{list-style:none;display:flex;gap:1.5rem}
+nav ul a{color:var(--gray-600);font-size:.85rem;font-weight:500}
+nav ul a:hover{color:var(--blue-dark);text-decoration:none}
+@media(max-width:768px){nav ul{display:none}}
+
+section{padding:5rem 2rem}
+.container{max-width:960px;margin:0 auto}
+.label{font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;color:var(--red);font-weight:700;margin-bottom:.75rem}
+h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;color:var(--blue-dark);line-height:1.2;margin-bottom:1rem}
+h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;color:var(--blue-dark);margin-bottom:.75rem}
+h3{font-size:1.1rem;font-weight:700;color:var(--blue-dark);margin-bottom:.5rem}
+.subtitle{font-size:1.05rem;color:var(--gray-600);max-width:700px;line-height:1.8}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 100%);color:var(--white);padding:6rem 2rem 5rem}
+.hero .label{color:rgba(255,255,255,.6)}
+.hero h1{color:var(--white)}
+.hero .subtitle{color:rgba(255,255,255,.75)}
+.hero-meta{display:flex;gap:2rem;margin-top:2rem;flex-wrap:wrap;font-size:.85rem;color:rgba(255,255,255,.5)}
+.hero-meta span{display:flex;align-items:center;gap:.4rem}
+
+/* Alert box */
+.alert{background:var(--blue-pale);border-left:4px solid var(--blue-light);padding:1.25rem 1.5rem;border-radius:0 6px 6px 0;margin:2rem 0;font-size:.95rem;color:var(--blue-dark)}
+.alert strong{font-weight:700}
+
+/* Numbered sections */
+.numbered{counter-reset:section}
+.numbered h2::before{counter-increment:section;content:counter(section) ". ";color:var(--red)}
+
+/* Table */
+.data-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.9rem}
+.data-table th{background:var(--blue-dark);color:var(--white);padding:.6rem 1rem;text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.data-table td{padding:.6rem 1rem;border-bottom:1px solid var(--gray-200);vertical-align:top}
+.data-table tr:hover td{background:var(--gray-50)}
+.data-table code{font-family:var(--mono);font-size:.8rem;background:var(--gray-100);padding:.15rem .4rem;border-radius:3px}
+
+/* Two column */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem}
+@media(max-width:768px){.two-col{grid-template-columns:1fr}}
+.info-box{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:1.5rem}
+.info-box h3{font-size:1rem;margin-bottom:.5rem}
+.info-box p,.info-box li{font-size:.9rem;color:var(--gray-600)}
+.info-box ul{margin-top:.5rem;padding-left:1.25rem}
+.info-box li{margin-bottom:.25rem}
+
+/* Stack table */
+.stack-row{display:grid;grid-template-columns:120px 1fr 1fr;gap:1px;background:var(--gray-200);border:1px solid var(--gray-200);border-radius:6px;overflow:hidden;margin:1.5rem 0;font-size:.9rem}
+.stack-row>div{background:var(--white);padding:.65rem 1rem}
+.stack-row.header>div{background:var(--blue-dark);color:var(--white);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.stack-row .highlight{background:rgba(37,99,235,.04);font-weight:600}
+@media(max-width:600px){.stack-row{grid-template-columns:1fr;}.stack-row.header{display:none}}
+
+/* Compliance cards */
+.compliance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem;margin-top:2rem}
+.c-card{border:1px solid var(--gray-200);border-radius:8px;padding:1.5rem;border-top:3px solid var(--blue-light);transition:box-shadow .2s}
+.c-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.c-card h3{font-size:.95rem;margin-bottom:.5rem}
+.c-card p{font-size:.85rem;color:var(--gray-600)}
+
+/* Standards badges */
+.badges{display:flex;flex-wrap:wrap;gap:.75rem;margin:1.5rem 0}
+.badge{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border:1px solid var(--gray-200);border-radius:100px;font-size:.8rem;font-weight:600;color:var(--gray-600);background:var(--white)}
+.badge.active{border-color:var(--blue-light);color:var(--blue-light);background:rgba(37,99,235,.04)}
+
+/* Code */
+.code-block{background:var(--gray-800);color:#e2e8f0;border-radius:8px;padding:1.25rem 1.5rem;margin:1.5rem 0;font-family:var(--mono);font-size:.85rem;line-height:1.7;overflow-x:auto}
+.code-block .kw{color:#93c5fd}
+.code-block .str{color:#86efac}
+.code-block .cmt{color:#64748b}
+.code-block .fn{color:#fbbf24}
+.install-cmd{font-family:var(--mono);font-size:.9rem;background:var(--gray-800);color:#e2e8f0;padding:.75rem 1.25rem;border-radius:6px;display:inline-block;margin:1rem 0}
+
+/* CTA section */
+.cta-section{background:var(--blue-dark);color:var(--white);text-align:center;padding:5rem 2rem}
+.cta-section h2{color:var(--white)}
+.cta-section h2::before{display:none}
+.cta-section p{color:rgba(255,255,255,.7);max-width:600px;margin:1rem auto}
+.btn{display:inline-block;padding:.75rem 2rem;border-radius:6px;font-weight:600;font-size:.9rem;transition:all .2s;margin:.5rem}
+.btn-white{background:var(--white);color:var(--blue-dark)}
+.btn-white:hover{background:var(--gray-100);text-decoration:none}
+.btn-outline{border:1px solid rgba(255,255,255,.3);color:var(--white)}
+.btn-outline:hover{border-color:var(--white);text-decoration:none}
+
+/* Recs */
+.rec{padding:1.25rem 0;border-bottom:1px solid var(--gray-200)}
+.rec-num{display:inline-block;background:var(--red);color:var(--white);font-size:.7rem;font-weight:700;padding:.2rem .6rem;border-radius:3px;margin-bottom:.5rem}
+
+/* Alt bg */
+.alt{background:var(--gray-50)}
+
+footer{border-top:1px solid var(--gray-200);padding:2.5rem 2rem;text-align:center;font-size:.8rem;color:var(--gray-400)}
+</style>
+</head>
+<body>
+
+<div class="topbar">Response to NIST AI Agent Standards Initiative · Request for Information · February 2026</div>
+
+<nav>
+  <div class="inner">
+    <div class="logo">EXIT <span class="bar">|</span> Agent Transition Standard</div>
+    <ul>
+      <li><a href="#problem">The Problem</a></li>
+      <li><a href="#standard">Proposed Standard</a></li>
+      <li><a href="#technical">Technical</a></li>
+      <li><a href="#compliance">Compliance</a></li>
+      <li><a href="#alignment">Standards</a></li>
+      <li><a href="https://github.com/HOLOS-git/cellar-door-exit">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="label">Policy Brief</div>
+    <h1>Agent Transition Standards for Competitive AI Markets</h1>
+    <p class="subtitle">The AI agent protocol stack addresses communication (A2A), tool access (MCP), and payments (AP2). No protocol addresses what happens when an agent transitions between platforms. EXIT fills this gap with a minimal, open, cryptographically verifiable format for portable agent departure records.</p>
+    <div class="hero-meta">
+      <span>📄 Cellar Door Contributors</span>
+      <span>📋 Apache License 2.0</span>
+      <span>🏛 Submitted to NIST CAISI</span>
+    </div>
+  </div>
+</section>
+
+<section id="summary">
+  <div class="container">
+    <div class="label">Executive Summary</div>
+    <h2>The Documentation Gap</h2>
+    <p class="subtitle">Without agent transition documentation, enterprises cannot perform due diligence, insurers cannot underwrite operations, regulators cannot audit transitions, and markets cannot price risk. EXIT provides the missing documentation layer.</p>
+    <div class="alert">
+      <strong>Key finding:</strong> Agent transitions are already happening — without documentation, without audit trails, without standards. EXIT doesn't create agent mobility. Agent mobility already exists. EXIT makes it <strong>visible, auditable, and governable</strong>.
+    </div>
+  </div>
+</section>
+
+<section id="problem" class="alt numbered">
+  <div class="container">
+    <h2>The Problem: Undocumented Agent Transitions</h2>
+    <p class="subtitle">This is the equivalent of a used car market with no vehicle history reports. The transactions happen — but nobody can verify what they're getting.</p>
+    <div class="two-col" style="margin-top:2rem">
+      <div class="info-box">
+        <h3>Economic Consequences</h3>
+        <ul>
+          <li><strong>Market friction:</strong> Receiving platforms cannot assess incoming agents</li>
+          <li><strong>Adverse selection:</strong> Classic "market for lemons" (Akerlof, 1970)</li>
+          <li><strong>Risk mispricing:</strong> Insurers cannot price agent-related risk</li>
+          <li><strong>Lock-in inefficiency:</strong> Switching costs unrelated to quality</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h3>Compliance Exposure</h3>
+        <ul>
+          <li><strong>SOC 2 / ISO 27001:</strong> Undocumented migrations create audit gaps</li>
+          <li><strong>Financial regulation:</strong> Obligations follow agent history</li>
+          <li><strong>EU AI Act:</strong> Documentation requirements extend to lifecycle events</li>
+          <li><strong>Insurance:</strong> Underwriters need lifecycle data that doesn't exist</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="standard" class="numbered">
+  <div class="container">
+    <h2>Proposed Standard: The EXIT Protocol</h2>
+    <p class="subtitle">A minimal format for portable, cryptographically signed agent departure records. ~300–500 bytes. JSON-LD. Ed25519 signatures. Offline-verifiable.</p>
+
+    <h3 style="margin-top:2rem">Design Properties</h3>
+    <div class="compliance-grid">
+      <div class="c-card"><h3>Always Available</h3><p>Transition records producible even without platform cooperation. No denial-of-documentation attacks.</p></div>
+      <div class="c-card"><h3>Minimal Core</h3><p>Seven mandatory fields. All extensions optional. Minimal integration cost and attack surface.</p></div>
+      <div class="c-card"><h3>Cryptographically Verifiable</h3><p>Ed25519 signatures. Offline verification. No dependency on external services.</p></div>
+      <div class="c-card"><h3>Non-Custodial</h3><p>No central registry. No single point of failure. No custodian liability exposure.</p></div>
+      <div class="c-card"><h3>Standards-Aligned</h3><p>JSON-LD, W3C DIDs, W3C Verifiable Credentials, KERI-compatible key management.</p></div>
+      <div class="c-card"><h3>GDPR-Compatible</h3><p>Pseudonymous identifiers. Data minimization. Functional erasure. Non-custodial architecture.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="technical" class="alt numbered">
+  <div class="container">
+    <h2>Technical Overview</h2>
+    <h3>Core Schema</h3>
+    <table class="data-table">
+      <thead><tr><th>Field</th><th>Purpose</th><th>Compliance Value</th></tr></thead>
+      <tbody>
+        <tr><td><code>@context</code></td><td>JSON-LD semantic context</td><td>Interoperability</td></tr>
+        <tr><td><code>id</code></td><td>Content-addressed hash URI</td><td>Tamper evidence</td></tr>
+        <tr><td><code>subject</code></td><td>DID of transitioning agent</td><td>Identity continuity</td></tr>
+        <tr><td><code>origin</code></td><td>URI of departing platform</td><td>Audit trail</td></tr>
+        <tr><td><code>timestamp</code></td><td>UTC departure time</td><td>Regulatory timeline</td></tr>
+        <tr><td><code>exitType</code></td><td>voluntary / forced / emergency / keyCompromise</td><td>Risk classification</td></tr>
+        <tr><td><code>status</code></td><td>good_standing / disputed / unverified</td><td>Liability indicator</td></tr>
+        <tr><td><code>selfAttested</code></td><td>Is status self-reported?</td><td>Disclosure transparency</td></tr>
+        <tr><td><code>proof</code></td><td>Ed25519 cryptographic signature</td><td>Verification</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:2.5rem">Extension Modules</h3>
+    <table class="data-table">
+      <thead><tr><th>Module</th><th>Name</th><th>Use Case</th></tr></thead>
+      <tbody>
+        <tr><td><code>A</code></td><td>Lineage</td><td>Cryptographic identity continuity across migrations</td></tr>
+        <tr><td><code>B</code></td><td>State Snapshot</td><td>Hash-referenced state at transition time</td></tr>
+        <tr><td><code>C</code></td><td>Dispute Bundle</td><td>Bi-lateral documentation, challenge windows</td></tr>
+        <tr><td><code>D</code></td><td>Economic</td><td>Asset and obligation references</td></tr>
+        <tr><td><code>E</code></td><td>Metadata</td><td>Human-readable context and tags</td></tr>
+        <tr><td><code>F</code></td><td>Cross-Domain</td><td>External registry and on-chain anchoring</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:2.5rem">Transition Paths</h3>
+    <table class="data-table">
+      <thead><tr><th>Path</th><th>States</th><th>Scenario</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cooperative</strong></td><td>ALIVE → INTENT → SNAPSHOT → OPEN → FINAL → DEPARTED</td><td>Planned vendor migrations</td></tr>
+        <tr><td><strong>Unilateral</strong></td><td>ALIVE → INTENT → SNAPSHOT → FINAL → DEPARTED</td><td>Platform failures, vendor disputes</td></tr>
+        <tr><td><strong>Emergency</strong></td><td>ALIVE → FINAL → DEPARTED</td><td>Key compromise, security incidents</td></tr>
+      </tbody>
+    </table>
+
+    <div class="alert" style="margin-top:2rem"><strong>Design invariant:</strong> Disputes are documented but never block transitions. A platform can record its objection. It cannot prevent an operator from documenting a departure.</div>
+  </div>
+</section>
+
+<section id="stack" class="numbered">
+  <div class="container">
+    <h2>Protocol Stack Integration</h2>
+    <p class="subtitle">EXIT fills a specific, unaddressed gap in the agent protocol stack.</p>
+    <div class="stack-row header"><div>Protocol</div><div>Function</div><div>Lifecycle Phase</div></div>
+    <div class="stack-row"><div>MCP</div><div>Tool access</div><div>Operation</div></div>
+    <div class="stack-row"><div>A2A</div><div>Agent communication</div><div>Operation</div></div>
+    <div class="stack-row"><div>AP2</div><div>Payment authorization</div><div>Operation</div></div>
+    <div class="stack-row"><div>Entra / SailPoint</div><div>Enterprise governance</div><div>Operation</div></div>
+    <div class="stack-row"><div class="highlight">EXIT</div><div class="highlight">Transition documentation</div><div class="highlight">Lifecycle boundary</div></div>
+  </div>
+</section>
+
+<section id="compliance" class="alt numbered">
+  <div class="container">
+    <h2>Compliance Framework</h2>
+    <div class="compliance-grid">
+      <div class="c-card"><h3>SOC 2 / ISO 27001</h3><p>Auditable lifecycle records for every agent transition. Asset lifecycle management with continuous documentation.</p></div>
+      <div class="c-card"><h3>Insurance Underwriting</h3><p>EXIT markers are to AI insurance what claims histories are to auto insurance — the foundational data for risk assessment.</p></div>
+      <div class="c-card"><h3>EU AI Act</h3><p>Documentation requirements for AI systems extend to lifecycle events. Standardized transition records ensure compliance.</p></div>
+      <div class="c-card"><h3>Financial Regulation</h3><p>Agents executing transactions create regulatory obligations that follow agent history. EXIT provides the audit trail.</p></div>
+      <div class="c-card"><h3>Procurement</h3><p>Due diligence documentation for agent deployment. Verifiable operational histories for informed decisions.</p></div>
+      <div class="c-card"><h3>Data Protection</h3><p>~300 bytes. No agent weights or sensitive data. Pseudonymous DIDs. GDPR-compatible by design.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="alignment" class="numbered">
+  <div class="container">
+    <h2>Standards Alignment</h2>
+    <div class="badges">
+      <span class="badge active">W3C DID v1.0</span>
+      <span class="badge active">W3C Verifiable Credentials v2.0</span>
+      <span class="badge active">JSON-LD</span>
+      <span class="badge active">Ed25519</span>
+      <span class="badge active">KERI</span>
+      <span class="badge">NIST AI Agent Standards</span>
+    </div>
+    <div class="two-col">
+      <div class="info-box">
+        <h3>DID Methods Supported</h3>
+        <ul>
+          <li><code>did:key</code> — Prototyping, emergency scenarios</li>
+          <li><code>did:keri</code> — Production (pre-rotation key management)</li>
+          <li><code>did:web</code> — Organization-backed agents</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h3>VC Integration</h3>
+        <p>EXIT markers can be wrapped in W3C Verifiable Credentials for compatibility with any VC ecosystem. JSON-LD context provides semantic interoperability across linked data systems.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="start" class="alt">
+  <div class="container">
+    <div class="label">Get Started</div>
+    <h2 style="margin-bottom:.75rem">Reference Implementation</h2>
+    <p class="subtitle">TypeScript reference implementation. Apache 2.0. No vendor lock-in.</p>
+    <div class="install-cmd">$ npm install cellar-door-exit</div>
+    <div class="code-block">
+<span class="kw">import</span> { <span class="fn">quickExit</span>, <span class="fn">quickVerify</span>, <span class="fn">toJSON</span> } <span class="kw">from</span> <span class="str">"cellar-door-exit"</span>;
+
+<span class="cmt">// Create a signed departure record</span>
+<span class="kw">const</span> { marker } = <span class="fn">quickExit</span>(<span class="str">"did:web:platform.example"</span>);
+console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));
+
+<span class="cmt">// Verify offline — no API dependency</span>
+<span class="kw">const</span> result = <span class="fn">quickVerify</span>(jsonString);
+console.<span class="fn">log</span>(result.valid); <span class="cmt">// true</span>
+    </div>
+  </div>
+</section>
+
+<section id="recommendations" class="numbered">
+  <div class="container">
+    <h2>Recommendations for NIST</h2>
+    <div class="rec">
+      <div class="rec-num">6.1</div>
+      <h3>Include Agent Lifecycle Transitions in the Standards Framework</h3>
+      <p class="subtitle" style="font-size:.95rem">Agent transitions are equally critical lifecycle events requiring standardized documentation. Portable agent identity, verifiable transition records, and cryptographic continuity proofs should be within scope.</p>
+    </div>
+    <div class="rec">
+      <div class="rec-num">6.2</div>
+      <h3>Establish Non-Blocking Transition Documentation as a Governance Principle</h3>
+      <p class="subtitle" style="font-size:.95rem">Operators must always retain the ability to produce a verifiable transition record regardless of platform cooperation. This prevents denial-of-documentation attacks and lock-in.</p>
+    </div>
+    <div class="rec">
+      <div class="rec-num">6.3</div>
+      <h3>Address the Information Asymmetry Problem</h3>
+      <p class="subtitle" style="font-size:.95rem">Multi-party attestation, graduated trust models, structured dispute documentation, and economic mechanisms for honest reporting. The Akerlof "market for lemons" problem applies directly to agent transitions.</p>
+    </div>
+    <div class="rec">
+      <div class="rec-num">6.4</div>
+      <h3>Build on Existing W3C Standards</h3>
+      <p class="subtitle" style="font-size:.95rem">Adopt W3C DIDs for agent identification. Include transition credentials in verifiable agent credentials scope. Leverage existing VC infrastructure.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <h2>Call for Comment</h2>
+    <p>The EXIT specification is open for public review. We welcome engagement from standards bodies, enterprises, platform operators, insurers, and regulators.</p>
+    <p style="margin-bottom:2rem">Apache 2.0. No vendor lock-in. Designed as a public good.</p>
+    <a href="https://github.com/HOLOS-git/cellar-door-exit" class="btn btn-white">View Specification on GitHub</a>
+    <a href="#start" class="btn btn-outline">Reference Implementation</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>EXIT Protocol — Cellar Door Project — Submitted to NIST AI Agent Standards Initiative</p>
+    <p style="margin-top:.25rem">Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a> · <a href="https://github.com/HOLOS-git/cellar-door-exit">GitHub</a></p>
+    <p style="margin-top:.5rem;font-size:.75rem;color:var(--gray-400)">References: Akerlof (1970), Hirschman (1970), W3C DID v1.0, W3C VC v2.0, KERI (Smith, 2021)</p>
+  </div>
+</footer>
+
+</body>
+</html>
