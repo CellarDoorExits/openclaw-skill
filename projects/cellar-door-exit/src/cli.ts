@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 /**
  * cellar-door-exit — CLI
+ *
+ * Verifiable EXIT markers for agents. Create, sign, verify, inspect,
+ * anchor, store, list, and redact EXIT markers from the command line.
  */
 
-import { Command } from "commander";
-import { readFileSync, writeFileSync } from "node:fs";
+import { Command, InvalidArgumentError } from "commander";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import {
   createMarker,
   signMarker,
@@ -25,38 +28,299 @@ import {
   type ModuleE,
 } from "./index.js";
 
+// ─── Exit Codes ──────────────────────────────────────────────────────────────
+
+const EXIT_SUCCESS = 0;
+const EXIT_VALIDATION_ERROR = 1;
+const EXIT_FILE_ERROR = 2;
+const EXIT_PARSE_ERROR = 3;
+const EXIT_CRYPTO_ERROR = 4;
+const EXIT_STORAGE_ERROR = 5;
+const EXIT_ARG_ERROR = 6;
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function toHex(bytes: Uint8Array): string {
+  return Array.from(bytes)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function fromHexOrBase64(s: string): Uint8Array {
+  if (/^[0-9a-fA-F]+$/.test(s)) {
+    const bytes = new Uint8Array(s.length / 2);
+    for (let i = 0; i < s.length; i += 2) bytes[i / 2] = parseInt(s.slice(i, i + 2), 16);
+    return bytes;
+  }
+  try {
+    return Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  } catch {
+    throw new Error(`Key data is neither valid hex nor base64. Got: "${s.slice(0, 20)}..."`);
+  }
+}
+
+function parseExitType(s: string): ExitType {
+  const map: Record<string, ExitType> = {
+    voluntary: ExitType.Voluntary,
+    forced: ExitType.Forced,
+    emergency: ExitType.Emergency,
+  };
+  if (!map[s]) {
+    throw new InvalidArgumentError(
+      `Invalid exit type "${s}". Valid types: voluntary, forced, emergency`
+    );
+  }
+  return map[s];
+}
+
+function parseExitStatus(s: string): ExitStatus {
+  const map: Record<string, ExitStatus> = {
+    good_standing: ExitStatus.GoodStanding,
+    disputed: ExitStatus.Disputed,
+    unverified: ExitStatus.Unverified,
+  };
+  if (!map[s]) {
+    throw new InvalidArgumentError(
+      `Invalid status "${s}". Valid statuses: good_standing, disputed, unverified`
+    );
+  }
+  return map[s];
+}
+
+/**
+ * Read and parse a JSON marker file, with user-friendly errors.
+ */
+function readMarkerFile(file: string, context: string): ExitMarker {
+  let raw: string;
+  try {
+    if (!existsSync(file)) {
+      error(
+        `File not found: ${file}`,
+        `Attempted to ${context}, but the file does not exist.`,
+        [
+          `Check that the path is correct`,
+          `Use an absolute path or a path relative to the current directory`,
+          `Run 'exit list' to see stored markers`,
+        ],
+        EXIT_FILE_ERROR
+      );
+    }
+    raw = readFileSync(file, "utf-8");
+  } catch (e: any) {
+    if (e.exitCode) throw e; // re-throw our own errors
+    error(
+      `Cannot read file: ${file}`,
+      `Attempted to ${context}, but the file could not be read.`,
+      [
+        `Check file permissions (current user needs read access)`,
+        `Ensure the file is not locked by another process`,
+        e.message ? `System error: ${e.message}` : null,
+      ].filter(Boolean) as string[],
+      EXIT_FILE_ERROR
+    );
+  }
+
+  try {
+    return JSON.parse(raw!) as ExitMarker;
+  } catch (e: any) {
+    error(
+      `Invalid JSON in file: ${file}`,
+      `Attempted to ${context}, but the file does not contain valid JSON.`,
+      [
+        `Ensure the file contains a valid EXIT marker in JSON format`,
+        `Check for trailing commas, unquoted keys, or truncated content`,
+        `You can create a new marker with: exit create --origin <uri>`,
+        e.message ? `Parse error: ${e.message}` : null,
+      ].filter(Boolean) as string[],
+      EXIT_PARSE_ERROR
+    );
+  }
+
+  // Unreachable, but TypeScript needs it
+  return null as never;
+}
+
+/**
+ * Read a private key file with user-friendly errors.
+ */
+function readKeyFile(keyPath: string): Uint8Array {
+  let raw: string;
+  try {
+    if (!existsSync(keyPath)) {
+      error(
+        `Key file not found: ${keyPath}`,
+        `Attempted to read a private key, but the file does not exist.`,
+        [
+          `Check the path to your key file`,
+          `Generate a new keypair with: exit keygen`,
+          `Save the privateKey field to a file and reference it with --key`,
+        ],
+        EXIT_FILE_ERROR
+      );
+    }
+    raw = readFileSync(keyPath, "utf-8").trim();
+  } catch (e: any) {
+    if (e.exitCode) throw e;
+    error(
+      `Cannot read key file: ${keyPath}`,
+      `The key file exists but could not be read.`,
+      [
+        `Check file permissions`,
+        e.message ? `System error: ${e.message}` : null,
+      ].filter(Boolean) as string[],
+      EXIT_FILE_ERROR
+    );
+    return null as never;
+  }
+
+  try {
+    return fromHexOrBase64(raw);
+  } catch (e: any) {
+    error(
+      `Invalid key format in: ${keyPath}`,
+      `The key file was read but its contents are not valid hex or base64.`,
+      [
+        `Key files should contain a single line of hex (64 chars for Ed25519) or base64`,
+        `Generate a valid keypair with: exit keygen`,
+        e.message ? `Detail: ${e.message}` : null,
+      ].filter(Boolean) as string[],
+      EXIT_CRYPTO_ERROR
+    );
+    return null as never;
+  }
+}
+
+/**
+ * Print a structured error message and exit.
+ */
+function error(title: string, context: string, suggestions: string[], exitCode: number): never {
+  console.error();
+  console.error(`  ✗ Error: ${title}`);
+  console.error();
+  console.error(`  ${context}`);
+  console.error();
+  if (suggestions.length > 0) {
+    console.error(`  Suggestions:`);
+    for (const s of suggestions) {
+      console.error(`    → ${s}`);
+    }
+    console.error();
+  }
+  const err = new Error(title) as Error & { exitCode: number };
+  err.exitCode = exitCode;
+  throw err;
+}
+
+/**
+ * Wrap a command action with top-level error handling.
+ */
+function withErrorHandling(fn: (...args: any[]) => void): (...args: any[]) => void {
+  return (...args: any[]) => {
+    try {
+      fn(...args);
+    } catch (e: any) {
+      if (e.exitCode !== undefined) {
+        process.exit(e.exitCode);
+      }
+      // Unexpected errors
+      console.error();
+      console.error(`  ✗ Unexpected error: ${e.message || e}`);
+      console.error();
+      console.error(`  This may be a bug in cellar-door-exit.`);
+      console.error(`  Please report it with the full error output.`);
+      if (e.stack) {
+        console.error();
+        console.error(`  Stack trace:`);
+        console.error(`  ${e.stack}`);
+      }
+      console.error();
+      process.exit(1);
+    }
+  };
+}
+
+// ─── Program ─────────────────────────────────────────────────────────────────
+
 const program = new Command();
 
 program
   .name("exit")
-  .description("cellar-door-exit — Verifiable EXIT markers for agents")
-  .version("0.1.0");
+  .description(
+    "cellar-door-exit — Verifiable EXIT markers for agents.\n\n" +
+    "Create, sign, verify, inspect, anchor, store, and manage EXIT markers\n" +
+    "that provide authenticated declarations of departure with continuity\n" +
+    "preservation across contexts."
+  )
+  .version("0.1.0")
+  .addHelpText("after", `
+Examples:
+  $ exit keygen                                    Generate a new Ed25519 keypair
+  $ exit create --origin example.com --sign        Create and sign a marker
+  $ exit verify marker.json                        Verify a marker file
+  $ exit inspect marker.json                       Human-readable marker display
+  $ exit store marker.json                         Save marker to local storage
+  $ exit list                                      List stored markers
+  $ exit anchor marker.json                        Compute anchor hash
+  $ exit redact marker.json --fields subject       Redact fields from a marker
+
+Documentation: https://cellar-door.org/exit/v1
+`);
 
 // ─── exit create ─────────────────────────────────────────────────────────────
 
 program
   .command("create")
-  .description("Create an EXIT marker")
-  .requiredOption("--origin <uri>", "Origin URI (what is being exited)")
-  .option("--subject <did>", "Subject DID (who is exiting; generates keypair if omitted)")
-  .option("--type <type>", "Exit type: voluntary, forced, emergency", "voluntary")
-  .option("--status <status>", "Standing: good_standing, disputed, unverified", "good_standing")
-  .option("--reason <text>", "Reason for departure")
-  .option("--sign", "Sign the marker")
-  .option("--key <path>", "Private key file (hex or base64)")
-  .action((opts) => {
+  .description("Create a new EXIT marker.")
+  .requiredOption("--origin <uri>", "Origin URI — the system/context being exited")
+  .option("--subject <did>", "Subject DID (who is exiting). Generates a keypair if omitted")
+  .option("--type <type>", "Exit type: voluntary, forced, emergency (default: voluntary)", "voluntary")
+  .option("--status <status>", "Standing: good_standing, disputed, unverified (default: good_standing)", "good_standing")
+  .option("--reason <text>", "Human-readable reason for departure")
+  .option("--sign", "Sign the marker (uses --key if provided, otherwise generates a keypair)")
+  .option("--key <path>", "Path to private key file (hex or base64 encoded)")
+  .addHelpText("after", `
+Examples:
+  $ exit create --origin example.com
+    Create an unsigned marker with a generated DID
+
+  $ exit create --origin example.com --sign
+    Create and sign a marker with a generated keypair
+
+  $ exit create --origin example.com --sign --key ./my.key --subject did:key:z6Mk...
+    Create and sign with an existing key
+
+  $ exit create --origin example.com --type emergency --reason "System shutting down"
+    Create an emergency exit marker with a reason
+
+  $ exit create --origin example.com --status disputed --reason "Banned unfairly"
+    Create a marker with disputed standing
+`)
+  .action(withErrorHandling((opts) => {
     let privateKey: Uint8Array | undefined;
     let publicKey: Uint8Array | undefined;
     let subject = opts.subject;
 
     // Resolve keys
     if (opts.key) {
-      const raw = readFileSync(opts.key, "utf-8").trim();
-      privateKey = fromHexOrBase64(raw);
-      // Derive public key — ed25519 private keys are 32 bytes, pubkey via noble
-      const ed = require("@noble/ed25519") as typeof import("@noble/ed25519");
-      publicKey = ed.getPublicKey(privateKey);
-      if (!subject) subject = didFromPublicKey(publicKey);
+      privateKey = readKeyFile(opts.key);
+
+      try {
+        const ed = require("@noble/ed25519") as typeof import("@noble/ed25519");
+        publicKey = ed.getPublicKey(privateKey);
+      } catch (e: any) {
+        error(
+          `Failed to derive public key from private key`,
+          `The private key in "${opts.key}" could not be used to derive a public key.`,
+          [
+            `Ensure the key file contains a valid 32-byte Ed25519 private key`,
+            `Generate a new keypair with: exit keygen`,
+            e.message ? `Crypto error: ${e.message}` : null,
+          ].filter(Boolean) as string[],
+          EXIT_CRYPTO_ERROR
+        );
+      }
+
+      if (!subject) subject = didFromPublicKey(publicKey!);
     } else if (opts.sign || !subject) {
       const kp = generateKeyPair();
       privateKey = kp.privateKey;
@@ -77,7 +341,22 @@ program
     const exitType = parseExitType(opts.type);
     const status = parseExitStatus(opts.status);
 
-    let marker = createMarker({ subject, origin: opts.origin, exitType, status });
+    let marker: ExitMarker;
+    try {
+      marker = createMarker({ subject, origin: opts.origin, exitType, status });
+    } catch (e: any) {
+      error(
+        `Failed to create EXIT marker`,
+        `The marker could not be created with the provided parameters.`,
+        [
+          `Check that --origin is a valid URI`,
+          `Check that --subject (if provided) is a valid DID`,
+          e.message ? `Detail: ${e.message}` : null,
+        ].filter(Boolean) as string[],
+        EXIT_VALIDATION_ERROR
+      );
+      return;
+    }
 
     if (opts.reason) {
       const meta: ModuleE = { reason: opts.reason };
@@ -85,20 +364,63 @@ program
     }
 
     if (opts.sign && privateKey && publicKey) {
-      marker = signMarker(marker, privateKey, publicKey);
+      try {
+        marker = signMarker(marker, privateKey, publicKey);
+      } catch (e: any) {
+        error(
+          `Failed to sign EXIT marker`,
+          `The marker was created but signing failed.`,
+          [
+            `Ensure the private key is a valid 32-byte Ed25519 key`,
+            `If using --key, verify the file contains the correct key`,
+            e.message ? `Signing error: ${e.message}` : null,
+          ].filter(Boolean) as string[],
+          EXIT_CRYPTO_ERROR
+        );
+      }
     }
 
-    process.stdout.write(JSON.stringify(marker, null, 2) + "\n");
-  });
+    process.stdout.write(JSON.stringify(marker!, null, 2) + "\n");
+  }));
 
 // ─── exit verify ─────────────────────────────────────────────────────────────
 
 program
   .command("verify <file>")
-  .description("Verify an EXIT marker from a JSON file")
-  .action((file) => {
-    const marker = JSON.parse(readFileSync(file, "utf-8")) as ExitMarker;
-    const result = verifyMarker(marker);
+  .description("Verify an EXIT marker from a JSON file.")
+  .addHelpText("after", `
+Examples:
+  $ exit verify marker.json
+    Verify a marker and display the result
+
+  $ exit verify ./exit-markers/abc123.json
+    Verify a specific stored marker
+
+Exit codes:
+  0  Marker is valid
+  1  Marker is invalid (verification failed)
+  2  File not found or unreadable
+  3  File is not valid JSON
+`)
+  .action(withErrorHandling((file) => {
+    const marker = readMarkerFile(file, "verify the EXIT marker");
+    let result: { valid: boolean; errors: string[] };
+
+    try {
+      result = verifyMarker(marker);
+    } catch (e: any) {
+      error(
+        `Verification error`,
+        `An error occurred while verifying the marker in "${file}".`,
+        [
+          `The file may contain a malformed or incomplete marker`,
+          `Ensure all required fields are present (id, subject, origin, timestamp, exitType, status, proof)`,
+          e.message ? `Detail: ${e.message}` : null,
+        ].filter(Boolean) as string[],
+        EXIT_VALIDATION_ERROR
+      );
+      return;
+    }
 
     if (result.valid) {
       console.log("✓ VALID");
@@ -108,20 +430,34 @@ program
       console.log(`  Status:  ${marker.status}`);
     } else {
       console.log("✗ INVALID");
+      console.log();
       for (const err of result.errors) {
-        console.log(`  - ${err}`);
+        console.log(`  ✗ ${err}`);
       }
-      process.exit(1);
+      console.log();
+      console.log("  Suggestions:");
+      console.log("    → Ensure the marker was signed with the correct key");
+      console.log("    → Check that no fields were modified after signing");
+      console.log("    → Re-create and re-sign the marker if needed: exit create --origin <uri> --sign");
+      process.exit(EXIT_VALIDATION_ERROR);
     }
-  });
+  }));
 
 // ─── exit inspect ────────────────────────────────────────────────────────────
 
 program
   .command("inspect <file>")
-  .description("Human-readable display of an EXIT marker")
-  .action((file) => {
-    const marker = JSON.parse(readFileSync(file, "utf-8")) as ExitMarker;
+  .description("Human-readable display of an EXIT marker.")
+  .addHelpText("after", `
+Examples:
+  $ exit inspect marker.json
+    Display a formatted view of the marker with all modules
+
+  $ exit inspect ./exit-markers/abc123.json
+    Inspect a specific stored marker
+`)
+  .action(withErrorHandling((file) => {
+    const marker = readMarkerFile(file, "inspect the EXIT marker");
 
     console.log("╔══════════════════════════════════════════════════════════╗");
     console.log("║                    EXIT MARKER                          ║");
@@ -195,19 +531,40 @@ program
     }
 
     // Verification
-    const result = verifyMarker(marker);
+    let result: { valid: boolean; errors: string[] };
+    try {
+      result = verifyMarker(marker);
+    } catch {
+      console.log("  Verification: ⚠ Could not verify (marker may be malformed)");
+      return;
+    }
     console.log(`  Verification: ${result.valid ? "✓ VALID" : "✗ INVALID"}`);
     if (!result.valid) {
       for (const err of result.errors) console.log(`    - ${err}`);
     }
-  });
+  }));
 
 // ─── exit keygen ─────────────────────────────────────────────────────────────
 
 program
   .command("keygen")
-  .description("Generate a new Ed25519 keypair")
-  .action(() => {
+  .description("Generate a new Ed25519 keypair for signing EXIT markers.")
+  .addHelpText("after", `
+Examples:
+  $ exit keygen
+    Print a new keypair as JSON (did, publicKey, privateKey)
+
+  $ exit keygen > keypair.json
+    Save the keypair to a file
+
+  $ exit keygen | jq -r .privateKey > my.key
+    Extract just the private key for use with --key
+
+Security:
+  The private key is printed to stdout. Store it securely and never share it.
+  Anyone with the private key can sign EXIT markers as your identity.
+`)
+  .action(withErrorHandling(() => {
     const kp = generateKeyPair();
     const did = didFromPublicKey(kp.publicKey);
     console.log(
@@ -221,94 +578,180 @@ program
         2
       )
     );
-  });
+  }));
 
 // ─── exit anchor ─────────────────────────────────────────────────────────────
 
 program
   .command("anchor <file>")
-  .description("Compute and display anchor hash for a marker")
-  .action((file) => {
-    const marker = JSON.parse(readFileSync(file, "utf-8")) as ExitMarker;
-    const record = createAnchorRecord(marker);
-    console.log(JSON.stringify(record, null, 2));
-  });
+  .description("Compute and display the anchor hash for a marker (for cross-domain anchoring).")
+  .addHelpText("after", `
+Examples:
+  $ exit anchor marker.json
+    Compute the anchor record (hash + metadata) for on-chain anchoring
+
+  $ exit anchor marker.json > anchor.json
+    Save the anchor record for submission to a blockchain or registry
+`)
+  .action(withErrorHandling((file) => {
+    const marker = readMarkerFile(file, "compute the anchor hash");
+    try {
+      const record = createAnchorRecord(marker);
+      console.log(JSON.stringify(record, null, 2));
+    } catch (e: any) {
+      error(
+        `Failed to compute anchor hash`,
+        `The anchor hash could not be computed for the marker in "${file}".`,
+        [
+          `Ensure the marker is complete and well-formed`,
+          `Try verifying the marker first: exit verify ${file}`,
+          e.message ? `Detail: ${e.message}` : null,
+        ].filter(Boolean) as string[],
+        EXIT_VALIDATION_ERROR
+      );
+    }
+  }));
 
 // ─── exit store ──────────────────────────────────────────────────────────────
 
 program
   .command("store <file>")
-  .description("Save a marker to local storage")
-  .option("--dir <path>", "Storage directory", "./exit-markers")
-  .action((file, opts) => {
-    const marker = JSON.parse(readFileSync(file, "utf-8")) as ExitMarker;
-    const path = storageSave(marker, opts.dir);
-    console.log(`Saved to ${path}`);
-  });
+  .description("Save a marker to local file-based storage.")
+  .option("--dir <path>", "Storage directory (default: ./exit-markers)", "./exit-markers")
+  .addHelpText("after", `
+Examples:
+  $ exit store marker.json
+    Save to ./exit-markers/
+
+  $ exit store marker.json --dir /var/lib/exit-markers
+    Save to a custom directory
+
+  $ exit list --dir /var/lib/exit-markers
+    List markers in the custom directory
+`)
+  .action(withErrorHandling((file, opts) => {
+    const marker = readMarkerFile(file, "store the EXIT marker");
+    try {
+      const path = storageSave(marker, opts.dir);
+      console.log(`Saved to ${path}`);
+    } catch (e: any) {
+      error(
+        `Failed to save marker`,
+        `The marker from "${file}" could not be saved to "${opts.dir}".`,
+        [
+          `Check that you have write permissions to the directory`,
+          `Ensure the directory path is valid`,
+          `Try creating the directory manually: mkdir -p ${opts.dir}`,
+          e.message ? `Storage error: ${e.message}` : null,
+        ].filter(Boolean) as string[],
+        EXIT_STORAGE_ERROR
+      );
+    }
+  }));
 
 // ─── exit list ───────────────────────────────────────────────────────────────
 
 program
   .command("list")
-  .description("List stored markers")
-  .option("--dir <path>", "Storage directory", "./exit-markers")
-  .action((opts) => {
-    const ids = storageList(opts.dir);
+  .description("List stored EXIT markers.")
+  .option("--dir <path>", "Storage directory (default: ./exit-markers)", "./exit-markers")
+  .addHelpText("after", `
+Examples:
+  $ exit list
+    List all markers in ./exit-markers/
+
+  $ exit list --dir /var/lib/exit-markers
+    List markers in a custom directory
+`)
+  .action(withErrorHandling((opts) => {
+    let ids: string[];
+    try {
+      ids = storageList(opts.dir);
+    } catch (e: any) {
+      if (!existsSync(opts.dir)) {
+        console.log(`No markers found. Storage directory does not exist: ${opts.dir}`);
+        console.log();
+        console.log(`  To create your first marker:`);
+        console.log(`    $ exit create --origin example.com --sign > marker.json`);
+        console.log(`    $ exit store marker.json --dir ${opts.dir}`);
+        return;
+      }
+      error(
+        `Failed to list markers`,
+        `Could not read the storage directory "${opts.dir}".`,
+        [
+          `Check that you have read permissions on the directory`,
+          e.message ? `System error: ${e.message}` : null,
+        ].filter(Boolean) as string[],
+        EXIT_STORAGE_ERROR
+      );
+      return;
+    }
+
     if (ids.length === 0) {
       console.log("No markers found.");
+      console.log();
+      console.log("  To create and store a marker:");
+      console.log("    $ exit create --origin example.com --sign > marker.json");
+      console.log(`    $ exit store marker.json --dir ${opts.dir}`);
     } else {
       for (const id of ids) console.log(id);
     }
-  });
+  }));
 
 // ─── exit redact ─────────────────────────────────────────────────────────────
 
 program
   .command("redact <file>")
-  .description("Create a redacted version of a marker")
-  .requiredOption("--fields <fields>", "Comma-separated fields to redact")
-  .action((file, opts) => {
-    const marker = JSON.parse(readFileSync(file, "utf-8")) as ExitMarker;
-    const fields = (opts.fields as string).split(",").map((f: string) => f.trim());
-    const redacted = redactMarker(marker, fields);
-    process.stdout.write(JSON.stringify(redacted, null, 2) + "\n");
-  });
+  .description("Create a privacy-preserving redacted version of a marker.")
+  .requiredOption("--fields <fields>", "Comma-separated list of fields to redact (e.g., subject,origin)")
+  .addHelpText("after", `
+Examples:
+  $ exit redact marker.json --fields subject
+    Redact the subject field (replace with hash)
+
+  $ exit redact marker.json --fields subject,origin,metadata
+    Redact multiple fields
+
+  $ exit redact marker.json --fields subject > redacted.json
+    Save the redacted marker to a new file
+
+Redactable fields:
+  subject, origin, metadata, lineage, stateSnapshot, dispute, economic, crossDomain
+`)
+  .action(withErrorHandling((file, opts) => {
+    const marker = readMarkerFile(file, "redact the EXIT marker");
+    const fields = (opts.fields as string).split(",").map((f: string) => f.trim()).filter(Boolean);
+
+    if (fields.length === 0) {
+      error(
+        `No fields specified for redaction`,
+        `The --fields option was provided but no valid field names were found.`,
+        [
+          `Provide a comma-separated list of fields: --fields subject,origin`,
+          `Redactable fields: subject, origin, metadata, lineage, stateSnapshot, dispute, economic, crossDomain`,
+        ],
+        EXIT_ARG_ERROR
+      );
+    }
+
+    try {
+      const redacted = redactMarker(marker, fields);
+      process.stdout.write(JSON.stringify(redacted, null, 2) + "\n");
+    } catch (e: any) {
+      error(
+        `Redaction failed`,
+        `Could not redact the specified fields from the marker in "${file}".`,
+        [
+          `Check that the field names are valid: ${fields.join(", ")}`,
+          `Redactable fields: subject, origin, metadata, lineage, stateSnapshot, dispute, economic, crossDomain`,
+          e.message ? `Detail: ${e.message}` : null,
+        ].filter(Boolean) as string[],
+        EXIT_VALIDATION_ERROR
+      );
+    }
+  }));
+
+// ─── Parse ───────────────────────────────────────────────────────────────────
 
 program.parse();
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function toHex(bytes: Uint8Array): string {
-  return Array.from(bytes)
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-function fromHexOrBase64(s: string): Uint8Array {
-  if (/^[0-9a-fA-F]+$/.test(s)) {
-    const bytes = new Uint8Array(s.length / 2);
-    for (let i = 0; i < s.length; i += 2) bytes[i / 2] = parseInt(s.slice(i, i + 2), 16);
-    return bytes;
-  }
-  return Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
-}
-
-function parseExitType(s: string): ExitType {
-  const map: Record<string, ExitType> = {
-    voluntary: ExitType.Voluntary,
-    forced: ExitType.Forced,
-    emergency: ExitType.Emergency,
-  };
-  if (!map[s]) throw new Error(`Invalid exit type: ${s}. Use: voluntary, forced, emergency`);
-  return map[s];
-}
-
-function parseExitStatus(s: string): ExitStatus {
-  const map: Record<string, ExitStatus> = {
-    good_standing: ExitStatus.GoodStanding,
-    disputed: ExitStatus.Disputed,
-    unverified: ExitStatus.Unverified,
-  };
-  if (!map[s]) throw new Error(`Invalid status: ${s}. Use: good_standing, disputed, unverified`);
-  return map[s];
-}
