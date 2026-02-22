@@ -36,7 +36,8 @@ TOOL → AGENT → ENTITY → PERSON (time + reputation, no permanent caps)
 - **Cellar-Door** — EXIT primitive: cryptographic exit/lineage/reputation portability for agents
 - **SEAL** — ZK proof infrastructure for AI alignment attestations
 - **Hollow** — Boundary/threshold primitive (the space itself)
-- **Signamancy** — Emoji/symbol parsing system (naming/identity primitives?)
+- **Signamancy (now REPUTE)** — Emoji/symbol parsing system (naming/identity primitives?)
+  > Note: 'Signamancy' (the repo/ontological concept) has been renamed to 'REPUTE' for the reputation primitive to avoid confusion.
 - **Resonance** — Induction/learning experiments (mini RPGs, crystallizing systems)
 - **Looking Glass** — Design docs, tuning, deep loop advice
 - **Bean Bunker** — Matrix/Discord migration tools

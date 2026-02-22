@@ -41,23 +41,24 @@ HOLOS ZK SWARM PRIMITIVES
 	- https://github.com/dogcomplex/Cellar-Door
 	
 	### EXIT / CELLAR DOOR STATUS (Updated 2026-02-22)
-	- [x] Reference implementation: 153 tests, 20+ TS modules, ~4000+ lines
+	**✅ Implementation complete** — Sprint 1-5 done. 205 tests, 49 source modules, working CLI (`exit-door`).
+	- [x] Reference implementation: 205 tests, 49 TS modules
 	- [x] Spec v1.1 complete (48KB, 18 sections)
-	- [x] Academic paper v3 (8K words, 24 refs) — needs formula reconciliation with spec
+	- [x] Academic paper v3 (8K words, 24 refs)
 	- [x] Full legal battery (7 analyses), risk heatmap, competitive landscape
 	- [x] Business plan, integration analysis, pre-export checklist
 	- [x] Unified 5-mode website deployed to Netlify (cellar-door-exit.netlify.app)
 	- [x] Benchmarks: 442B core marker, 0.74ms quickExit, 1.9ms verify
 	- [x] Slogans: "There's always a door." / #GracefulExit / "The Right to Exit"
 	- [x] Renames: Insurance→PLEDGE, Signamancy→REPUTE, LINE→LINEAGE, CLI→exit-door
-	- [ ] **BLOCKER**: Fix 3 formula contradictions (paper vs spec v1.1: confidence, tenure, canonicalization)
-	- [ ] **BLOCKER**: Fix "~300 bytes" claim → 442 bytes in NIST RFI
-	- [ ] **BLOCKER**: Register domain (cellar-door.dev recommended)
-	- [ ] Submit NIST RFI (March 9 deadline)
-	- [ ] npm publish (pending: security email, package name confirmation, domain)
-	- [ ] Reconcile Module D risk ratings (Howey says low, everything else says critical)
-	- [ ] Antitrust analysis (coordinated exit = Sherman Act? single-source finding)
-	- [ ] Build top 3 integrations: Vercel AI SDK, LangChain TS, OpenClaw
+
+	### CURRENT PRIORITIES (Feb 2026)
+	- [ ] **NIST RFI submission** (March 9 deadline) — fix formula contradictions first
+	- [ ] **npm publish** (pending: security email, package name confirmation, domain)
+	- [ ] **Consistency fixes**: formula contradictions (paper vs spec), "~300 bytes" → 442 bytes
+	- [ ] **Register domain** (cellar-door.dev recommended)
+	- [ ] **Build top 3 integrations**: Vercel AI SDK, LangChain TS, OpenClaw
+	- [ ] Reconcile Module D risk ratings (see assessments/howey-module-d-v2.md)
 	- [ ] arXiv submission (paper v3 + formula fixes + benchmarks)
 	- [ ] Entity strategy: BC sole prop under Fool-Hardy Designs for now, defer LLC
 
