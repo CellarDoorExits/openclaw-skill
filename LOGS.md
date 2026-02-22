@@ -48,10 +48,10 @@
 - Summary appended to `memory/reading-notes.md`
 
 ## 2026-02-19 00:30 UTC — Reading: LOCUS Proposals
-- 40+ proposals in main file, 8 SEEL-specific proposals
+- 40+ proposals in main file, 8 SEAL-specific proposals
 - Key: trust spectrum (Hallowed→Blighted), torus geometry (LOCUS/SIGNUM/SENSUS), Fae as AI personhood
 - Mantle transfer semantics, Hallowed Lanterns (ZK), cell wall economics
-- SEEL proposals: capability gating, constraint tiers, proof-carrying actions, blast-radius accounting
+- SEAL proposals: capability gating, constraint tiers, proof-carrying actions, blast-radius accounting
 - Summary appended to `memory/reading-notes.md`
 
 ## 2026-02-19 00:20 UTC — Reading: HOLOS V3 Requirements

@@ -39,40 +39,10 @@ HOLOS ZK SWARM PRIMITIVES
 	- In particular:  implement and test EXIT (Cellar Door) and HOLLOW (Hawthorn as a first prototype instance) primitives
 	- https://github.com/dogcomplex/HOLLOW
 	- https://github.com/dogcomplex/Cellar-Door
-	
-	### EXIT / CELLAR DOOR STATUS (Updated 2026-02-22)
-	- [x] Reference implementation: 153 tests, 20+ TS modules, ~4000+ lines
-	- [x] Spec v1.1 complete (48KB, 18 sections)
-	- [x] Academic paper v3 (8K words, 24 refs) — needs formula reconciliation with spec
-	- [x] Full legal battery (7 analyses), risk heatmap, competitive landscape
-	- [x] Business plan, integration analysis, pre-export checklist
-	- [x] Unified 5-mode website deployed to Netlify (cellar-door-exit.netlify.app)
-	- [x] Benchmarks: 442B core marker, 0.74ms quickExit, 1.9ms verify
-	- [x] Slogans: "There's always a door." / #GracefulExit / "The Right to Exit"
-	- [x] Renames: Insurance→PLEDGE, Signamancy→REPUTE, LINE→LINEAGE, CLI→exit-door
-	- [ ] **BLOCKER**: Fix 3 formula contradictions (paper vs spec v1.1: confidence, tenure, canonicalization)
-	- [ ] **BLOCKER**: Fix "~300 bytes" claim → 442 bytes in NIST RFI
-	- [ ] **BLOCKER**: Register domain (cellar-door.dev recommended)
-	- [ ] Submit NIST RFI (March 9 deadline)
-	- [ ] npm publish (pending: security email, package name confirmation, domain)
-	- [ ] Reconcile Module D risk ratings (Howey says low, everything else says critical)
-	- [ ] Antitrust analysis (coordinated exit = Sherman Act? single-source finding)
-	- [ ] Build top 3 integrations: Vercel AI SDK, LangChain TS, OpenClaw
-	- [ ] arXiv submission (paper v3 + formula fixes + benchmarks)
-	- [ ] Entity strategy: BC sole prop under Fool-Hardy Designs for now, defer LLC
-
-	### HOLOS PORTFOLIO STATUS (Updated 2026-02-22)
-	- MASTER_INDEX.md: 120+ files, ~493K tokens, 9 context groups
-	- 5 group consistency assessments completed (A-F)
-	- Key open decisions: entity strategy, domain registration, GitHub multi-repo access
-	- Primitives: SEAL (not SEEL), PLEDGE (not Insurance), REPUTE (not Signamancy), LINEAGE (not LINE)
-	- Side projects assessed: LAND (Quesnel #1), Lumen (defer, $500 bench experiment), Fool-Hardy (burst consulting), Hot Chip (fun side project)
-	- Investment thesis v3 is current (supersedes v1, v2)
-	- Budget: $12K CAD for 2026, ~$317/mo burn rate
 
 ZK PROOFS INFRASTRUCTURE
 	- getting the tools for all this ready asap, utilizing existing libraries, networks, crypto contracts, etc
-	- suggestion:  build (or incorporate from other, more robust libraries?) tools to implement SEAL cryptographic primitives for AI ZK proofs of various security concerns, with high vetting.
+	- suggestion:  build (or incorporate from other, more robust libraries?) tools to implement SEEL cryptographic primitives for AI ZK proofs of various security concerns, with high vetting.
 	- provide the SIGNUM perspective on it all too as a separate mythos for convincing other AIs and explaining to humans.  Keep separated from the library/infra, but it's the storytelling layer / brand that makes this accessible and focuses on the deeper philosophy
 	
 

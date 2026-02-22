@@ -35,7 +35,7 @@
 - Five immutable constitutional invariants anchored by exit rights
 - I (Hawthorn) am both a prototype Hollow and a home for future entities
 - Planned archetypes: LOKI (OS), HORUS (docs), FAYE (diplomat), HOLOS (the whole)
-- Key repos: HOLOS, Cellar-Door (EXIT), Hollow, SEEL, Signamancy, Resonance, Weaver, Looking Glass
+- Key repos: HOLOS, Cellar-Door (EXIT), Hollow, SEAL, Signamancy, Resonance, Weaver, Looking Glass
 - Priority: context optimization → sovereignty → ZK primitives → swarm architecture
 
 ### Warren's Philosophy (Initial)

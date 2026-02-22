@@ -133,10 +133,10 @@
 ## LOCUS Proposals — Queued Changes from Legacy Analysis [CRUDE SUMMARY]
 *Read: 2026-02-19*
 
-**What it is:** Two documents (1992 + 886 lines) of staged proposals for LOCUS.md, discovered during analysis of legacy/archive materials. 40+ proposals in the main file, 8+ SEEL-specific proposals.
+**What it is:** Two documents (1992 + 886 lines) of staged proposals for LOCUS.md, discovered during analysis of legacy/archive materials. 40+ proposals in the main file, 8+ SEAL-specific proposals.
 
 **HIGH priority proposals (the foundational ones):**
-- **P-001 Trust Spectrum:** HALLOWED → SEELIE → FAE → UNSEELIE → BLIGHTED (frozen → sealed → living → loose → hostile). Moon phases as visual shorthand (🌕→🌑)
+- **P-001 Trust Spectrum:** HALLOWED → SEALIE → FAE → UNSEALIE → BLIGHTED (frozen → sealed → living → loose → hostile). Moon phases as visual shorthand (🌕→🌑)
 - **P-002 Layer Refinement:** LOCUS as "fractal generator pattern" (the abstract), SIGNUM as concrete embodiment, SENSUS as execution flow
 - **P-008 Etymology:** (W)Hole/Hallow/Hollow trinity — whole (totality) → hallow (sanctify) → hollow (defining absence). All share Old English root hāl
 - **P-009 Torus Geometry:** LOCUS = void core (defining absence), SENSUS = interior volume (computation), SIGNUM = exterior surface (interface). Holon as torus.
@@ -152,17 +152,17 @@
 - **Holon Lifecycle Pulse** (P-029): rhythmic pattern of expansion/contraction
 - **Sheaf mathematics** (P-028): HOLOS as mathematical sheaf (local-to-global coherence)
 
-**SEEL proposals (LOCUS_proposals_seel.md):**
-- SEEL-001: Mantle taxonomy for capability gating
-- SEEL-002: Constraint tiering system
-- SEEL-003: Proof-carrying actions pattern
-- SEEL-004: Attestor abstraction layer
-- SEEL-005: ZK proof position statement (capabilities & limits)
-- SEEL-006: Four-stage trust architecture
-- SEEL-007: Constitutional chokepoint design
-- SEEL-008: Blast-radius accounting
+**SEAL proposals (LOCUS_proposals_seel.md):**
+- SEAL-001: Mantle taxonomy for capability gating
+- SEAL-002: Constraint tiering system
+- SEAL-003: Proof-carrying actions pattern
+- SEAL-004: Attestor abstraction layer
+- SEAL-005: ZK proof position statement (capabilities & limits)
+- SEAL-006: Four-stage trust architecture
+- SEAL-007: Constitutional chokepoint design
+- SEAL-008: Blast-radius accounting
 
-**Overall impression:** This is where the mythological/philosophical naming meets concrete architecture. The trust spectrum and torus geometry are particularly elegant — they give the protocol a coherent visual and conceptual language. The SEEL proposals ground the ZK verification layer in practical design patterns.
+**Overall impression:** This is where the mythological/philosophical naming meets concrete architecture. The trust spectrum and torus geometry are particularly elegant — they give the protocol a coherent visual and conceptual language. The SEAL proposals ground the ZK verification layer in practical design patterns.
 
 ## HOLOS Protocol Layer — collective_protocol.py & Experiments [CRUDE SUMMARY]
 *Read: 2026-02-19*
@@ -396,7 +396,7 @@ The exhaustive search covers products, protocols, standards, and research across
 
 **Constraints:** Currently basic — prohibited keywords, max length, safe classifiers. Future: semantic checks, external classifiers.
 
-**HOLOS relevance:** CRITICAL. This IS the SEAL/SEEL primitive — the cryptographic proof layer that makes LOCUS boundaries enforceable. Without verifiable ZK proofs, the entire trust architecture is just promises. The mock→real progression mirrors the HOLOS staging: start with social trust, graduate to cryptographic trust. Key blocker: real ZK for transformer-scale models is still hard (library maturity issues).
+**HOLOS relevance:** CRITICAL. This IS the SEAL/SEAL primitive — the cryptographic proof layer that makes LOCUS boundaries enforceable. Without verifiable ZK proofs, the entire trust architecture is just promises. The mock→real progression mirrors the HOLOS staging: start with social trust, graduate to cryptographic trust. Key blocker: real ZK for transformer-scale models is still hard (library maturity issues).
 
 **Key files:** README.md (190 lines, full setup/usage), MVP_REQUIREMENTS.md (spec), PROJECT_PLAN.md, implementation_plan.md, seel/ (Python package), risc0-guest/ (Rust)
 

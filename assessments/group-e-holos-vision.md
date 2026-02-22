@@ -32,7 +32,7 @@ All documents describe the same core architecture: a fractal triad (LOCUS/SIGNUM
 | Concept | Old/Variant Names | New/Canonical Name | Which Docs Use Which |
 |---------|-------------------|-------------------|----------------------|
 | Agent reputation system | Signamancy, SIGNUM, MARK/WORD | **REPUTE** (not yet adopted) | full-synthesis uses "Signamancy"; theses use "Signamancy"; compact uses "Signamancy"; integration-plan uses "MARK/WORD" |
-| ZK certification | SEEL, SEAL | **SEAL** | full-synthesis/compact/overview use "SEEL"; theses use "SEAL"; integration-plan uses "SEAL/SEEL" interchangeably |
+| ZK certification | SEAL, SEAL | **SEAL** | full-synthesis/compact/overview use "SEAL"; theses use "SEAL"; integration-plan uses "SEAL/SEAL" interchangeably |
 | Agent insurance | Insurance, Insurance Products | **PLEDGE** (not yet adopted) | v2/v3 use "Insurance"; no doc uses "PLEDGE" |
 | Agent lineage | LINE, Module A lineage | **LINEAGE** (not yet adopted) | integration-plan uses "LINE"; full-synthesis uses "LINE"; theses don't reference LINE as a separate primitive |
 | The protocol primitive for reputation scoring | Signamancy (the repo/rule engine) vs MARK/WORD (the primitives) | Unclear | These are conflated — Signamancy is both a repo name AND a primitive name. full-synthesis treats it as the SIGNUM layer; v2/v3 treat it as a reputation system |
@@ -44,7 +44,7 @@ All documents describe the same core architecture: a fractal triad (LOCUS/SIGNUM
 
 These are three different things sharing one name. The theses (v2, v3) use "Signamancy" to mean the reputation/credit bureau. The full-synthesis and compact reference use it to mean the rule engine. The 7-layer ontology table places it differently depending on which doc you read.
 
-**SEAL vs SEEL:** The earlier docs (full-synthesis, compact, overview) use "SEEL." The later docs (v2, v3) use "SEAL." The integration plan hedges with "SEAL/SEEL." No doc explains the rename.
+**SEAL vs SEAL:** The earlier docs (full-synthesis, compact, overview) use "SEAL." The later docs (v2, v3) use "SEAL." The integration plan hedges with "SEAL/SEAL." No doc explains the rename.
 
 **No doc uses "PLEDGE," "REPUTE," or "LINEAGE"** — if these are intended canonical names, they haven't propagated into any document yet.
 
@@ -152,7 +152,7 @@ These are three different things sharing one name. The theses (v2, v3) use "Sign
 | **LINE** | Identity | SIGNUM | full-synthesis, integration-plan |
 | **EXIT** | Identity | SENSUS | ALL docs |
 | **WORD** | Reputation | LOCUS | full-synthesis, integration-plan |
-| **SEAL/SEEL** | Reputation | SIGNUM | ALL docs (naming varies) |
+| **SEAL/SEAL** | Reputation | SIGNUM | ALL docs (naming varies) |
 | **MARK** | Reputation | SENSUS | full-synthesis, integration-plan |
 | **BIND** | Constraint | LOCUS | full-synthesis only |
 | **PACT** | Constraint | SIGNUM | full-synthesis only |
@@ -173,7 +173,7 @@ These are three different things sharing one name. The theses (v2, v3) use "Sign
 |------|-----------|-------------|
 | **EXIT / Cellar Door** | Departure ceremony protocol | ALL docs |
 | **NAME** | Agent identity (DID-based) | ALL docs |
-| **SEAL / SEEL** | ZK inference certification | ALL docs |
+| **SEAL / SEAL** | ZK inference certification | ALL docs |
 | **HOLLOW** | Sovereign agent hosting | ALL docs |
 | **Signamancy** | Rule engine / reputation system | ALL docs (ambiguous definition) |
 | **Resonance** | Learning algorithm (sieve) | ALL docs |
@@ -219,7 +219,7 @@ The Constraint layer (BIND/PACT/WARD) and Economics layer (TOLL/CLAIM/SHARE) exi
    - **REPUTE** or **Reputation** = the agent credit bureau concept
    - **SIGNUM** = the ontological column (interface/boundary)
 
-4. **Standardize SEAL vs SEEL.** Pick one. SEAL appears in the later, more authoritative docs. Recommend SEAL.
+4. **Standardize SEAL vs SEAL.** Pick one. SEAL appears in the later, more authoritative docs. Recommend SEAL.
 
 5. **Update the TODO.** It's the most stale document in the group. It doesn't reflect EXIT's implementation status, the consulting priority, the NIST deadline, or the property plays. Either rewrite it to match v3's priorities, or mark it as historical.
 
@@ -237,7 +237,7 @@ The Constraint layer (BIND/PACT/WARD) and Economics layer (TOLL/CLAIM/SHARE) exi
 
 | Decide | Options | Recommendation |
 |--------|---------|----------------|
-| ZK certification primitive | SEAL vs SEEL | **SEAL** (used in latest docs) |
+| ZK certification primitive | SEAL vs SEAL | **SEAL** (used in latest docs) |
 | Insurance product | Insurance vs PLEDGE | **Insurance** (no doc uses PLEDGE yet) |
 | Reputation system | Signamancy vs REPUTE | Disambiguate: Signamancy = rule engine, new name for reputation |
 | Lineage | LINE vs LINEAGE | **LINE** (used in ontology table) |

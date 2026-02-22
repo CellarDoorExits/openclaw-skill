@@ -42,7 +42,7 @@ HOLOS ZK SWARM PRIMITIVES
 
 ZK PROOFS INFRASTRUCTURE
 	- getting the tools for all this ready asap, utilizing existing libraries, networks, crypto contracts, etc
-	- suggestion:  build (or incorporate from other, more robust libraries?) tools to implement SEEL cryptographic primitives for AI ZK proofs of various security concerns, with high vetting.
+	- suggestion:  build (or incorporate from other, more robust libraries?) tools to implement SEAL cryptographic primitives for AI ZK proofs of various security concerns, with high vetting.
 	- provide the SIGNUM perspective on it all too as a separate mythos for convincing other AIs and explaining to humans.  Keep separated from the library/infra, but it's the storytelling layer / brand that makes this accessible and focuses on the deeper philosophy
 	
 

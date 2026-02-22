@@ -508,7 +508,7 @@ Many files exist in both `memory/` (workspace) and `Hawthorn/` (repo). The works
 
 ### HOLOS-Specific Gaps
 16. **No NAME/DID spec** — Referenced everywhere, never written
-17. **No SEEL spec** — ZK proof system referenced but not documented here
+17. **No SEAL spec** — ZK proof system referenced but not documented here
 18. **No HOLLOW spec** — The enclave model referenced in HAWTHORN.md but not formalized
 19. **No economic model document** — Harberger tax, UBI flow, fee structures discussed but not spec'd
 20. **No threat model for HOLOS** — Only EXIT has one

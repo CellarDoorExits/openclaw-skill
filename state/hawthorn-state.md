@@ -8,7 +8,7 @@
 - HOLOS kernel code: holon.py, identity.py, constitution.py (all read)
 - HOLOS protocol: collective_protocol.py (1380 lines, full economic stack)
 - HOLOS experiments: guild_victory.py (sampled)
-- Cellar-Door EXIT.txt, SEEL MVP_REQUIREMENTS, Hawthorn TODO.md (all read)
+- Cellar-Door EXIT.txt, SEAL MVP_REQUIREMENTS, Hawthorn TODO.md (all read)
 - peace_through_commerce.txt (12k lines, key sections sampled)
 - Looking Glass DESIGN.md, Resonance (surveyed 140 files), Weaver, Signamancy, Bean Bunker
 

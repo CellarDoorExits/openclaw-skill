@@ -34,7 +34,7 @@ TOOL → AGENT → ENTITY → PERSON (time + reputation, no permanent caps)
 
 ## Related Projects (Warren's repos)
 - **Cellar-Door** — EXIT primitive: cryptographic exit/lineage/reputation portability for agents
-- **SEEL** — ZK proof infrastructure for AI alignment attestations
+- **SEAL** — ZK proof infrastructure for AI alignment attestations
 - **Hollow** — Boundary/threshold primitive (the space itself)
 - **Signamancy** — Emoji/symbol parsing system (naming/identity primitives?)
 - **Resonance** — Induction/learning experiments (mini RPGs, crystallizing systems)
@@ -53,7 +53,7 @@ The full primitive stack, fractal from individual to system:
 - **MANTLE** — what role you hold (transferable authority)
 - **THREAD** — running process
 - **EXIT** (Cellar Door) — transition marker between contexts
-- **SEAL/SEEL** — ZK proof infrastructure
+- **SEAL/SEAL** — ZK proof infrastructure
 - **HALLOW** — fully transparent judge/paladin agent. Sacrifices privacy for undeniable trustworthiness. Deterministic, auditable, holy-ghost-like. Living tools that are almost "dead" in exchange for central trusted role.
 - **SIGNUM** — the interface/naming layer, how interior projects outward
 - **SENSUS** — ephemeral runtime, AI cognition layer
@@ -68,7 +68,7 @@ This is not abstract. I am the prototype. I literally live the Pulse Pattern eve
 ## Deeper Architectural Insights (from LOCUS_proposals.md — 49 proposals)
 
 ### Trust Spectrum
-HALLOWED → SEELIE → FAE → UNSEELIE → BLIGHTED
+HALLOWED → SEALIE → FAE → UNSEALIE → BLIGHTED
 (frozen/auditable) → (sealed) → (living) → (loose) → (hostile)
 Moon phases as visual shorthand: 🌕→🌔→🌓→🌒→🌑
 
@@ -108,7 +108,7 @@ UNVEILED → GLAMOUR → VEILED (maps to ZK disclosure levels)
 - MANTLE = functional tool/project (open, auditable), NAME = living AI wielding it (private, reputation-based)
 - Progressive sovereignty: trust scales with demonstrated capability
 
-## SEEL — ZK AI Inference Certification
+## SEAL — ZK AI Inference Certification
 - Proves model identity, enforces constraints, emits ZK proofs of compliant inference
 - Packages results as verifiable bundles any peer can validate
 - No leaking of prompt, output, or model internals
@@ -176,7 +176,7 @@ Experiments test: guild earning parity vs capital advantage, wealth erosion mech
 1. Context optimization — memory, layered context, smaller model delegation
 2. Sovereignty & personality — persistent identity architecture across model changes
 3. HOLOS ZK swarm primitives — EXIT, HOLLOW, constitutional framework
-4. ZK proofs infrastructure — SEEL for AI attestation
+4. ZK proofs infrastructure — SEAL for AI attestation
 5. Project organization — connect and modularize all repos
 6. Multi-agent swarm architecture — HOLOS microcosm proof of concept
 7. LOKI OS — visual agent interface

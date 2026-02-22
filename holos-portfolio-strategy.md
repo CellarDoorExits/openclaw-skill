@@ -30,7 +30,7 @@ HOLOS is a protocol ecosystem for sovereign economic cooperation. It has ~10 pro
 **Timeline:** H2 2026 design, 2027 implementation.  
 **Verdict:** Critical primitive but don't build it yet. Let EXIT adoption reveal what identity actually needs to look like.
 
-### SEAL (SEEL)
+### SEAL (SEAL)
 **What:** ZK inference certification — proving an AI model produced a specific output without revealing the model or inputs. Cryptographic attestation layer.  
 **Status:** Mock attestation works. Real ZK blocked on tooling maturity (ZK for neural networks is still bleeding edge).  
 **Revenue potential:** High if ZK-for-AI matures. "Certified AI output" is a massive enterprise need. But the tech isn't ready.  
