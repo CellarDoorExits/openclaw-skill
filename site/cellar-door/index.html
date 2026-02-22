@@ -717,6 +717,20 @@ img { max-width: 100%; height: auto; display: block; }
 /* ═══════════════════════════════════════════
    FOOTER
    ═══════════════════════════════════════════ */
+.always-a-door {
+  position: fixed;
+  bottom: 20px;
+  right: 24px;
+  font-size: 0.82rem;
+  opacity: 0.25;
+  letter-spacing: 0.03em;
+  transition: color 0.8s, font-family 0.5s, opacity 0.3s;
+  z-index: 9998;
+  pointer-events: none;
+  font-style: italic;
+}
+.always-a-door:hover { opacity: 0.5; pointer-events: auto; }
+
 .site-footer {
   text-align: center;
   padding: 40px 20px;
@@ -946,8 +960,7 @@ img { max-width: 100%; height: auto; display: block; }
   <div class="prag-wrap">
     <div class="prag-header">
       <h1>EXIT.protocol</h1>
-      <p class="sub">Exit Architecture — A vehicle history report for AI agents</p>
-      <p class="slogan">There's always a door.</p>
+      <p class="sub">Exit Architecture — A transfer history report for AI agents</p>
     </div>
     <div class="prag-body">
 
@@ -1293,6 +1306,8 @@ console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));</co
 <!-- ═══════════════════════════════════════════
      FOOTER
      ═══════════════════════════════════════════ -->
+<div class="always-a-door">There's always a door.</div>
+
 <footer class="site-footer">
   EXIT.protocol · Cellar Door · 2026
 </footer>
