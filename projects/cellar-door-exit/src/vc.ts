@@ -20,7 +20,21 @@ export interface ExitVerifiableCredential {
   proof?: DataIntegrityProof;
 }
 
-/** Wrap an ExitMarker as a W3C Verifiable Credential. */
+/**
+ * Wrap an ExitMarker as a W3C Verifiable Credential.
+ *
+ * Self-issued: the issuer is the marker's subject. If the marker is signed,
+ * the proof is transferred to the VC envelope.
+ *
+ * @param marker - The EXIT marker to wrap.
+ * @returns An {@link ExitVerifiableCredential} containing the marker as `credentialSubject`.
+ *
+ * @example
+ * ```ts
+ * const vc = wrapAsVC(signedMarker);
+ * console.log(vc.type); // ["VerifiableCredential", "ExitCredential"]
+ * ```
+ */
 export function wrapAsVC(marker: ExitMarker): ExitVerifiableCredential {
   const vc: ExitVerifiableCredential = {
     "@context": [VC_CONTEXT, EXIT_CONTEXT_V1],
@@ -39,7 +53,13 @@ export function wrapAsVC(marker: ExitMarker): ExitVerifiableCredential {
   return vc;
 }
 
-/** Extract the ExitMarker from a Verifiable Credential. */
+/**
+ * Extract the ExitMarker from a Verifiable Credential.
+ *
+ * @param vc - The Verifiable Credential to unwrap.
+ * @returns The EXIT marker from `credentialSubject`.
+ * @throws {Error} If the object is not a valid ExitVerifiableCredential.
+ */
 export function unwrapVC(vc: ExitVerifiableCredential): ExitMarker {
   if (!isVC(vc)) {
     throw new Error("Not a valid ExitVerifiableCredential");
@@ -47,7 +67,12 @@ export function unwrapVC(vc: ExitVerifiableCredential): ExitMarker {
   return vc.credentialSubject;
 }
 
-/** Type guard: is this object an EXIT Verifiable Credential? */
+/**
+ * Type guard: is this object an EXIT Verifiable Credential?
+ *
+ * @param obj - The object to check.
+ * @returns `true` if the object has the correct `@context`, `type`, and `credentialSubject`.
+ */
 export function isVC(obj: unknown): obj is ExitVerifiableCredential {
   if (!obj || typeof obj !== "object") return false;
   const o = obj as Record<string, unknown>;

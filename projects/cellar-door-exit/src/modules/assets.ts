@@ -34,7 +34,19 @@ function hashString(s: string): string {
   return Array.from(h).map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-/** Create an asset manifest module from asset definitions. */
+/**
+ * Create an asset manifest module from asset definitions.
+ *
+ * @param assetOpts - Array of asset option objects. If `data` is provided, its SHA-256 hash is computed automatically.
+ * @returns An {@link AssetManifestModule} containing the asset manifest.
+ *
+ * @example
+ * ```ts
+ * const manifest = createAssetManifest([
+ *   { id: "data-export", type: "data", description: "User data export", data: "..." },
+ * ]);
+ * ```
+ */
 export function createAssetManifest(assetOpts: CreateAssetOpts[]): AssetManifestModule {
   const assets: Asset[] = assetOpts.map(a => ({
     id: a.id,

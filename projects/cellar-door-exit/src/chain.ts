@@ -30,6 +30,16 @@ export interface ChainAdapter {
 
 // ─── Mock Chain Adapter (in-memory) ──────────────────────────────────────────
 
+/**
+ * In-memory mock chain adapter for testing. Stores anchors in a `Map`.
+ *
+ * @example
+ * ```ts
+ * const chain = new MockChainAdapter();
+ * const result = await chain.anchor("abc123");
+ * const exists = await chain.verify("abc123"); // true
+ * ```
+ */
 export class MockChainAdapter implements ChainAdapter {
   private ledger = new Map<string, { timestamp: string; metadata?: AnchorMetadata }>();
 
@@ -57,7 +67,19 @@ interface FileEntry {
   metadata?: AnchorMetadata;
 }
 
+/**
+ * Append-only file-based chain adapter. Each anchor is a newline-delimited JSON entry.
+ *
+ * @example
+ * ```ts
+ * const chain = new FileChainAdapter("./anchors.jsonl");
+ * await chain.anchor(hash, { exitType: "voluntary" });
+ * ```
+ */
 export class FileChainAdapter implements ChainAdapter {
+  /**
+   * @param filePath - Path to the append-only JSONL file for storing anchors.
+   */
   constructor(private filePath: string) {}
 
   private readEntries(): FileEntry[] {

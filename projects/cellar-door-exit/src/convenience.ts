@@ -17,7 +17,17 @@ export interface Identity {
   privateKey: Uint8Array;
 }
 
-/** Generate a complete EXIT identity (DID + keypair) in one call. */
+/**
+ * Generate a complete EXIT identity (DID + keypair) in one call.
+ *
+ * @returns An {@link Identity} containing the DID string and Ed25519 key pair.
+ *
+ * @example
+ * ```ts
+ * const { did, publicKey, privateKey } = generateIdentity();
+ * console.log(did); // "did:key:z6Mk..."
+ * ```
+ */
 export function generateIdentity(): Identity {
   const { publicKey, privateKey } = generateKeyPair();
   const did = didFromPublicKey(publicKey);
@@ -92,7 +102,12 @@ export function fromJSON(json: string): ExitMarker {
   return parsed as ExitMarker;
 }
 
-/** Serialize a marker to pretty-printed JSON. */
+/**
+ * Serialize a marker to pretty-printed JSON.
+ *
+ * @param marker - The EXIT marker to serialize.
+ * @returns A pretty-printed JSON string (2-space indent).
+ */
 export function toJSON(marker: ExitMarker): string {
   return JSON.stringify(marker, null, 2);
 }

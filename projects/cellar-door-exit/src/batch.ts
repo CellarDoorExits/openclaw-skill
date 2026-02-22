@@ -37,7 +37,18 @@ export interface BatchExit {
   leaves: string[];
 }
 
-/** Compute the Merkle root of an array of hex hash strings. */
+/**
+ * Compute the Merkle root of an array of hex hash strings.
+ *
+ * @param hashes - Array of hex-encoded hash strings (the leaves).
+ * @returns The hex-encoded Merkle root hash.
+ * @throws {Error} If the array is empty.
+ *
+ * @example
+ * ```ts
+ * const root = computeMerkleRoot(["aabb...", "ccdd..."]);
+ * ```
+ */
 export function computeMerkleRoot(hashes: string[]): string {
   if (hashes.length === 0) throw new Error("Cannot compute Merkle root of empty set");
   if (hashes.length === 1) return hashes[0];
@@ -58,7 +69,14 @@ export function computeMerkleRoot(hashes: string[]): string {
   return level[0];
 }
 
-/** Compute a Merkle inclusion proof for the hash at the given index. */
+/**
+ * Compute a Merkle inclusion proof for the hash at the given index.
+ *
+ * @param hashes - Array of hex-encoded leaf hashes.
+ * @param index - The zero-based index of the leaf to prove.
+ * @returns A {@link MerkleProof} with the leaf, sibling path, and root.
+ * @throws {Error} If the index is out of range.
+ */
 export function computeMerkleProof(hashes: string[], index: number): MerkleProof {
   if (index < 0 || index >= hashes.length) {
     throw new Error(`Index ${index} out of range [0, ${hashes.length})`);
@@ -100,7 +118,14 @@ export function computeMerkleProof(hashes: string[], index: number): MerkleProof
   return { leaf, path, root: level[0] };
 }
 
-/** Verify a Merkle inclusion proof. */
+/**
+ * Verify a Merkle inclusion proof for a marker against a batch root.
+ *
+ * @param marker - The EXIT marker to verify membership for.
+ * @param batchRoot - The expected Merkle root of the batch.
+ * @param proof - The Merkle inclusion proof for the marker.
+ * @returns `true` if the marker is a verified member of the batch.
+ */
 export function verifyBatchMembership(
   marker: ExitMarker,
   batchRoot: string,
@@ -121,7 +146,19 @@ export function verifyBatchMembership(
   return current === batchRoot;
 }
 
-/** Create a batch exit from an array of markers. */
+/**
+ * Create a batch exit from an array of markers.
+ *
+ * @param markers - Array of EXIT markers to batch together.
+ * @returns A {@link BatchExit} with the Merkle root, count, timestamp, and leaf hashes.
+ * @throws {Error} If the marker array is empty.
+ *
+ * @example
+ * ```ts
+ * const batch = createBatchExit([marker1, marker2, marker3]);
+ * console.log(batch.merkleRoot); // hex hash
+ * ```
+ */
 export function createBatchExit(markers: ExitMarker[]): BatchExit {
   if (markers.length === 0) throw new Error("Cannot create batch from empty marker set");
 

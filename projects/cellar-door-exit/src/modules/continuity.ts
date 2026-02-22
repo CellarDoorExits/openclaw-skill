@@ -19,7 +19,12 @@ export interface CreateContinuityOpts {
   continuityProofType?: ContinuityProofType;
 }
 
-/** Create a continuity module. */
+/**
+ * Create a continuity module for preserving agent state across exits.
+ *
+ * @param opts - Options including stateHash, optional memoryRef, configHash, and continuityProofType.
+ * @returns A {@link ContinuityModule} with the specified state references.
+ */
 export function createContinuityModule(opts: CreateContinuityOpts): ContinuityModule {
   return {
     moduleType: "continuity",

@@ -30,6 +30,17 @@ export { CoercionLabel as COERCION_LABELS } from "./types.js";
 /**
  * Attach a coercion label to a marker with evidence.
  * Returns a new marker (does not mutate the original).
+ *
+ * @param marker - The EXIT marker to label.
+ * @param label - The coercion label to apply.
+ * @param _evidence - A description or reference to the evidence supporting the label.
+ * @returns A new EXIT marker with the coercion label and evidence tags attached.
+ *
+ * @example
+ * ```ts
+ * const labeled = addCoercionLabel(marker, CoercionLabel.PossibleRetaliation, "Short tenure + forced exit");
+ * console.log(labeled.coercionLabel); // "possible_retaliation"
+ * ```
  */
 export function addCoercionLabel(
   marker: ExitMarker,
@@ -56,6 +67,17 @@ export function addCoercionLabel(
  * Attach a signed right-of-reply counter-narrative to a marker's Module C.
  * This allows the subject to respond to an origin's attestation.
  * Returns a new marker (does not mutate the original).
+ *
+ * @param marker - The EXIT marker to attach the reply to.
+ * @param replyText - The subject's counter-narrative text.
+ * @param signerKey - The DID or key URI of the replying party.
+ * @returns A new EXIT marker with the right-of-reply attached in the dispute module.
+ *
+ * @example
+ * ```ts
+ * const withReply = addRightOfReply(marker, "I left voluntarily, not forced.", "did:key:z6Mk...");
+ * console.log(withReply.dispute?.rightOfReply?.replyText);
+ * ```
  */
 export function addRightOfReply(
   marker: ExitMarker,
@@ -88,6 +110,20 @@ export interface EthicalComplianceResult {
 
 /**
  * Validate a marker against ethical guardrails.
+ *
+ * Checks for: forced exits without reasons, missing right-of-reply on disputed markers,
+ * emergency exits without justification, and expired sunset dates.
+ *
+ * @param marker - The EXIT marker to validate.
+ * @returns An object with `compliant` boolean and an array of `violations` strings.
+ *
+ * @example
+ * ```ts
+ * const result = validateEthicalCompliance(marker);
+ * if (!result.compliant) {
+ *   console.log("Violations:", result.violations);
+ * }
+ * ```
  */
 export function validateEthicalCompliance(marker: ExitMarker): EthicalComplianceResult {
   const violations: string[] = [];
@@ -130,6 +166,16 @@ export function validateEthicalCompliance(marker: ExitMarker): EthicalCompliance
 /**
  * Apply a sunset policy to a marker — sets a sunsetDate based on the policy.
  * Returns a new marker (does not mutate the original).
+ *
+ * @param marker - The EXIT marker to apply the sunset policy to.
+ * @param policy - The sunset policy specifying duration and expiry action.
+ * @returns A new EXIT marker with `sunsetDate` set.
+ *
+ * @example
+ * ```ts
+ * const withSunset = applySunset(marker, { durationDays: 365, action: "flag" });
+ * console.log(withSunset.sunsetDate); // ISO 8601 date ~1 year after marker timestamp
+ * ```
  */
 export function applySunset(marker: ExitMarker, policy: SunsetPolicy): ExitMarker {
   const exitDate = new Date(marker.timestamp);
@@ -143,6 +189,16 @@ export function applySunset(marker: ExitMarker, policy: SunsetPolicy): ExitMarke
 
 /**
  * Check if a marker has expired according to its sunset date.
+ *
+ * @param marker - The EXIT marker to check.
+ * @returns `true` if the marker has a sunset date that is in the past; `false` otherwise.
+ *
+ * @example
+ * ```ts
+ * if (isExpired(marker)) {
+ *   console.log("This marker should no longer be relied upon.");
+ * }
+ * ```
  */
 export function isExpired(marker: ExitMarker): boolean {
   if (!marker.sunsetDate) return false;

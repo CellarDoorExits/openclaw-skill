@@ -14,7 +14,12 @@ export interface CreateLineageOpts {
   continuityProof?: ContinuityProof;
 }
 
-/** Create a lineage module. */
+/**
+ * Create a lineage module for tracking agent continuity across exits.
+ *
+ * @param opts - Options including optional predecessor, successor, lineage chain, and continuity proof.
+ * @returns A {@link ModuleA} lineage module.
+ */
 export function createLineageModule(opts: CreateLineageOpts): ModuleA {
   return {
     predecessor: opts.predecessor,
@@ -26,7 +31,10 @@ export function createLineageModule(opts: CreateLineageOpts): ModuleA {
 
 /**
  * Verify that a chain of EXIT markers forms valid lineage.
- * Each marker[i+1] should reference marker[i]'s subject as predecessor.
+ * Each `marker[i+1]` should reference `marker[i]`'s subject as predecessor.
+ *
+ * @param markers - An ordered array of EXIT markers forming a lineage chain.
+ * @returns An object with `valid` boolean and array of `errors`.
  */
 export function verifyLineageChain(markers: ExitMarker[]): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
@@ -62,6 +70,12 @@ export function verifyLineageChain(markers: ExitMarker[]): { valid: boolean; err
 /**
  * Bind a successor to an existing marker by creating a key rotation proof.
  * Returns a new marker with successor info attached.
+ *
+ * @param marker - The EXIT marker to bind a successor to.
+ * @param successorDid - The DID of the designated successor.
+ * @param privateKey - The current subject's Ed25519 private key for signing the binding.
+ * @param publicKey - The current subject's Ed25519 public key.
+ * @returns A new EXIT marker with the lineage module updated with successor and continuity proof.
  */
 export function bindSuccessor(
   marker: ExitMarker,

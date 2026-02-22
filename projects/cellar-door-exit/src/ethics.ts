@@ -33,6 +33,20 @@ function tenureDays(start: string, end: string): number {
 
 /**
  * Detect coercion signals in a single EXIT marker.
+ *
+ * Analyzes forced exits with conflicting statuses, emergency exits without
+ * infrastructure failure indicators, and short-tenure forced departures.
+ *
+ * @param marker - The EXIT marker to analyze for coercion signals.
+ * @returns A {@link CoercionSignals} object with detected signals, risk level, and recommendation.
+ *
+ * @example
+ * ```ts
+ * const signals = detectCoercion(marker);
+ * if (signals.riskLevel !== "none") {
+ *   console.log("Coercion risk:", signals.recommendation);
+ * }
+ * ```
  */
 export function detectCoercion(marker: ExitMarker): CoercionSignals {
   const signals: string[] = [];
@@ -98,6 +112,20 @@ export function detectCoercion(marker: ExitMarker): CoercionSignals {
 
 /**
  * Detect weaponization patterns across a set of EXIT markers.
+ *
+ * Analyzes origins for mass forced exits, systematic dispute of departing subjects,
+ * and purge-like patterns (many exits in a short timeframe).
+ *
+ * @param markers - An array of EXIT markers to analyze for weaponization patterns.
+ * @returns A {@link WeaponizationSignals} object with patterns, severity, and affected subjects.
+ *
+ * @example
+ * ```ts
+ * const signals = detectWeaponization(allMarkers);
+ * if (signals.severity === "severe") {
+ *   console.log("Affected subjects:", signals.affectedSubjects);
+ * }
+ * ```
  */
 export function detectWeaponization(markers: ExitMarker[]): WeaponizationSignals {
   const patterns: string[] = [];
@@ -164,6 +192,21 @@ export function detectWeaponization(markers: ExitMarker[]): WeaponizationSignals
 
 /**
  * Detect reputation laundering signals for a specific subject.
+ *
+ * Checks for identity cycling (multiple short-tenure exits), high churn rates,
+ * and self-attested good standing without origin corroboration.
+ *
+ * @param markers - The full set of EXIT markers to search through.
+ * @param subjectDid - The DID of the subject to analyze.
+ * @returns A {@link LaunderingSignals} object with detected signals and probability assessment.
+ *
+ * @example
+ * ```ts
+ * const signals = detectReputationLaundering(allMarkers, "did:key:z6Mk...");
+ * if (signals.probability === "high") {
+ *   console.log("Laundering signals:", signals.signals);
+ * }
+ * ```
  */
 export function detectReputationLaundering(
   markers: ExitMarker[],
@@ -228,6 +271,20 @@ export function detectReputationLaundering(
 
 /**
  * Generate a comprehensive ethics audit report for a set of markers.
+ *
+ * Runs coercion detection on each marker, weaponization detection across all markers,
+ * and laundering detection per unique subject. Produces aggregated recommendations and
+ * an overall risk assessment.
+ *
+ * @param markers - An array of EXIT markers to audit.
+ * @returns A comprehensive {@link EthicsReport} with findings, recommendations, and overall risk.
+ *
+ * @example
+ * ```ts
+ * const report = generateEthicsReport(markers);
+ * console.log(`Overall risk: ${report.overallRisk}`);
+ * console.log(`Recommendations: ${report.recommendations.join("; ")}`);
+ * ```
  */
 export function generateEthicsReport(markers: ExitMarker[]): EthicsReport {
   const coercionFindings = markers.map((m) => ({

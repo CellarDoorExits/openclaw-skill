@@ -31,13 +31,35 @@ function toHex(bytes: Uint8Array): string {
     .join("");
 }
 
-/** Compute a SHA-256 hash of the full marker suitable for on-chain posting. */
+/**
+ * Compute a SHA-256 hash of the full marker suitable for on-chain posting.
+ *
+ * @param marker - The EXIT marker to hash.
+ * @returns Hex-encoded SHA-256 hash of the canonicalized marker.
+ *
+ * @example
+ * ```ts
+ * const hash = computeAnchorHash(marker);
+ * console.log(hash); // "a1b2c3..."
+ * ```
+ */
 export function computeAnchorHash(marker: ExitMarker): string {
   const canonical = canonicalize(marker);
   return toHex(sha256(new TextEncoder().encode(canonical)));
 }
 
-/** Create a standard anchor record with minimal public metadata. */
+/**
+ * Create a standard anchor record with minimal public metadata.
+ *
+ * @param marker - The EXIT marker to create an anchor record for.
+ * @returns An anchor record containing the hash, timestamp, exit type, and subject DID.
+ *
+ * @example
+ * ```ts
+ * const record = createAnchorRecord(marker);
+ * // record.hash, record.timestamp, record.exitType, record.subjectDid
+ * ```
+ */
 export function createAnchorRecord(marker: ExitMarker): AnchorRecord {
   return {
     hash: computeAnchorHash(marker),
@@ -47,7 +69,19 @@ export function createAnchorRecord(marker: ExitMarker): AnchorRecord {
   };
 }
 
-/** Verify that an anchor record matches a given marker. */
+/**
+ * Verify that an anchor record matches a given marker.
+ *
+ * @param record - The anchor record to verify (minimal or standard).
+ * @param marker - The EXIT marker to verify against.
+ * @returns `true` if the record's hash (and optional metadata) matches the marker.
+ *
+ * @example
+ * ```ts
+ * const record = createAnchorRecord(marker);
+ * const valid = verifyAnchorRecord(record, marker); // true
+ * ```
+ */
 export function verifyAnchorRecord(record: MinimalAnchorRecord | AnchorRecord, marker: ExitMarker): boolean {
   const computed = computeAnchorHash(marker);
   if (record.hash !== computed) return false;
@@ -56,7 +90,18 @@ export function verifyAnchorRecord(record: MinimalAnchorRecord | AnchorRecord, m
   return true;
 }
 
-/** Create the absolute bare minimum anchor: just hash + timestamp. */
+/**
+ * Create the absolute bare minimum anchor: just hash + timestamp.
+ *
+ * @param marker - The EXIT marker to create a minimal anchor for.
+ * @returns A minimal anchor record containing only the hash and timestamp.
+ *
+ * @example
+ * ```ts
+ * const anchor = createMinimalAnchor(marker);
+ * // anchor.hash, anchor.timestamp
+ * ```
+ */
 export function createMinimalAnchor(marker: ExitMarker): MinimalAnchorRecord {
   return {
     hash: computeAnchorHash(marker),

@@ -22,19 +22,51 @@ export interface KeyPair {
   privateKey: Uint8Array;
 }
 
-/** Generate an Ed25519 keypair. */
+/**
+ * Generate an Ed25519 keypair.
+ *
+ * @returns A {@link KeyPair} containing the public and private keys as `Uint8Array`.
+ *
+ * @example
+ * ```ts
+ * const { publicKey, privateKey } = generateKeyPair();
+ * ```
+ */
 export function generateKeyPair(): KeyPair {
   const privateKey = ed.utils.randomPrivateKey();
   const publicKey = ed.getPublicKey(privateKey);
   return { publicKey, privateKey };
 }
 
-/** Sign data with an Ed25519 private key. */
+/**
+ * Sign data with an Ed25519 private key.
+ *
+ * @param data - The data to sign.
+ * @param privateKey - The Ed25519 private key (32 bytes).
+ * @returns The 64-byte Ed25519 signature.
+ *
+ * @example
+ * ```ts
+ * const sig = sign(new TextEncoder().encode("hello"), privateKey);
+ * ```
+ */
 export function sign(data: Uint8Array, privateKey: Uint8Array): Uint8Array {
   return ed.sign(data, privateKey);
 }
 
-/** Verify an Ed25519 signature. */
+/**
+ * Verify an Ed25519 signature.
+ *
+ * @param data - The original signed data.
+ * @param signature - The 64-byte Ed25519 signature.
+ * @param publicKey - The Ed25519 public key (32 bytes).
+ * @returns `true` if the signature is valid; `false` otherwise.
+ *
+ * @example
+ * ```ts
+ * const valid = verify(data, signature, publicKey);
+ * ```
+ */
 export function verify(
   data: Uint8Array,
   signature: Uint8Array,
@@ -98,7 +130,18 @@ function base58btcDecode(str: string): Uint8Array {
   return result;
 }
 
-/** Convert an Ed25519 public key to a did:key string (z6Mk...). */
+/**
+ * Convert an Ed25519 public key to a did:key string (z6Mk...).
+ *
+ * @param publicKey - The Ed25519 public key (32 bytes).
+ * @returns A `did:key:z...` string encoding the public key with multicodec prefix.
+ *
+ * @example
+ * ```ts
+ * const did = didFromPublicKey(publicKey);
+ * console.log(did); // "did:key:z6Mk..."
+ * ```
+ */
 export function didFromPublicKey(publicKey: Uint8Array): string {
   const multicodec = new Uint8Array(ED25519_MULTICODEC.length + publicKey.length);
   multicodec.set(ED25519_MULTICODEC);
@@ -106,7 +149,18 @@ export function didFromPublicKey(publicKey: Uint8Array): string {
   return `did:key:z${base58btcEncode(multicodec)}`;
 }
 
-/** Extract an Ed25519 public key from a did:key string. */
+/**
+ * Extract an Ed25519 public key from a did:key string.
+ *
+ * @param did - A `did:key:z...` string containing an Ed25519 public key.
+ * @returns The extracted 32-byte Ed25519 public key.
+ * @throws {Error} If the DID format is invalid or the multicodec prefix is not Ed25519.
+ *
+ * @example
+ * ```ts
+ * const pubKey = publicKeyFromDid("did:key:z6Mk...");
+ * ```
+ */
 export function publicKeyFromDid(did: string): Uint8Array {
   if (!did.startsWith("did:key:z")) {
     throw new Error("Invalid did:key format: must start with 'did:key:z'");

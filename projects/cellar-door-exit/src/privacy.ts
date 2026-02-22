@@ -35,7 +35,22 @@ export interface EncryptedMarkerBlob {
   ciphertext: string;
 }
 
-/** Encrypt a marker so only the holder of the private key can decrypt it. */
+/**
+ * Encrypt a marker so only the holder of the private key can decrypt it.
+ *
+ * Uses ECDH (x25519) key agreement with an ephemeral keypair, derives a symmetric
+ * key via SHA-256, and encrypts with XChaCha20-Poly1305.
+ *
+ * @param marker - The EXIT marker to encrypt.
+ * @param recipientPublicKey - The recipient's x25519 public key (32 bytes).
+ * @returns An {@link EncryptedMarkerBlob} containing the ephemeral public key, nonce, and ciphertext.
+ *
+ * @example
+ * ```ts
+ * const blob = encryptMarker(marker, recipientX25519PubKey);
+ * // blob can be safely stored or transmitted
+ * ```
+ */
 export function encryptMarker(marker: ExitMarker, recipientPublicKey: Uint8Array): EncryptedMarkerBlob {
   // Generate ephemeral x25519 keypair
   const ephemeralPrivate = randomBytes(32);
@@ -58,7 +73,14 @@ export function encryptMarker(marker: ExitMarker, recipientPublicKey: Uint8Array
   };
 }
 
-/** Decrypt an encrypted marker blob using the recipient's x25519 private key. */
+/**
+ * Decrypt an encrypted marker blob using the recipient's x25519 private key.
+ *
+ * @param blob - The encrypted marker blob produced by {@link encryptMarker}.
+ * @param privateKey - The recipient's x25519 private key (32 bytes).
+ * @returns The decrypted EXIT marker.
+ * @throws {Error} If decryption fails (wrong key, tampered ciphertext, etc.).
+ */
 export function decryptMarker(blob: EncryptedMarkerBlob, privateKey: Uint8Array): ExitMarker {
   const ephemeralPublic = fromHex(blob.ephemeralPublicKey);
   const shared = x25519.getSharedSecret(privateKey, ephemeralPublic);
@@ -82,8 +104,18 @@ function hashField(value: unknown): string {
 }
 
 /**
- * Create a redacted marker with specified fields replaced by their hashes.
+ * Create a redacted marker with specified fields replaced by their SHA-256 hashes.
  * ZK-lite: proves fields existed without revealing content.
+ *
+ * @param marker - The EXIT marker to redact.
+ * @param fields - Array of field names to replace with `"redacted:sha256:..."` hashes.
+ * @returns A new object with specified fields hashed and all other fields intact.
+ *
+ * @example
+ * ```ts
+ * const redacted = redactMarker(marker, ["subject", "metadata"]);
+ * // redacted.subject === "redacted:sha256:abc123..."
+ * ```
  */
 export function redactMarker(marker: ExitMarker, fields: string[]): Record<string, unknown> {
   const result = { ...marker } as Record<string, unknown>;
@@ -97,6 +129,16 @@ export function redactMarker(marker: ExitMarker, fields: string[]): Record<strin
 
 /**
  * Create a minimal disclosure: only reveal specified fields, hash everything else.
+ *
+ * @param marker - The EXIT marker to create a minimal disclosure from.
+ * @param revealFields - Array of field names to keep in plaintext.
+ * @returns A new object with only the specified fields visible; all others are SHA-256 hashed.
+ *
+ * @example
+ * ```ts
+ * const disclosure = createMinimalDisclosure(marker, ["id", "exitType", "timestamp"]);
+ * // Only id, exitType, timestamp are readable; everything else is hashed
+ * ```
  */
 export function createMinimalDisclosure(
   marker: ExitMarker,

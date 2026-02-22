@@ -18,7 +18,17 @@ import type {
 } from "./types.js";
 import { EXIT_CONTEXT_V1 } from "./types.js";
 
-/** Create an EXIT marker declaring key compromise. */
+/**
+ * Create an EXIT marker declaring key compromise.
+ *
+ * Links the compromised identity to a new one via the rotation chain.
+ *
+ * @param compromisedDid - The DID of the compromised identity.
+ * @param rotationEvent - The key rotation event that established the new key.
+ * @param newDid - The DID of the new (post-rotation) identity.
+ * @param signingKey - The private key of the new identity for signing.
+ * @returns A signed EXIT marker of type `keyCompromise` linking old to new identity.
+ */
 export function createCompromiseMarker(
   compromisedDid: string,
   rotationEvent: KeyRotationEvent,
@@ -68,7 +78,13 @@ export function createCompromiseMarker(
   return marker;
 }
 
-/** Verify that a compromise recovery marker is backed by a valid rotation chain. */
+/**
+ * Verify that a compromise recovery marker is backed by a valid rotation chain.
+ *
+ * @param compromiseMarker - The compromise EXIT marker to verify.
+ * @param keyEventLog - The key event log containing the rotation history.
+ * @returns `true` if the marker is a valid key compromise recovery; `false` otherwise.
+ */
 export function verifyCompromiseRecovery(
   compromiseMarker: ExitMarker,
   keyEventLog: KeyEventLog
@@ -97,7 +113,13 @@ export function verifyCompromiseRecovery(
   }
 }
 
-/** Create a record linking compromised markers to the compromise event. */
+/**
+ * Create a record linking compromised markers to the compromise event.
+ *
+ * @param compromiseMarker - The compromise EXIT marker.
+ * @param affectedMarkerIds - IDs of markers signed with the compromised key.
+ * @returns A {@link CompromiseLink} record associating affected markers with the compromise event.
+ */
 export function linkCompromisedMarkers(
   compromiseMarker: ExitMarker,
   affectedMarkerIds: string[]

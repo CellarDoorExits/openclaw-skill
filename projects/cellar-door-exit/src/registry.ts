@@ -19,7 +19,12 @@ export class MarkerRegistry {
   private bySubject = new Map<string, Set<string>>();
   private byOrigin = new Map<string, Set<string>>();
 
-  /** Register a marker. Indexes by ID, subject DID, and origin. */
+  /**
+   * Register a marker. Indexes by ID, subject DID, and origin.
+   *
+   * @param marker - The EXIT marker to register.
+   * @throws {Error} If a marker with the same ID is already registered.
+   */
   register(marker: ExitMarker): void {
     if (this.byId.has(marker.id)) {
       throw new Error(`Marker already registered: ${marker.id}`);
@@ -38,26 +43,47 @@ export class MarkerRegistry {
     this.byOrigin.get(marker.origin)!.add(marker.id);
   }
 
-  /** Look up a marker by ID. */
+  /**
+   * Look up a marker by ID.
+   *
+   * @param id - The marker ID to look up.
+   * @returns The marker if found, or `null`.
+   */
   lookup(id: string): ExitMarker | null {
     return this.byId.get(id) ?? null;
   }
 
-  /** Find all markers for a given subject DID. */
+  /**
+   * Find all markers for a given subject DID.
+   *
+   * @param did - The subject DID to search for.
+   * @returns An array of markers for the subject (empty if none found).
+   */
   findBySubject(did: string): ExitMarker[] {
     const ids = this.bySubject.get(did);
     if (!ids) return [];
     return [...ids].map((id) => this.byId.get(id)!);
   }
 
-  /** Find all markers from a given origin URI. */
+  /**
+   * Find all markers from a given origin URI.
+   *
+   * @param uri - The origin URI to search for.
+   * @returns An array of markers from the origin (empty if none found).
+   */
   findByOrigin(uri: string): ExitMarker[] {
     const ids = this.byOrigin.get(uri);
     if (!ids) return [];
     return [...ids].map((id) => this.byId.get(id)!);
   }
 
-  /** Find markers within a time range (inclusive). */
+  /**
+   * Find markers within a time range (inclusive).
+   *
+   * @param start - The start of the time range.
+   * @param end - The end of the time range.
+   * @returns An array of markers whose timestamps fall within the range.
+   */
   findByTimeRange(start: Date, end: Date): ExitMarker[] {
     const results: ExitMarker[] = [];
     for (const marker of this.byId.values()) {
@@ -69,12 +95,20 @@ export class MarkerRegistry {
     return results;
   }
 
-  /** Total number of registered markers. */
+  /**
+   * Total number of registered markers.
+   *
+   * @returns The count of markers in the registry.
+   */
   count(): number {
     return this.byId.size;
   }
 
-  /** Export all markers as an array. */
+  /**
+   * Export all markers as an array.
+   *
+   * @returns An array of all registered markers.
+   */
   export(): ExitMarker[] {
     return [...this.byId.values()];
   }

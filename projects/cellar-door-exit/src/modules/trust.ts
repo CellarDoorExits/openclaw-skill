@@ -38,6 +38,9 @@ import { sha256 } from "@noble/hashes/sha256";
  * - If origin co-signed but statuses disagree → disputed_by_origin or disputed_by_subject
  * - If only self-attested → self_only
  * - If Module C has counterpartyAcks from witnesses → witnessed
+ *
+ * @param marker - The EXIT marker to analyze.
+ * @returns The {@link StatusConfirmation} level.
  */
 export function computeStatusConfirmation(marker: ExitMarker): StatusConfirmation {
   const hasOriginAttestation = marker.dispute?.originStatus !== undefined;
@@ -73,6 +76,13 @@ export function computeStatusConfirmation(marker: ExitMarker): StatusConfirmatio
 
 /**
  * Create a signed tenure attestation.
+ *
+ * @param duration - ISO 8601 duration string (e.g., `"P365D"`).
+ * @param startDate - ISO 8601 start date of tenure.
+ * @param privateKey - The attester's Ed25519 private key.
+ * @param publicKey - The attester's Ed25519 public key.
+ * @param attestedBy - Whether the subject or origin is attesting (default: `"subject"`).
+ * @returns A signed {@link TenureAttestation}.
  */
 export function createTenureAttestation(
   duration: string,
@@ -96,6 +106,9 @@ export function createTenureAttestation(
 
 /**
  * Verify a tenure attestation signature.
+ *
+ * @param attestation - The tenure attestation to verify.
+ * @returns `true` if the signature is valid; `false` otherwise.
  */
 export function verifyTenureAttestation(attestation: TenureAttestation): boolean {
   try {
@@ -117,7 +130,10 @@ export function verifyTenureAttestation(attestation: TenureAttestation): boolean
 
 /**
  * Parse an ISO 8601 duration to approximate days.
- * Handles P[n]Y[n]M[n]D format.
+ * Handles `P[n]Y[n]M[n]D` format.
+ *
+ * @param duration - An ISO 8601 duration string (e.g., `"P2Y3M10D"`).
+ * @returns Approximate number of days (years=365, months=30). Returns 0 if unparseable.
  */
 export function parseDurationToDays(duration: string): number {
   const match = duration.match(/^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?$/);
@@ -131,8 +147,14 @@ export function parseDurationToDays(duration: string): number {
 // ─── Commit-Reveal ───────────────────────────────────────────────────────────
 
 /**
- * Create a commitment hash for an exit intent.
- * The commitment is SHA-256(canonicalize(intent fields)).
+ * Create a commitment hash for an exit intent (commit-reveal scheme).
+ * The commitment is `SHA-256(canonicalize(intent fields))`.
+ *
+ * @param intent - The exit intent to commit to.
+ * @param revealDelayMs - Minimum delay in milliseconds before the intent can be revealed.
+ * @param privateKey - The committer's Ed25519 private key.
+ * @param publicKey - The committer's Ed25519 public key.
+ * @returns A signed {@link ExitCommitment} with the hash, timestamps, and proof.
  */
 export function createCommitment(
   intent: ExitIntent,
@@ -179,6 +201,10 @@ export function createCommitment(
 
 /**
  * Verify that a commitment matches the revealed intent.
+ *
+ * @param commitment - The previously published commitment.
+ * @param revealedIntent - The revealed exit intent to verify against.
+ * @returns An object with `valid` boolean and array of `errors`.
  */
 export function verifyCommitment(
   commitment: ExitCommitment,
@@ -227,6 +253,9 @@ export function verifyCommitment(
 
 /**
  * Check if the reveal window has opened (current time >= revealAfter).
+ *
+ * @param commitment - The exit commitment to check.
+ * @returns `true` if the current time is at or past the `revealAfter` timestamp.
  */
 export function isRevealWindowOpen(commitment: ExitCommitment): boolean {
   return new Date() >= new Date(commitment.revealAfter);
@@ -236,6 +265,12 @@ export function isRevealWindowOpen(commitment: ExitCommitment): boolean {
 
 /**
  * Extract confidence factors from a marker and optional attestations.
+ *
+ * @param marker - The EXIT marker to extract factors from.
+ * @param tenure - Optional subject tenure attestation.
+ * @param originTenure - Optional origin tenure attestation (enables mutual attestation scoring).
+ * @param hasCommitReveal - Whether a valid commit-reveal was present (default: `false`).
+ * @returns A {@link ConfidenceFactors} object with all extracted factors.
  */
 export function extractConfidenceFactors(
   marker: ExitMarker,
@@ -271,6 +306,9 @@ export function extractConfidenceFactors(
  * - Commit-reveal: 0.0 or 0.15 (binary)
  *
  * Disputed statuses cap the score.
+ *
+ * @param factors - The {@link ConfidenceFactors} to score.
+ * @returns A {@link ConfidenceScore} with the overall score (0.0–1.0), level, and factor breakdown.
  */
 export function computeConfidence(factors: ConfidenceFactors): ConfidenceScore {
   // Status confirmation weight

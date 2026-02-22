@@ -2,8 +2,25 @@
  * cellar-door-exit — JSON-LD Context Document
  */
 
+/**
+ * The canonical URL for the EXIT JSON-LD context, version 1.
+ *
+ * @example
+ * ```ts
+ * const ctx = { "@context": EXIT_CONTEXT_V1_URL };
+ * ```
+ */
 export const EXIT_CONTEXT_V1_URL = "https://cellar-door.org/exit/v1";
 
+/**
+ * The full EXIT JSON-LD context object defining all terms, namespaces,
+ * and type mappings for EXIT markers.
+ *
+ * @example
+ * ```ts
+ * const marker = { "@context": EXIT_CONTEXT["@context"], ... };
+ * ```
+ */
 export const EXIT_CONTEXT = {
   "@context": {
     // Base vocabularies
@@ -67,7 +84,17 @@ export const EXIT_CONTEXT = {
   },
 };
 
-/** Get the full EXIT JSON-LD context object. */
+/**
+ * Get the full EXIT JSON-LD context object.
+ *
+ * @returns The complete EXIT JSON-LD context with all term definitions.
+ *
+ * @example
+ * ```ts
+ * const ctx = getContext();
+ * console.log(ctx["@context"].subject); // { "@id": "exit:subject", "@type": "@id" }
+ * ```
+ */
 export function getContext(): typeof EXIT_CONTEXT {
   return EXIT_CONTEXT;
 }

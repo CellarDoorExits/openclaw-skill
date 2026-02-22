@@ -37,7 +37,22 @@ const EMPTY_PROOF: DataIntegrityProof = {
   proofValue: "",
 };
 
-/** Create an ExitMarker with sensible defaults. Validates inputs eagerly. */
+/**
+ * Create an ExitMarker with sensible defaults. Validates inputs eagerly.
+ *
+ * @param opts - Options for creating the marker including subject, origin, exitType, and optional overrides.
+ * @returns A new unsigned EXIT marker with a content-addressed ID.
+ * @throws {ValidationError} If required fields are missing or invalid.
+ *
+ * @example
+ * ```ts
+ * const marker = createMarker({
+ *   subject: "did:key:z6Mk...",
+ *   origin: "https://platform.example.com",
+ *   exitType: ExitType.Voluntary,
+ * });
+ * ```
+ */
 export function createMarker(opts: CreateMarkerOpts): ExitMarker {
   // Input validation — fail fast
   const errors: string[] = [];
@@ -87,7 +102,12 @@ function defaultStatus(exitType: ExitType): ExitStatus {
   }
 }
 
-/** Deterministic JSON string with sorted keys (recursive). */
+/**
+ * Deterministic JSON string with sorted keys (recursive).
+ *
+ * @param obj - The value to canonicalize.
+ * @returns A deterministic JSON string with lexicographically sorted keys at every level.
+ */
 export function canonicalize(obj: unknown): string {
   if (obj === null || obj === undefined) return JSON.stringify(obj);
   if (typeof obj !== "object") return JSON.stringify(obj);
@@ -101,7 +121,12 @@ export function canonicalize(obj: unknown): string {
   return "{" + pairs.join(",") + "}";
 }
 
-/** Compute a content-addressed SHA-256 hex hash of a marker (excluding proof). */
+/**
+ * Compute a content-addressed SHA-256 hex hash of a marker (excluding proof and id).
+ *
+ * @param marker - The EXIT marker to hash.
+ * @returns Hex-encoded SHA-256 hash suitable for use as a content-addressed ID.
+ */
 export function computeId(marker: ExitMarker): string {
   // Hash everything except proof and id for content-addressing
   const { proof: _proof, id: _id, ...rest } = marker;
@@ -115,7 +140,19 @@ export function computeId(marker: ExitMarker): string {
 type ModuleKey = "lineage" | "stateSnapshot" | "dispute" | "economic" | "metadata" | "crossDomain";
 type ModuleType = ModuleA | ModuleB | ModuleC | ModuleD | ModuleE | ModuleF;
 
-/** Return a new marker with a module attached. */
+/**
+ * Return a new marker with a module attached. Does not mutate the original.
+ *
+ * @param marker - The EXIT marker to attach the module to.
+ * @param key - The module slot name (`"lineage"`, `"stateSnapshot"`, `"dispute"`, `"economic"`, `"metadata"`, or `"crossDomain"`).
+ * @param module - The module data to attach.
+ * @returns A new EXIT marker with the module set.
+ *
+ * @example
+ * ```ts
+ * const withMeta = addModule(marker, "metadata", { reason: "Moving on" });
+ * ```
+ */
 export function addModule(
   marker: ExitMarker,
   key: ModuleKey,

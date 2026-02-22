@@ -38,9 +38,21 @@ export interface ExitMiddlewareOpts {
 
 /**
  * Create express-style middleware that handles EXIT marker endpoints:
- * - POST /exit — submit a new marker
- * - GET /exit/:id — retrieve a marker
- * - POST /exit/:id/verify — verify a marker
+ * - `POST /exit` — submit a new marker (validates before storing)
+ * - `GET /exit/:id` — retrieve a marker by ID
+ * - `POST /exit/:id/verify` — verify a marker's signature and schema
+ *
+ * @param opts - Middleware configuration with `onPost`, `onGet` callbacks and optional `basePath`.
+ * @returns An express-compatible middleware function.
+ *
+ * @example
+ * ```ts
+ * app.use(createExitMiddleware({
+ *   onPost: async (marker) => { store.save(marker); return marker; },
+ *   onGet: async (id) => store.load(id),
+ *   basePath: "/api/exit",
+ * }));
+ * ```
  */
 export function createExitMiddleware(opts: ExitMiddlewareOpts): Middleware {
   const base = opts.basePath ?? "/exit";
@@ -100,7 +112,21 @@ export interface ExitHook {
   execute(marker: ExitMarker): Promise<void>;
 }
 
-/** Create a lifecycle hook for EXIT processing. */
+/**
+ * Create a lifecycle hook for EXIT processing.
+ *
+ * @param callbacks - An object with optional `beforeExit`, `onExit`, and `afterExit` callbacks.
+ * @returns An {@link ExitHook} whose `execute` method runs callbacks in order.
+ *
+ * @example
+ * ```ts
+ * const hook = createExitHook({
+ *   beforeExit: (m) => console.log("About to exit:", m.subject),
+ *   afterExit: (m) => notifyPeers(m),
+ * });
+ * await hook.execute(marker);
+ * ```
+ */
 export function createExitHook(callbacks: ExitHookCallbacks): ExitHook {
   return {
     async execute(marker: ExitMarker): Promise<void> {
@@ -117,21 +143,44 @@ export type ExitEvent = "intent" | "negotiating" | "signing" | "departed";
 
 /**
  * Event emitter for EXIT lifecycle events.
- * Emits: 'intent', 'negotiating', 'signing', 'departed'
+ * Emits: `'intent'`, `'negotiating'`, `'signing'`, `'departed'`
+ *
+ * @example
+ * ```ts
+ * const emitter = new ExitEventEmitter();
+ * emitter.on("departed", (marker) => console.log("Departed:", marker.subject));
+ * emitter.emitDeparted(signedMarker);
+ * ```
  */
 export class ExitEventEmitter extends EventEmitter {
+  /**
+   * Emit an intent event.
+   * @param marker - The EXIT marker associated with the intent.
+   */
   emitIntent(marker: ExitMarker): void {
     this.emit("intent", marker);
   }
 
+  /**
+   * Emit a negotiating event.
+   * @param marker - The EXIT marker being negotiated.
+   */
   emitNegotiating(marker: ExitMarker): void {
     this.emit("negotiating", marker);
   }
 
+  /**
+   * Emit a signing event.
+   * @param marker - The EXIT marker being signed.
+   */
   emitSigning(marker: ExitMarker): void {
     this.emit("signing", marker);
   }
 
+  /**
+   * Emit a departed event.
+   * @param marker - The finalized EXIT marker.
+   */
   emitDeparted(marker: ExitMarker): void {
     this.emit("departed", marker);
   }
@@ -143,6 +192,15 @@ export class ExitEventEmitter extends EventEmitter {
  * Serialize a marker to a compact binary format for bandwidth-constrained environments.
  * Format: 4-byte length prefix (big-endian) + canonical JSON as UTF-8.
  * (A real implementation would use CBOR; this is a lightweight approximation.)
+ *
+ * @param marker - The EXIT marker to serialize.
+ * @returns A `Buffer` with a 4-byte length header followed by the canonical JSON payload.
+ *
+ * @example
+ * ```ts
+ * const buf = serializeForTransport(marker);
+ * // Send buf over the wire, then deserialize on the other end
+ * ```
  */
 export function serializeForTransport(marker: ExitMarker): Buffer {
   const json = canonicalize(marker);
@@ -152,7 +210,13 @@ export function serializeForTransport(marker: ExitMarker): Buffer {
   return Buffer.concat([header, payload]);
 }
 
-/** Deserialize a marker from compact transport format. */
+/**
+ * Deserialize a marker from compact transport format.
+ *
+ * @param buffer - A `Buffer` in the format produced by {@link serializeForTransport}.
+ * @returns The deserialized EXIT marker.
+ * @throws {Error} If the buffer is too short or truncated.
+ */
 export function deserializeFromTransport(buffer: Buffer): ExitMarker {
   if (buffer.length < 4) throw new Error("Transport buffer too short");
   const length = buffer.readUInt32BE(0);

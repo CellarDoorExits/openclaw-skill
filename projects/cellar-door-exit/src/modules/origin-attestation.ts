@@ -23,7 +23,12 @@ export interface CreateOriginAttestationOpts {
   timestamp?: string;
 }
 
-/** Create an origin attestation module. */
+/**
+ * Create an origin attestation module.
+ *
+ * @param opts - Options including the origin's status assessment, statement, and optional signature/DID.
+ * @returns An {@link OriginAttestationModule} representing the origin's perspective on the exit.
+ */
 export function createOriginAttestation(opts: CreateOriginAttestationOpts): OriginAttestationModule {
   return {
     moduleType: "originAttestation",
@@ -35,7 +40,16 @@ export function createOriginAttestation(opts: CreateOriginAttestationOpts): Orig
   };
 }
 
-/** Sign an attestation: origin co-signs the marker with their assessment. */
+/**
+ * Sign an attestation: origin co-signs the marker with their assessment.
+ *
+ * @param marker - The EXIT marker being attested.
+ * @param originPrivateKey - The origin's Ed25519 private key.
+ * @param originPublicKey - The origin's Ed25519 public key.
+ * @param status - The origin's assessment of the subject's standing.
+ * @param statement - The origin's statement about the exit.
+ * @returns A signed {@link OriginAttestationModule}.
+ */
 export function signAttestation(
   marker: ExitMarker,
   originPrivateKey: Uint8Array,

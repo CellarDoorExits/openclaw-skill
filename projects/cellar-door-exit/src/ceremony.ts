@@ -24,11 +24,39 @@ const TRANSITIONS: Record<CeremonyState, CeremonyState[]> = {
   [CeremonyState.Departed]: [],
 };
 
-/** Get valid transitions from a given ceremony state. */
+/**
+ * Get valid transitions from a given ceremony state.
+ *
+ * @param state - The current ceremony state.
+ * @returns An array of valid next states.
+ *
+ * @example
+ * ```ts
+ * const next = getValidTransitions(CeremonyState.Alive);
+ * // [CeremonyState.Intent, CeremonyState.Final]
+ * ```
+ */
 export function getValidTransitions(state: CeremonyState): CeremonyState[] {
   return [...(TRANSITIONS[state] ?? [])];
 }
 
+/**
+ * State machine managing the EXIT ceremony lifecycle.
+ *
+ * Supports three paths:
+ * - **Full cooperative:** ALIVE → INTENT → SNAPSHOT → OPEN → FINAL → DEPARTED
+ * - **Unilateral:** ALIVE → INTENT → SNAPSHOT → FINAL → DEPARTED
+ * - **Emergency:** ALIVE → FINAL → DEPARTED
+ *
+ * @example
+ * ```ts
+ * const ceremony = new CeremonyStateMachine();
+ * ceremony.declareIntent(subject, origin, ExitType.Voluntary, privKey, pubKey);
+ * ceremony.snapshot();
+ * const signed = ceremony.signMarker(marker, privKey, pubKey);
+ * const final = ceremony.depart();
+ * ```
+ */
 export class CeremonyStateMachine {
   state: CeremonyState = CeremonyState.Alive;
   intent?: ExitIntent;
@@ -46,7 +74,17 @@ export class CeremonyStateMachine {
     this.state = to;
   }
 
-  /** Declare intent to exit. Moves ALIVE → INTENT. */
+  /**
+   * Declare intent to exit. Moves ALIVE → INTENT (or stays ALIVE for emergency path).
+   *
+   * @param subject - The DID of the departing entity.
+   * @param origin - The URI of the system being exited.
+   * @param exitType - The type of exit.
+   * @param privateKey - The subject's Ed25519 private key for signing the intent.
+   * @param publicKey - The subject's Ed25519 public key.
+   * @returns A signed {@link ExitIntent}.
+   * @throws {CeremonyError} If the transition is invalid.
+   */
   declareIntent(
     subject: string,
     origin: string,
@@ -94,22 +132,42 @@ export class CeremonyStateMachine {
     };
   }
 
-  /** Advance through snapshot. Moves INTENT → SNAPSHOT. */
+  /**
+   * Advance through snapshot. Moves INTENT → SNAPSHOT.
+   *
+   * @throws {CeremonyError} If the current state is not INTENT.
+   */
   snapshot(): void {
     this.transition(CeremonyState.Snapshot);
   }
 
-  /** Open challenge window. Moves SNAPSHOT → OPEN. */
+  /**
+   * Open challenge window. Moves SNAPSHOT → OPEN.
+   *
+   * @throws {CeremonyError} If the current state is not SNAPSHOT.
+   */
   openChallenge(): void {
     this.transition(CeremonyState.Open);
   }
 
-  /** Mark as contested. Moves OPEN → CONTESTED. */
+  /**
+   * Mark as contested. Moves OPEN → CONTESTED.
+   *
+   * @throws {CeremonyError} If the current state is not OPEN.
+   */
   contest(): void {
     this.transition(CeremonyState.Contested);
   }
 
-  /** Sign the marker and finalize. Moves to FINAL. */
+  /**
+   * Sign the marker and finalize. Moves to FINAL.
+   *
+   * @param marker - The EXIT marker to sign.
+   * @param privateKey - The subject's Ed25519 private key.
+   * @param publicKey - The subject's Ed25519 public key.
+   * @returns The signed EXIT marker.
+   * @throws {CeremonyError} If the transition to FINAL is invalid.
+   */
   signMarker(marker: ExitMarker, privateKey: Uint8Array, publicKey: Uint8Array): ExitMarker {
     if (this.exitType === ExitType.Emergency && this.state === CeremonyState.Alive) {
       this.transition(CeremonyState.Final);
@@ -120,7 +178,14 @@ export class CeremonyStateMachine {
     return this.marker;
   }
 
-  /** Add a witness co-signature. Stays in FINAL. */
+  /**
+   * Add a witness co-signature. Stays in FINAL.
+   *
+   * @param witnessKey - The witness's Ed25519 private key.
+   * @param witnessPublicKey - The witness's Ed25519 public key.
+   * @returns A {@link DataIntegrityProof} containing the witness's co-signature.
+   * @throws {CeremonyError} If the current state is not FINAL or no marker has been signed.
+   */
   witness(witnessKey: Uint8Array, witnessPublicKey: Uint8Array): DataIntegrityProof {
     if (this.state !== CeremonyState.Final) {
       throw new CeremonyError(this.state, "witness (requires final)", getValidTransitions(this.state).map(s => s as string));
@@ -139,7 +204,12 @@ export class CeremonyStateMachine {
     };
   }
 
-  /** Depart. Moves FINAL → DEPARTED. Terminal. */
+  /**
+   * Depart. Moves FINAL → DEPARTED. Terminal — no further transitions possible.
+   *
+   * @returns The finalized EXIT marker.
+   * @throws {CeremonyError} If the current state is not FINAL or no marker has been signed.
+   */
   depart(): ExitMarker {
     this.transition(CeremonyState.Departed);
     if (!this.marker) throw new CeremonyError(this.state, "depart", ["sign a marker first"]);

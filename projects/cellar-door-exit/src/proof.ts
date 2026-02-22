@@ -8,7 +8,21 @@ import { validateMarker } from "./validate.js";
 import type { ExitMarker, DataIntegrityProof } from "./types.js";
 import { SigningError, VerificationError } from "./errors.js";
 
-/** Sign a marker with an Ed25519 private key. Returns a new marker with proof attached. */
+/**
+ * Sign a marker with an Ed25519 private key. Returns a new marker with proof attached.
+ *
+ * @param marker - The EXIT marker to sign.
+ * @param privateKey - The Ed25519 private key (32 bytes).
+ * @param publicKey - The corresponding Ed25519 public key (32 bytes).
+ * @returns A new EXIT marker with the `proof` field populated.
+ * @throws {SigningError} If signing fails for any reason.
+ *
+ * @example
+ * ```ts
+ * const signed = signMarker(marker, privateKey, publicKey);
+ * console.log(signed.proof.proofValue); // base64 signature
+ * ```
+ */
 export function signMarker(marker: ExitMarker, privateKey: Uint8Array, publicKey: Uint8Array): ExitMarker {
   try {
     const did = didFromPublicKey(publicKey);
@@ -41,7 +55,21 @@ export interface VerificationResult {
   errors: string[];
 }
 
-/** Verify a signed marker: schema validation + signature check. */
+/**
+ * Verify a signed marker: schema validation + signature check.
+ *
+ * Runs full schema validation via {@link validateMarker}, then verifies the
+ * Ed25519 signature against the canonical marker content (excluding proof).
+ *
+ * @param marker - The signed EXIT marker to verify.
+ * @returns A {@link VerificationResult} with `valid` boolean and array of `errors`.
+ *
+ * @example
+ * ```ts
+ * const result = verifyMarker(signedMarker);
+ * if (result.valid) console.log("Marker is authentic!");
+ * ```
+ */
 export function verifyMarker(marker: ExitMarker): VerificationResult {
   const errors: string[] = [];
 

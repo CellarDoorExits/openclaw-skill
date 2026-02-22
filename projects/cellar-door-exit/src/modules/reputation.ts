@@ -25,7 +25,12 @@ export interface CreateReputationOpts {
   tenure?: string;
 }
 
-/** Create a reputation module. */
+/**
+ * Create a reputation module for portable reputation at exit.
+ *
+ * @param opts - Options including metrics (key-value pairs), optional endorsements, and tenure duration.
+ * @returns A {@link ReputationModule} with the specified reputation data.
+ */
 export function createReputationModule(opts: CreateReputationOpts): ReputationModule {
   return {
     moduleType: "reputation",
@@ -35,7 +40,14 @@ export function createReputationModule(opts: CreateReputationOpts): ReputationMo
   };
 }
 
-/** Sign an endorsement with a signer's key. */
+/**
+ * Sign an endorsement with a signer's key.
+ *
+ * @param text - The endorsement text.
+ * @param privateKey - The signer's Ed25519 private key.
+ * @param publicKey - The signer's Ed25519 public key.
+ * @returns A signed {@link Endorsement} with timestamp and signer DID.
+ */
 export function signEndorsement(
   text: string,
   privateKey: Uint8Array,

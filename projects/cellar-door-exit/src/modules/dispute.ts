@@ -24,7 +24,12 @@ export interface CreateDisputeOpts {
   filedAt?: string;
 }
 
-/** Create a dispute module. */
+/**
+ * Create a dispute module for tracking disputes at exit time.
+ *
+ * @param opts - Options including dispute type, filer, description, and optional evidence/status.
+ * @returns A {@link DisputeModule} with the specified dispute details.
+ */
 export function createDisputeModule(opts: CreateDisputeOpts): DisputeModule {
   return {
     moduleType: "dispute",

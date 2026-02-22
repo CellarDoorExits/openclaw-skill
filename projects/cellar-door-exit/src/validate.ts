@@ -21,7 +21,23 @@ function isValidDid(s: string): boolean {
   return DID_KEY_RE.test(s) || s.startsWith("did:");
 }
 
-/** Validate an ExitMarker against the schema. */
+/**
+ * Validate an ExitMarker against the schema.
+ *
+ * Checks all 7 required fields, proof structure, DID formats, emergency justification
+ * requirements, legal hold structure, and optional module structures.
+ *
+ * @param marker - The object to validate (typically parsed from JSON).
+ * @returns A {@link ValidationResult} with `valid` boolean and array of `errors`.
+ *
+ * @example
+ * ```ts
+ * const result = validateMarker(parsedJson);
+ * if (!result.valid) {
+ *   console.error("Validation errors:", result.errors);
+ * }
+ * ```
+ */
 export function validateMarker(marker: unknown): ValidationResult {
   const errors: string[] = [];
   const m = marker as Record<string, unknown>;
