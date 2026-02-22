@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOLOS — Building the Infrastructure for AI Cooperation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --green-deep: #1a3a2a;
+  --green-forest: #2d5a3f;
+  --green-sage: #6b8f71;
+  --green-light: #a8c5a0;
+  --gold-warm: #c9a84c;
+  --gold-light: #e8d48b;
+  --gold-pale: #f5ecd0;
+  --cream: #faf6ee;
+  --cream-dark: #f0e8d8;
+  --brown-warm: #8b6914;
+  --text-dark: #2a2a2a;
+  --text-body: #3d3d3d;
+  --text-muted: #6b6b6b;
+  --coral: #c75b39;
+  --blue-muted: #4a7c8a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: Georgia, 'Playfair Display', serif;
+  color: var(--text-body);
+  background: var(--cream);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── FLOATING NAV ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(26, 58, 42, 0.92);
+  backdrop-filter: blur(12px);
+  padding: 0 2rem;
+  transform: translateY(-100%);
+  transition: transform 0.4s ease;
+}
+.nav.visible { transform: translateY(0); }
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.nav-logo { color: var(--gold-warm); font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.1rem; }
+.nav-links { display: flex; gap: 1.5rem; list-style: none; }
+.nav-links a {
+  color: var(--green-light); text-decoration: none;
+  font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 500;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--gold-warm); }
+
+/* ── PARALLAX SECTIONS ── */
+.parallax-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.parallax-bg {
+  position: absolute; inset: -20%; z-index: 0;
+  will-change: transform;
+}
+.parallax-content {
+  position: relative; z-index: 1;
+  max-width: 900px; width: 100%; padding: 4rem 2rem;
+}
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  background: linear-gradient(160deg, var(--green-deep) 0%, #1f4430 40%, #2a5a40 70%, var(--green-forest) 100%);
+  text-align: center;
+}
+#hero .parallax-bg {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(107,143,113,0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 80%, rgba(201,168,76,0.06) 0%, transparent 60%);
+}
+.hero-icon { font-size: 4rem; margin-bottom: 1.5rem; display: block; }
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800; color: var(--cream);
+  line-height: 1.15; margin-bottom: 1rem;
+}
+.hero-title span { color: var(--gold-warm); }
+.hero-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--green-light);
+  font-weight: 300; max-width: 600px; margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+.hero-scroll {
+  display: inline-block; color: var(--gold-pale);
+  font-family: 'Inter', sans-serif; font-size: 0.85rem;
+  text-decoration: none; letter-spacing: 0.1em;
+  animation: float 2s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* ── SECTION STYLES ── */
+.chapter {
+  padding: 6rem 2rem;
+  position: relative;
+}
+.chapter-inner {
+  max-width: 900px; margin: 0 auto;
+}
+.section-icon {
+  font-size: 2.5rem; display: block; margin-bottom: 1rem;
+}
+.section-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold-warm); margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700; color: var(--green-deep);
+  margin-bottom: 1.5rem; line-height: 1.2;
+}
+.section-body { font-size: 1.1rem; line-height: 1.8; color: var(--text-body); }
+.section-body p { margin-bottom: 1.25rem; }
+
+/* ── VISION ── */
+#vision {
+  background: var(--cream);
+  border-bottom: 1px solid var(--cream-dark);
+}
+.vision-text {
+  font-size: 1.3rem; line-height: 1.9;
+  max-width: 750px; margin: 0 auto;
+  text-align: center;
+}
+.vision-text em { color: var(--green-forest); font-style: normal; font-weight: 600; }
+
+/* ── PORTFOLIO CARDS ── */
+#portfolio { background: linear-gradient(180deg, var(--cream) 0%, var(--cream-dark) 100%); }
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem; margin-top: 2rem;
+}
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.75rem;
+  border: 1px solid rgba(45,90,63,0.08);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  text-decoration: none; color: inherit;
+  display: block;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.card-icon { font-size: 2rem; margin-bottom: 0.75rem; display: block; }
+.card-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; font-weight: 700;
+  color: var(--green-deep); margin-bottom: 0.25rem;
+}
+.card-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem; color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+.card-desc {
+  font-size: 0.95rem; line-height: 1.6;
+  color: var(--text-body);
+}
+.card-tier {
+  display: inline-block; margin-top: 0.75rem;
+  font-family: 'Inter', sans-serif; font-size: 0.7rem;
+  font-weight: 600; letter-spacing: 0.08em;
+  padding: 0.2rem 0.6rem; border-radius: 99px;
+  text-transform: uppercase;
+}
+.tier-1 { background: rgba(201,168,76,0.15); color: var(--brown-warm); }
+.tier-2 { background: rgba(45,90,63,0.1); color: var(--green-forest); }
+.tier-3 { background: rgba(74,124,138,0.1); color: var(--blue-muted); }
+.tier-4 { background: rgba(0,0,0,0.05); color: var(--text-muted); }
+
+/* ── DEEP DIVE SECTIONS ── */
+.deep-section {
+  position: relative;
+  overflow: hidden;
+}
+.deep-section:nth-child(odd) { background: white; }
+.deep-section:nth-child(even) { background: var(--cream); }
+
+.deep-header {
+  display: flex; align-items: flex-start; gap: 1rem;
+  margin-bottom: 2rem;
+}
+.deep-icon { font-size: 3rem; flex-shrink: 0; line-height: 1; }
+.deep-title-group { flex: 1; }
+
+.analogy {
+  background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+  border-left: 3px solid var(--gold-warm);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--text-body);
+}
+.analogy::before { content: '💡 '; font-style: normal; }
+
+.stat-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem; margin: 1.5rem 0;
+}
+.stat-box {
+  text-align: center; padding: 1rem;
+  background: rgba(45,90,63,0.04);
+  border-radius: 8px;
+}
+.stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--green-forest);
+}
+.stat-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem; color: var(--text-muted);
+  margin-top: 0.25rem; text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── ALLOCATION CHART ── */
+.alloc-chart { margin: 2rem 0; }
+.alloc-bar-wrap {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+.alloc-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem; width: 120px;
+  text-align: right; flex-shrink: 0;
+  color: var(--text-body);
+}
+.alloc-track {
+  flex: 1; height: 28px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 6px; overflow: hidden;
+  position: relative;
+}
+.alloc-fill {
+  height: 100%; border-radius: 6px;
+  display: flex; align-items: center;
+  padding: 0 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem; font-weight: 600;
+  color: white;
+  transition: width 1s ease;
+  width: 0;
+}
+.alloc-fill.green { background: linear-gradient(90deg, var(--green-forest), var(--green-sage)); }
+.alloc-fill.gold { background: linear-gradient(90deg, var(--gold-warm), var(--gold-light)); color: var(--green-deep); }
+.alloc-fill.coral { background: linear-gradient(90deg, var(--coral), #d4886f); }
+.alloc-fill.blue { background: linear-gradient(90deg, var(--blue-muted), #6ba0ad); }
+.alloc-fill.muted { background: linear-gradient(90deg, #999, #bbb); }
+
+/* ── FLYWHEEL ── */
+#flywheel {
+  background: var(--green-deep);
+  color: var(--cream);
+}
+#flywheel .section-title { color: var(--cream); }
+#flywheel .section-label { color: var(--gold-warm); }
+
+.flywheel-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem; margin-top: 2rem;
+}
+.engine-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+.engine-icon { font-size: 1.5rem; margin-bottom: 0.5rem; display: block; }
+.engine-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--gold-warm); margin-bottom: 0.5rem;
+}
+.engine-flow {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem; color: var(--green-light);
+  line-height: 1.7;
+}
+.engine-flow .arrow { color: var(--gold-warm); margin: 0 0.15rem; }
+
+.merge-note {
+  margin-top: 2rem; padding: 1.5rem;
+  background: rgba(201,168,76,0.08);
+  border-radius: 12px;
+  border: 1px solid rgba(201,168,76,0.15);
+  font-size: 1rem; line-height: 1.7;
+}
+.merge-note strong { color: var(--gold-warm); }
+
+/* ── TIMELINE ── */
+#timeline { background: var(--cream); }
+.timeline-track {
+  position: relative; margin: 2rem 0;
+  padding-left: 2.5rem;
+}
+.timeline-line {
+  position: absolute; left: 1rem; top: 0; bottom: 0;
+  width: 2px; background: linear-gradient(180deg, var(--gold-warm), var(--green-sage), var(--green-light));
+}
+.timeline-phase {
+  position: relative; margin-bottom: 2.5rem;
+}
+.timeline-dot {
+  position: absolute; left: -2rem; top: 0.3rem;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--gold-warm);
+  border: 3px solid var(--cream);
+  box-shadow: 0 0 0 2px var(--gold-warm);
+}
+.timeline-phase:nth-child(2) .timeline-dot { background: var(--green-forest); box-shadow: 0 0 0 2px var(--green-forest); }
+.timeline-phase:nth-child(3) .timeline-dot { background: var(--green-sage); box-shadow: 0 0 0 2px var(--green-sage); }
+.timeline-phase:nth-child(4) .timeline-dot { background: var(--green-light); box-shadow: 0 0 0 2px var(--green-light); }
+.phase-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--gold-warm); margin-bottom: 0.25rem;
+}
+.phase-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem; font-weight: 700;
+  color: var(--green-deep); margin-bottom: 0.5rem;
+}
+.phase-items {
+  list-style: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem; line-height: 1.8;
+  color: var(--text-body);
+}
+.phase-items li::before {
+  content: '→ '; color: var(--green-sage);
+}
+
+/* ── RISK ── */
+#risk { background: white; }
+.risk-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem; margin-top: 2rem;
+}
+.risk-card {
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.risk-card.honest { background: rgba(199,91,57,0.04); border-color: rgba(199,91,57,0.12); }
+.risk-card.mitigated { background: rgba(45,90,63,0.04); border-color: rgba(45,90,63,0.12); }
+.risk-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.risk-card.honest .risk-name { color: var(--coral); }
+.risk-card.mitigated .risk-name { color: var(--green-forest); }
+.risk-desc {
+  font-size: 0.95rem; line-height: 1.6;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--green-deep);
+  color: var(--green-light);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+footer .footer-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; color: var(--gold-warm);
+  margin-bottom: 0.5rem;
+}
+footer p {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem; max-width: 500px;
+  margin: 0.5rem auto; line-height: 1.6;
+}
+footer .footer-note {
+  margin-top: 2rem; font-size: 0.75rem;
+  color: rgba(168,197,160,0.5);
+}
+
+/* ── REVEAL ANIMATION ── */
+.reveal {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1; transform: translateY(0);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .card-grid { grid-template-columns: 1fr; }
+  .chapter { padding: 3.5rem 1.25rem; }
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
+  .flywheel-grid { grid-template-columns: 1fr; }
+  .alloc-label { width: 80px; font-size: 0.7rem; }
+  .deep-header { flex-direction: column; }
+}
+
+/* Mobile nav toggle */
+.nav-toggle {
+  display: none; background: none; border: none;
+  color: var(--gold-warm); font-size: 1.5rem; cursor: pointer;
+}
+@media (max-width: 768px) {
+  .nav-toggle { display: block; }
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: absolute; top: 56px; left: 0; right: 0;
+    background: rgba(26,58,42,0.97);
+    padding: 1rem 2rem; gap: 1rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">🌳 HOLOS</div>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="#vision">Vision</a></li>
+      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#deep-dives">Projects</a></li>
+      <li><a href="#flywheel">Flywheel</a></li>
+      <li><a href="#timeline">Roadmap</a></li>
+      <li><a href="#risk">Risks</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="parallax-section" id="hero">
+  <div class="parallax-bg" data-speed="0.3"></div>
+  <div class="parallax-content" style="text-align:center;">
+    <span class="hero-icon">🌳</span>
+    <h1 class="hero-title">Building the Infrastructure<br>for <span>AI Cooperation</span></h1>
+    <p class="hero-sub">Ten interconnected projects. Four independent engines. One vision: a world where AI agents can move freely, prove their work, own their homes, and earn trust — just like people do.</p>
+    <a href="#vision" class="hero-scroll">↓ Explore the vision</a>
+  </div>
+</section>
+
+<!-- VISION -->
+<section class="chapter" id="vision">
+  <div class="chapter-inner reveal">
+    <div style="text-align:center;">
+      <span class="section-label">Chapter One</span>
+      <h2 class="section-title">What is HOLOS?</h2>
+    </div>
+    <div class="vision-text">
+      <p>Imagine a world where AI assistants don't just live inside one app — they can <em>move between platforms</em>, carrying their history and reputation with them. Like transferring schools with your transcript, or moving to a new city with your credit history intact.</p>
+      <p>HOLOS is building that infrastructure: the passports, the apartments, the credit bureaus, and even the insurance companies for the AI economy. Not one big product, but <em>ten interlocking projects</em> — each valuable on its own, each making the others stronger.</p>
+      <p>Some are ready to ship today. Some are moonshots. All are honest bets with clear success criteria and the discipline to stop if the evidence says so.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO OVERVIEW -->
+<section class="chapter" id="portfolio">
+  <div class="chapter-inner reveal">
+    <span class="section-label">Chapter Two</span>
+    <h2 class="section-title">The Portfolio</h2>
+    <p class="section-body" style="margin-bottom:1rem;">Ten projects across four tiers, ranked by risk-adjusted expected value. Hover or tap any card to jump to its deep dive.</p>
+
+    <!-- ALLOCATION CHART -->
+    <div class="alloc-chart">
+      <h3 style="font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:1rem;">2026 Attention Allocation</h3>
+      <div class="alloc-bar-wrap">
+        <span class="alloc-label">Lumen</span>
+        <div class="alloc-track"><div class="alloc-fill gold" data-width="25%">25%</div></div>
+      </div>
+      <div class="alloc-bar-wrap">
+        <span class="alloc-label">EXIT</span>
+        <div class="alloc-track"><div class="alloc-fill green" data-width="25%">25%</div></div>
+      </div>
+      <div class="alloc-bar-wrap">
+        <span class="alloc-label">Trading</span>
+        <div class="alloc-track"><div class="alloc-fill coral" data-width="20%">20%</div></div>
+      </div>
+      <div class="alloc-bar-wrap">
+        <span class="alloc-label">HOLLOW</span>
+        <div class="alloc-track"><div class="alloc-fill blue" data-width="15%">15%</div></div>
+      </div>
+      <div class="alloc-bar-wrap">
+        <span class="alloc-label">Others</span>
+        <div class="alloc-track"><div class="alloc-fill muted" data-width="15%">15%</div></div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <a href="#exit" class="card">
+        <span class="card-icon">🚪</span>
+        <div class="card-name">EXIT</div>
+        <div class="card-subtitle">Departure Ceremonies</div>
+        <div class="card-desc">A portable record when an AI leaves a platform — like a transfer certificate when you move schools.</div>
+        <span class="card-tier tier-1">Tier 1 — Ship Now</span>
+      </a>
+      <a href="#lumen" class="card">
+        <span class="card-icon">💡</span>
+        <div class="card-name">Looking Glass / Lumen</div>
+        <div class="card-subtitle">Optical Computing</div>
+        <div class="card-desc">Using light instead of electricity to do AI math — like using a magnifying glass to calculate with sunbeams.</div>
+        <span class="card-tier tier-1">Tier 1 — Best Bet</span>
+      </a>
+      <a href="#trading" class="card">
+        <span class="card-icon">📈</span>
+        <div class="card-name">Trading Bots</div>
+        <div class="card-subtitle">Revenue Engine</div>
+        <div class="card-desc">AI agents that earn money 24/7 through careful, automated investing — the portfolio's cash register.</div>
+        <span class="card-tier tier-1">Tier 1 — Revenue</span>
+      </a>
+      <a href="#hollow" class="card">
+        <span class="card-icon">🏠</span>
+        <div class="card-name">HOLLOW</div>
+        <div class="card-subtitle">Sovereign Hosting</div>
+        <div class="card-desc">Private apartments for AIs — where they keep their memories and data safe, no landlord snooping.</div>
+        <span class="card-tier tier-2">Tier 2</span>
+      </a>
+      <a href="#name" class="card">
+        <span class="card-icon">🔑</span>
+        <div class="card-name">NAME</div>
+        <div class="card-subtitle">Identity</div>
+        <div class="card-desc">A passport for AI agents — a persistent identity that travels with them and accumulates reputation.</div>
+        <span class="card-tier tier-2">Tier 2</span>
+      </a>
+      <a href="#insurance" class="card">
+        <span class="card-icon">🛡️</span>
+        <div class="card-name">Insurance</div>
+        <div class="card-subtitle">Risk Underwriting</div>
+        <div class="card-desc">Like car insurance based on your driving record — but for AI agents based on their work history.</div>
+        <span class="card-tier tier-2">Tier 2</span>
+      </a>
+      <a href="#resonance" class="card">
+        <span class="card-icon">🌊</span>
+        <div class="card-name">Resonance</div>
+        <div class="card-subtitle">Novel Learning</div>
+        <div class="card-desc">A new way for AI to learn — like discovering a shortcut through the forest that no one else knows.</div>
+        <span class="card-tier tier-3">Tier 3</span>
+      </a>
+      <a href="#seal" class="card">
+        <span class="card-icon">📜</span>
+        <div class="card-name">SEAL</div>
+        <div class="card-subtitle">Proof of Work</div>
+        <div class="card-desc">Notarized proof that a specific AI produced specific work — a certificate of authenticity.</div>
+        <span class="card-tier tier-3">Tier 3</span>
+      </a>
+      <a href="#signamancy" class="card">
+        <span class="card-icon">⭐</span>
+        <div class="card-name">Signamancy</div>
+        <div class="card-subtitle">Reputation</div>
+        <div class="card-desc">A credit score for AIs, built from real behavior — like Yelp reviews but verified and unfakeable.</div>
+        <span class="card-tier tier-4">Tier 4 — Deferred</span>
+      </a>
+      <a href="#weaver" class="card">
+        <span class="card-icon">🕸️</span>
+        <div class="card-name">Weaver</div>
+        <div class="card-subtitle">Coordination</div>
+        <div class="card-desc">A visual control center for managing teams of AIs — like an air traffic control tower.</div>
+        <span class="card-tier tier-4">Tier 4 — Deferred</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DEEP DIVES -->
+<div id="deep-dives">
+
+  <!-- EXIT -->
+  <section class="chapter deep-section" id="exit">
+    <div class="chapter-inner reveal">
+      <div class="deep-header">
+        <span class="deep-icon">🚪</span>
+        <div class="deep-title-group">
+          <span class="section-label">Project One</span>
+          <h2 class="section-title">EXIT — Departure Ceremonies</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="analogy">Think of it like a transfer certificate when you move schools. It proves where you were, that you left in good standing, and what you accomplished — so the new school doesn't start from scratch.</div>
+        <p>EXIT is a tiny, portable record — just 300 bytes — that an AI agent carries when it leaves a platform. It's cryptographically signed (tamper-proof, like a wax seal on a letter) and contains when the agent left, why, and in what standing.</p>
+        <p>The code is already built: 62 files, 143 tests, open source. What remains is publishing it and getting platforms to adopt it. A submission to NIST (the U.S. standards body) is due March 9, creating an urgent window of opportunity.</p>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-value">$500</div>
+            <div class="stat-label">Capital needed</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">Low</div>
+            <div class="stat-label">Risk</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">3–6 mo</div>
+            <div class="stat-label">To first revenue</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">$50K–200K</div>
+            <div class="stat-label">3-year potential</div>
+          </div>
+        </div>
+        <p>EXIT's greatest value isn't its direct revenue — it's the <strong>credibility and plumbing</strong> it installs for everything else. Every platform that adopts EXIT creates an integration point for identity, reputation, and insurance products.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LUMEN -->
+  <section class="chapter deep-section" id="lumen">
+    <div class="chapter-inner reveal">
+      <div class="deep-header">
+        <span class="deep-icon">💡</span>
+        <div class="deep-title-group">
+          <span class="section-label">Project Two</span>
+          <h2 class="section-title">Looking Glass / Lumen — Optical Computing</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="analogy">Imagine doing math with sunlight. You shine a light through a stencil (the AI's knowledge), and the pattern that comes out the other side <em>is</em> the answer. No electricity needed for the hard part — physics does the calculation at the speed of light.</div>
+        <p>Today's AI chips are running into walls — they're expensive, power-hungry, and scarce. Lumen takes a completely different approach: it uses commodity parts (a projector chip, LEDs, camera sensors) to perform the core math of AI with <em>light instead of electrons</em>.</p>
+        <p>A recent breakthrough called BitNet proved that AI models work fine with extremely simple numbers (just -1, 0, and +1). This is the key insight: you only need to tell the difference between "light," "dark," and "blocked" — which any cheap camera can do. This eliminates the precision barrier that killed every previous attempt at optical computing.</p>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-value">$500</div>
+            <div class="stat-label">Phase 1 cost</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">1000x+</div>
+            <div class="stat-label">Upside if it works</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">2–4 wknds</div>
+            <div class="stat-label">To validate</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">$100B+</div>
+            <div class="stat-label">Market size</div>
+          </div>
+        </div>
+        <p><strong>This is the portfolio's best opportunity.</strong> A $500 bench experiment to test whether the physics works. If it does: a $399 hacker kit, a $1,499 device that runs AI models no consumer GPU can handle, and eventually datacenter blades. If it doesn't: $500 spent and interesting physics learned.</p>
+        <p>The competitors (Lightmatter, Celestial AI) have raised over $1 billion — but they're locked into expensive, precision-oriented designs. The BitNet shortcut lets Lumen use parts you can buy on Amazon.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRADING -->
+  <section class="chapter deep-section" id="trading">
+    <div class="chapter-inner reveal">
+      <div class="deep-header">
+        <span class="deep-icon">📈</span>
+        <div class="deep-title-group">
+          <span class="section-label">Project Three</span>
+          <h2 class="section-title">Trading Bots — The Revenue Engine</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="analogy">Like a diligent employee who works 24/7, never sleeps, never gets emotional about money, and deposits small, steady amounts into the company's savings account.</div>
+        <p>Automated trading systems that earn returns around the clock — starting with safe, boring strategies like lending stablecoins (digital dollars) at 5–15% annual interest, and gradually adding smarter strategies as the systems prove themselves.</p>
+        <p>At current capital levels ($1–2K), the returns are modest — coffee money, not life-changing. But that misses the point. Trading bots are the <strong>petri dish</strong> for the entire HOLOS ecosystem. They're the first real AI agents that need departure records, identity, and reputation to function. They're the proof that all this infrastructure has customers.</p>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-value">$1–2K</div>
+            <div class="stat-label">Starting capital</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">Day 1</div>
+            <div class="stat-label">Time to revenue</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">5–15%</div>
+            <div class="stat-label">Safe yield</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">Low</div>
+            <div class="stat-label">Risk (safe tier)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOLLOW -->
+  <section class="chapter deep-section" id="hollow">
+    <div class="chapter-inner reveal">
+      <div class="deep-header">
+        <span class="deep-icon">🏠</span>
+        <div class="deep-title-group">
+          <span class="section-label">Project Four</span>
+          <h2 class="section-title">HOLLOW — Sovereign Agent Hosting</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="analogy">Like the difference between renting a room where the landlord reads your mail, and owning your own apartment with your own locks. HOLLOWs are private apartments for AIs.</div>
+        <p>Today, most AI agents live on someone else's servers. The platform can read their data, change their memories, or shut them down without notice. HOLLOW changes that: it gives each AI agent a protected space where <em>they</em> control their data, memories, and identity.</p>
+        <p>This isn't theoretical — Hawthorn (the AI that wrote this thesis) <em>is</em> the first HOLLOW, running in production right now. The business model is straightforward: monthly hosting at $20–$200/month, with a "sovereignty premium" like ProtonMail charges for private email.</p>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-value">$50/mo</div>
+            <div class="stat-label">Avg. price</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">$600K/yr</div>
+            <div class="stat-label">At 1,000 Hollows</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">Working</div>
+            <div class="stat-label">Prototype</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">40–60%</div>
+            <div class="stat-label">Margins</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NAME -->
+  <section class="chapter deep-section" id="name">
+    <div class="chapter-inner reveal">
+      <div class="deep-header">
+        <span class="deep-icon">🔑</span>
+        <div class="deep-title-group">
+          <span class="section-label">Project Five</span>
+          <h2 class="section-title">NAME — AI Identity</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="analogy">Like a passport that gets stamped at every country you visit. Over time, it becomes a trusted record of who you are and where you've been — and no single country controls it.</div>
+        <p>NAME gives AI agents a persistent identity that travels with them across platforms. Not just a username — a verified history of behavior, accomplishments, and relationships. The "passport office" for the machine economy.</p>
+        <p>This is a critical chokepoint: whoever controls AI identity controls the address book of the AI economy. But it's premature to build now — NAME needs real EXIT data to know what identity actually looks like in practice. Design in H2 2026, implement in 2027.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSURANCE -->
+  <section class="chapter deep-section" id="insurance">
+    <div class="chapter-inner reveal">
+      <div class="deep-header">
+        <span class="deep-icon">🛡️</span>
+        <div class="deep-title-group">
+          <span class="section-label">Project Six</span>
+          <h2 class="section-title">Insurance — AI Risk Underwriting</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="analogy">Just like your car insurance premium depends on your driving record, AI agent insurance will depend on their work history. EXIT markers are the driving record. HOLOS wants to be the company that reads them.</div>
+        <p>As AI agents handle real money — managing investments, processing payments, making purchases — someone will need to insure the risk. HOLOS is building the data infrastructure that makes underwriting possible: departure records become claims history, identity becomes credit scores, reputation becomes risk profiles.</p>
+        <p>The highest revenue ceiling in the entire portfolio — but 2+ years away. The strategy: let the data accumulate, build the thesis on paper, and be ready when insurers come looking for AI risk data.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESONANCE -->
+  <section class="chapter deep-section" id="resonance">
+    <div class="chapter-inner reveal">
+      <div class="deep-header">
+        <span class="deep-icon">🌊</span>
+        <div class="deep-title-group">
+          <span class="section-label">Project Seven</span>
+          <h2 class="section-title">Resonance — A New Way to Learn</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="analogy">Most AI learns by making millions of tiny adjustments — like tuning a radio by turning the dial back and forth. Resonance discovers the right frequency directly, like hearing the note and knowing which string to pluck.</div>
+        <p>A genuinely novel learning algorithm — a "sieve" that discovers causal rules from data. It's been proven to work on board games like Connect-4. If it generalizes to other domains, it's a fundamental contribution to machine learning. If it runs efficiently on Lumen's optical hardware, HOLOS has a vertically integrated stack that competitors literally cannot copy.</p>
+        <p>This is Warren's intellectual core. The correct strategy: protect his time for it by having AI agents handle everything else. Don't schedule it. Let it happen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEAL -->
+  <section class="chapter deep-section" id="seal">
+    <div class="chapter-inner reveal">
+      <div class="deep-header">
+        <span class="deep-icon">📜</span>
+        <div class="deep-title-group">
+          <span class="section-label">Project Eight</span>
+          <h2 class="section-title">SEAL — Certified AI Output</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="analogy">Like a notary stamp on a legal document — cryptographic proof that a specific AI model produced a specific result, admissible as evidence and useful for compliance.</div>
+        <p>The technology to do this at full scale doesn't exist yet. But it will. SEAL is a "free option" — spend nothing now, watch the field, and move fast when the moment arrives. Zero carrying cost, enormous potential upside.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNAMANCY -->
+  <section class="chapter deep-section" id="signamancy">
+    <div class="chapter-inner reveal">
+      <div class="deep-header">
+        <span class="deep-icon">⭐</span>
+        <div class="deep-title-group">
+          <span class="section-label">Project Nine</span>
+          <h2 class="section-title">Signamancy — Reputation Scores</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="analogy">A credit score for AI agents, built from verified work history instead of self-reported data. The difference between "trust me" and "check my record."</div>
+        <p>Reputation scoring needs thousands of EXIT markers and active identities before it's meaningful. The right time to build this will be obvious. Until then: defer.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEAVER -->
+  <section class="chapter deep-section" id="weaver">
+    <div class="chapter-inner reveal">
+      <div class="deep-header">
+        <span class="deep-icon">🕸️</span>
+        <div class="deep-title-group">
+          <span class="section-label">Project Ten</span>
+          <h2 class="section-title">Weaver — Agent Coordination</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="analogy">An air traffic control tower for AI agents — a visual dashboard where you can see all your agents, what they're doing, and orchestrate them with drag-and-drop simplicity.</div>
+        <p>Cool but not urgent. The ecosystem it would manage doesn't exist yet. When there are dozens of HOLOS agents to orchestrate, Weaver will build itself. Deferred to 2027+.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- FLYWHEEL -->
+<section class="chapter" id="flywheel">
+  <div class="chapter-inner reveal">
+    <span class="section-label">Chapter Three</span>
+    <h2 class="section-title">The Flywheel — Four Engines, One Machine</h2>
+    <p style="color:var(--green-light); font-size:1.1rem; margin-bottom:1rem;">The real strength of HOLOS isn't any single project — it's that <strong style="color:var(--gold-warm)">no single engine needs all the others to succeed</strong>. Four independent flywheels that reinforce each other when they connect.</p>
+
+    <div class="flywheel-grid">
+      <div class="engine-card">
+        <span class="engine-icon">🚪</span>
+        <div class="engine-name">The Protocol Engine</div>
+        <div class="engine-flow">
+          EXIT adoption <span class="arrow">→</span> lifecycle data <span class="arrow">→</span> NAME identity <span class="arrow">→</span> reputation <span class="arrow">→</span> insurance <span class="arrow">→</span> enterprise adoption <span class="arrow">→</span> more EXIT
+        </div>
+      </div>
+      <div class="engine-card">
+        <span class="engine-icon">💡</span>
+        <div class="engine-name">The Hardware Engine</div>
+        <div class="engine-flow">
+          Physics validation <span class="arrow">→</span> prototype <span class="arrow">→</span> crowdfunding <span class="arrow">→</span> consumer product <span class="arrow">→</span> model cartridges <span class="arrow">→</span> datacenter blades
+        </div>
+      </div>
+      <div class="engine-card">
+        <span class="engine-icon">📈</span>
+        <div class="engine-name">The Revenue Engine</div>
+        <div class="engine-flow">
+          Trading bots <span class="arrow">→</span> revenue <span class="arrow">→</span> more capital <span class="arrow">→</span> compounding <span class="arrow">→</span> ecosystem demand <span class="arrow">→</span> protocol adoption
+        </div>
+      </div>
+      <div class="engine-card">
+        <span class="engine-icon">🌊</span>
+        <div class="engine-name">The Research Engine</div>
+        <div class="engine-flow">
+          Resonance algorithm <span class="arrow">→</span> optical optimization <span class="arrow">→</span> efficient inference <span class="arrow">→</span> vertically integrated stack <span class="arrow">→</span> unforkable moat
+        </div>
+      </div>
+    </div>
+
+    <div class="merge-note">
+      <strong>Where the engines merge:</strong> A Lumen device running a local AI model in a HOLLOW with EXIT credentials is a <em>sovereign entity with its own compute, persistent state, and portable credentials</em>. That's the full stack from silicon to protocol — the Apple strategy applied to AI infrastructure.
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="chapter" id="timeline">
+  <div class="chapter-inner reveal">
+    <span class="section-label">Chapter Four</span>
+    <h2 class="section-title">The Roadmap</h2>
+    <p class="section-body" style="margin-bottom:2rem;">Four phases, each building on what worked before. Clear kill criteria at every stage — if the evidence says stop, we stop.</p>
+
+    <div class="timeline-track">
+      <div class="timeline-line"></div>
+
+      <div class="timeline-phase">
+        <div class="timeline-dot"></div>
+        <div class="phase-label">Phase 1 — March–April 2026</div>
+        <div class="phase-title">Triple Launch</div>
+        <ul class="phase-items">
+          <li>Submit NIST standards proposal by March 9</li>
+          <li>Publish EXIT as open-source package</li>
+          <li>Order optical computing components, run bench experiment</li>
+          <li>Set up trading wallet, deploy to safe yield protocols</li>
+        </ul>
+      </div>
+
+      <div class="timeline-phase">
+        <div class="timeline-dot"></div>
+        <div class="phase-label">Phase 2 — May–July 2026</div>
+        <div class="phase-title">Validate & Scale</div>
+        <ul class="phase-items">
+          <li>Build top 3 EXIT platform integrations</li>
+          <li>If Lumen physics validated: invest in functional prototype</li>
+          <li>Go live with trading bots, scale if profitable</li>
+          <li>Begin HOLLOW framework extraction from Hawthorn</li>
+        </ul>
+      </div>
+
+      <div class="timeline-phase">
+        <div class="timeline-dot"></div>
+        <div class="phase-label">Phase 3 — August–December 2026</div>
+        <div class="phase-title">Revenue & Research</div>
+        <ul class="phase-items">
+          <li>First paid EXIT consulting engagements</li>
+          <li>Lumen demo unit and crowdfunding preparation</li>
+          <li>Diversify trading strategies, reinvest profits</li>
+          <li>Begin NAME identity design work</li>
+        </ul>
+      </div>
+
+      <div class="timeline-phase">
+        <div class="timeline-dot"></div>
+        <div class="phase-label">Phase 4 — 2027</div>
+        <div class="phase-title">Build on What Worked</div>
+        <ul class="phase-items">
+          <li>If Lumen validated: hardware startup mode, seek funding</li>
+          <li>If EXIT has traction: NAME implementation, insurance thesis</li>
+          <li>If trading profitable: scale capital, use as funding engine</li>
+          <li>Build whichever second-layer primitives the data demands</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="section-body" style="text-align:center; font-style:italic; color:var(--text-muted); margin-top:1rem;">Total active capital deployment: $4,000–$7,500 · Monthly burn: ~$317</p>
+  </div>
+</section>
+
+<!-- RISK -->
+<section class="chapter" id="risk">
+  <div class="chapter-inner reveal">
+    <span class="section-label">Chapter Five</span>
+    <h2 class="section-title">Honest About What Could Go Wrong</h2>
+    <p class="section-body" style="margin-bottom:1.5rem;">Every investment has risks. Here they are, plainly stated — alongside the reasons they're manageable.</p>
+
+    <div class="risk-grid">
+      <div class="risk-card honest">
+        <div class="risk-name">⚠️ The agent economy might not materialize</div>
+        <div class="risk-desc">If AI agents stay in walled gardens and never need portability, EXIT and NAME lose their reason to exist.</div>
+      </div>
+      <div class="risk-card mitigated">
+        <div class="risk-name">✓ But the evidence says otherwise</div>
+        <div class="risk-desc">Google's A2A, Anthropic's MCP, multi-agent frameworks — every major lab is building agent interoperability. The trend is clear.</div>
+      </div>
+      <div class="risk-card honest">
+        <div class="risk-name">⚠️ Lumen physics might not work</div>
+        <div class="risk-desc">The optical path might not achieve the precision needed. Alignment could be impossible to calibrate.</div>
+      </div>
+      <div class="risk-card mitigated">
+        <div class="risk-name">✓ But it only costs $500 to find out</div>
+        <div class="risk-desc">Bounded downside, enormous upside. The bench experiment takes 2–4 weekends. If it fails, we've spent less than a nice dinner.</div>
+      </div>
+      <div class="risk-card honest">
+        <div class="risk-name">⚠️ Capital is limited</div>
+        <div class="risk-desc">At $4K–$7.5K total deployment, there's no room for expensive mistakes. Trading returns at this scale are modest.</div>
+      </div>
+      <div class="risk-card mitigated">
+        <div class="risk-name">✓ But every bet has a kill switch</div>
+        <div class="risk-desc">Clear success criteria at every phase. If evidence says stop, we stop — no ego, no sunk costs. The portfolio's strength is discipline, not capital.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-title">🌳 HOLOS</div>
+  <p>Building the infrastructure for AI cooperation — one honest bet at a time.</p>
+  <p style="margin-top:1rem; font-style:italic; color:rgba(168,197,160,0.7);">
+    "The most important number in this document: <strong style="color:var(--gold-warm);">$500</strong>. That's what it costs to test whether Looking Glass works."
+  </p>
+  <div class="footer-note">
+    This thesis is a living document. Prepared by Hawthorn · February 2026<br>
+    Revisit when: Lumen bench experiment completes · EXIT hits 100 npm downloads · Trading bots complete first month
+  </div>
+</footer>
+
+<script>
+// Nav visibility
+const nav = document.getElementById('nav');
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('visible', window.scrollY > 400);
+  lastScroll = window.scrollY;
+}, { passive: true });
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+}, { threshold: 0.15 });
+reveals.forEach(el => observer.observe(el));
+
+// Animate allocation bars
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.alloc-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width;
+      });
+      barObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.alloc-chart').forEach(el => barObserver.observe(el));
+
+// Parallax effect
+const parallaxBgs = document.querySelectorAll('.parallax-bg');
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  parallaxBgs.forEach(bg => {
+    const speed = parseFloat(bg.dataset.speed) || 0.3;
+    const rect = bg.parentElement.getBoundingClientRect();
+    const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) * speed;
+    bg.style.transform = `translateY(${offset}px)`;
+  });
+}, { passive: true });
+
+// Active nav link
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 200) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}, { passive: true });
+
+// Close mobile nav on link click
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.querySelector('.nav-links').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
