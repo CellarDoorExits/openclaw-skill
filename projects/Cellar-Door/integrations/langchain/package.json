@@ -1,0 +1,27 @@
+{
+  "name": "@cellar-door/langchain",
+  "version": "0.1.0",
+  "description": "LangChain integration for cellar-door-exit — verifiable agent departure markers",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "@langchain/core": ">=0.2.0",
+    "cellar-door-exit": ">=0.1.0"
+  },
+  "devDependencies": {
+    "@langchain/core": "0.2.36",
+    "typescript": "5.4.5",
+    "vitest": "1.6.0",
+    "zod": "3.23.8"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT"
+}

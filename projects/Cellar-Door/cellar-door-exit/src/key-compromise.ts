@@ -38,7 +38,7 @@ export function createCompromiseMarker(
   const now = new Date().toISOString();
   const publicKey = signingKey; // We need the public key for signing; caller provides private key
   
-  const marker: ExitMarker = {
+  const marker = {
     "@context": EXIT_CONTEXT_V1,
     id: "",
     subject: compromisedDid,
@@ -56,11 +56,11 @@ export function createCompromiseMarker(
       reason: "Key compromise detected. Identity rotated via KERI key event log.",
       tags: ["key-compromise", "rotation"],
     },
-  };
+  } as ExitMarker;
 
   // Compute content-addressed ID
   const { proof: _p, id: _id, ...rest } = marker;
-  marker.id = `urn:exit:${computeId(rest)}`;
+  marker.id = `urn:exit:${computeId(rest as ExitMarker)}`;
 
   // Sign with the new key (the current key after rotation)
   const canonical = canonicalize({ ...marker, proof: undefined });
