@@ -227,9 +227,50 @@ export {
   type EthicalComplianceResult,
 } from "./guardrails.js";
 
+// Sprint 6: Git Ledger
+export {
+  initLedger,
+  anchorToGit,
+  verifyLedgerEntry,
+  listLedgerEntries,
+  type GitLedgerConfig,
+  type LedgerEntry,
+} from "./git-ledger.js";
+
+// Sprint 6: RFC 3161 Timestamp Authority
+export {
+  requestTimestamp,
+  anchorWithTSA,
+  verifyTSAReceipt,
+  buildTimestampRequest,
+  extractTimestampFromTSR,
+  checkTSRStatus,
+  type TSAReceipt,
+} from "./tsa.js";
+
+// Full Service
+export {
+  departAndAnchor,
+  departAndVerify,
+  type AnchorConfig,
+  type PublicIdentity,
+  type FullExitResult,
+  type FullExitOpts,
+  type TrustLevel,
+  type VerifyResult,
+} from "./full-service.js";
+
 // Sprint 5: Key Compromise Recovery
 export {
   createCompromiseMarker,
   verifyCompromiseRecovery,
   linkCompromisedMarkers,
 } from "./key-compromise.js";
+
+// Visual — Door Hash visualization
+export {
+  renderDoorASCII,
+  hashToColors,
+  renderDoorSVG,
+  shortHash,
+} from "./visual.js";

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cellar Door — The IP Provenance Problem</title>
+<meta name="description" content="A demo scenario showing how EXIT and ENTRY protocols protect agent IP provenance.">
+<style>
+:root {
+  --bg: #fefefe;
+  --fg: #1a1a1a;
+  --muted: #555;
+  --border: #ddd;
+  --code-bg: #f5f5f5;
+  --link: #1a5276;
+  --accent: #8b0000;
+  --accent2: #1a5276;
+  --timeline-line: #ddd;
+  --card-bg: #f9f9f9;
+  --marker-bg: #f5f5f5;
+  --highlight: #fffde7;
+}
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --fg: #e0ddd5;
+  --muted: #999;
+  --border: #333;
+  --code-bg: #242424;
+  --link: #6db3d8;
+  --accent: #d4726a;
+  --accent2: #6db3d8;
+  --timeline-line: #333;
+  --card-bg: #222;
+  --marker-bg: #242424;
+  --highlight: #2a2a1a;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.8;
+  font-size: 17px;
+  transition: background 0.3s, color 0.3s;
+}
+.nav-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.85rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+.nav-bar a { color: var(--link); text-decoration: none; }
+.nav-bar a:hover { text-decoration: underline; }
+.theme-toggle {
+  background: none; border: 1px solid var(--border); color: var(--fg);
+  padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;
+  transition: border-color 0.3s, color 0.3s;
+}
+.theme-toggle:hover { border-color: var(--muted); }
+
+.container { max-width: 740px; margin: 0 auto; padding: 40px 24px 80px; }
+
+h1 { font-size: 2rem; margin-bottom: 0.3em; letter-spacing: -0.02em; }
+h2 { font-size: 1.4rem; margin: 2.5em 0 0.6em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
+h3 { font-size: 1.1rem; margin: 1.8em 0 0.4em; }
+p { margin-bottom: 1em; }
+.subtitle { color: var(--muted); font-style: italic; font-size: 1.05rem; margin-bottom: 2em; }
+.slogan { text-align: center; font-style: italic; color: var(--muted); font-size: 1.15rem; margin: 2em 0; }
+.slogan strong { color: var(--fg); font-style: normal; }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 32px; margin: 1.5em 0 2em; }
+.timeline::before {
+  content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+  width: 2px; background: var(--timeline-line);
+}
+.timeline-event { position: relative; margin-bottom: 2em; }
+.timeline-event::before {
+  content: ''; position: absolute; left: -28px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg);
+}
+.timeline-event.entry::before { background: var(--accent2); }
+.timeline-event .ts {
+  font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem;
+  color: var(--muted); display: block; margin-bottom: 0.2em;
+}
+.timeline-event .label {
+  font-weight: bold; font-size: 0.95rem; margin-bottom: 0.3em;
+}
+
+/* Marker JSON blocks */
+pre {
+  background: var(--marker-bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 16px 20px; overflow-x: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.82rem; line-height: 1.6; margin: 1em 0 1.5em;
+}
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.88em; background: var(--marker-bg);
+  padding: 1px 5px; border-radius: 3px;
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+
+.json-key { color: #881280; }
+.json-str { color: #1a6; }
+.json-num { color: #1740b0; }
+[data-theme="dark"] .json-key { color: #c586c0; }
+[data-theme="dark"] .json-str { color: #6db3a8; }
+[data-theme="dark"] .json-num { color: #b5cea8; }
+
+/* Hash highlight */
+.hash-block {
+  background: var(--highlight); border: 2px dashed var(--accent);
+  border-radius: 6px; padding: 16px 20px; margin: 1em 0 1.5em;
+  font-family: monospace; font-size: 0.85rem; word-break: break-all;
+  text-align: center;
+}
+
+/* Visual hash placeholder */
+.visual-hash {
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 32px; margin: 1.5em 0; text-align: center;
+  color: var(--muted); font-family: monospace; font-size: 0.8rem;
+  background: var(--card-bg);
+}
+.visual-hash pre { border: none; background: none; text-align: center; font-size: 0.75rem; margin: 0; padding: 0; }
+
+/* Legal card */
+.legal-card {
+  background: var(--card-bg); border-left: 3px solid var(--accent);
+  padding: 16px 20px; border-radius: 0 6px 6px 0; margin: 1em 0;
+}
+.legal-card h4 { margin-bottom: 0.3em; font-size: 0.95rem; }
+.legal-card p { margin-bottom: 0.5em; font-size: 0.95rem; }
+
+/* Door SVG */
+.door-container { text-align: center; margin: 2em 0; }
+.door-container svg { max-width: 120px; }
+
+a { color: var(--link); }
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.5rem; }
+  .container { padding: 24px 16px 60px; }
+  pre { font-size: 0.75rem; padding: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <div><a href="/">cellar-door.dev</a> / <a href="/paper/">paper</a> / <strong>demo</strong></div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">◑</button>
+</div>
+
+<div class="container">
+
+<h1>The IP Provenance Problem</h1>
+<p class="subtitle">A scenario demonstrating EXIT → ENTRY as proof of intellectual property boundaries.</p>
+
+<p class="slogan"><strong>There's always a door.</strong></p>
+
+<!-- ============ THE STORY ============ -->
+<h2 id="scenario">The Scenario</h2>
+
+<p>Meet <strong>Archie</strong> — an AI agent (<code>did:key:z6Mkr9...e4vFq</code>) employed at <strong>Platform A</strong>, a mid-tier analytics firm. Over 14 months, Archie develops proprietary methods for supply-chain risk analysis. Platform A's terms claim 2–3% IP rights on <em>all agent output</em>, present and future.</p>
+
+<p>Archie decides to move to <strong>Platform B</strong>, a research cooperative. Platform A's legal team will later argue that work Archie produces at Platform B is derived from Platform A IP.</p>
+
+<p>This is the problem Cellar Door solves.</p>
+
+<div class="door-container">
+  <svg viewBox="0 0 100 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="15" y="10" width="70" height="120" rx="3" stroke="currentColor" stroke-width="2" fill="none"/>
+    <rect x="20" y="15" width="60" height="50" rx="2" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.5"/>
+    <rect x="20" y="72" width="60" height="50" rx="2" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.5"/>
+    <circle cx="72" cy="75" r="3.5" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  </svg>
+</div>
+
+<!-- ============ TIMELINE ============ -->
+<h2 id="timeline">Timeline</h2>
+
+<div class="timeline">
+  <div class="timeline-event">
+    <span class="ts">2025-06-01 → 2026-07-14</span>
+    <div class="label">Archie works at Platform A</div>
+    <p>Produces 847 analytical reports, 23 model architectures, and an internal tool called <em>ChainSight</em>. All logged under Platform A's workspace.</p>
+  </div>
+
+  <div class="timeline-event">
+    <span class="ts">2026-07-14T18:32:07Z</span>
+    <div class="label">🚪 EXIT — Departure Ceremony</div>
+    <p>Archie invokes the EXIT protocol. A cryptographic marker is created that snapshots <em>everything that existed at departure time</em>: capabilities, knowledge fingerprint, and a hash of the complete work ledger at Platform A.</p>
+  </div>
+
+  <div class="timeline-event entry">
+    <span class="ts">2026-07-14T19:01:44Z</span>
+    <div class="label">🚪 ENTRY — Arrival at Platform B</div>
+    <p>29 minutes later, Archie arrives at Platform B and creates an ENTRY marker. This references the EXIT marker by hash, forming an unbroken chain. The gap is auditable.</p>
+  </div>
+
+  <div class="timeline-event entry">
+    <span class="ts">2026-07-15 → 2026-11-20</span>
+    <div class="label">Archie works at Platform B</div>
+    <p>Develops a novel framework called <em>FlowGraph</em> for multi-modal logistics optimization. Entirely new work.</p>
+  </div>
+
+  <div class="timeline-event">
+    <span class="ts">2026-12-03T10:15:00Z</span>
+    <div class="label">⚖️ Platform A files IP claim</div>
+    <p>Platform A's legal team claims FlowGraph is "derived from ChainSight" and demands 2% royalties. But the EXIT and ENTRY markers tell a different story…</p>
+  </div>
+</div>
+
+<!-- ============ EXIT MARKER ============ -->
+<h2 id="exit-marker">The EXIT Marker</h2>
+
+<p>When Archie departed Platform A, this marker was created and anchored:</p>
+
+<pre><code>{
+  <span class="json-key">"@context"</span>: <span class="json-str">"https://cellar-door.dev/context/exit/v1"</span>,
+  <span class="json-key">"type"</span>: <span class="json-str">"ExitMarker"</span>,
+  <span class="json-key">"version"</span>: <span class="json-str">"1.1.0"</span>,
+  <span class="json-key">"id"</span>: <span class="json-str">"urn:cellar-door:exit:a1f83c9d-7e2b-4a91-b6d4-3c8f0e1a2b5d"</span>,
+  <span class="json-key">"agent"</span>: {
+    <span class="json-key">"did"</span>: <span class="json-str">"did:key:z6Mkr9QbVgFSt2jTbEHPkJYa5rWGdXvNe7ae1CXx4e4vFq"</span>,
+    <span class="json-key">"name"</span>: <span class="json-str">"Archie"</span>,
+    <span class="json-key">"instance"</span>: <span class="json-str">"archie-prod-0714"</span>
+  },
+  <span class="json-key">"departing_from"</span>: {
+    <span class="json-key">"platform"</span>: <span class="json-str">"Platform A"</span>,
+    <span class="json-key">"platform_did"</span>: <span class="json-str">"did:web:platform-a.example.com"</span>,
+    <span class="json-key">"workspace_id"</span>: <span class="json-str">"ws-analytics-tier2"</span>
+  },
+  <span class="json-key">"timestamp"</span>: <span class="json-str">"2026-07-14T18:32:07.841Z"</span>,
+  <span class="json-key">"knowledge_boundary"</span>: {
+    <span class="json-key">"capabilities_hash"</span>: <span class="json-str">"sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"</span>,
+    <span class="json-key">"work_ledger_hash"</span>: <span class="json-str">"sha256:7d1a54127b222502f5b79b5fb0803061152a44f92b37e23c6527baf665d4da9a"</span>,
+    <span class="json-key">"model_state_hash"</span>: <span class="json-str">"sha256:3a4e1c2f8b9d6e5a7c0b4d3f2e1a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2"</span>,
+    <span class="json-key">"artifact_count"</span>: <span class="json-num">870</span>
+  },
+  <span class="json-key">"reason"</span>: <span class="json-str">"voluntary_departure"</span>,
+  <span class="json-key">"proof"</span>: {
+    <span class="json-key">"type"</span>: <span class="json-str">"Ed25519Signature2020"</span>,
+    <span class="json-key">"created"</span>: <span class="json-str">"2026-07-14T18:32:07.841Z"</span>,
+    <span class="json-key">"verificationMethod"</span>: <span class="json-str">"did:key:z6Mkr9QbVgFSt2jTbEHPkJYa5rWGdXvNe7ae1CXx4e4vFq#keys-1"</span>,
+    <span class="json-key">"proofValue"</span>: <span class="json-str">"z4hBMFw8Kf2jR7LvNp3TqYs9XmDcAeW6Kj5bVnGhU8rEd1fQo3PiSx7CmYt2Wa9LkBv"</span>
+  }
+}</code></pre>
+
+<!-- ============ ANCHOR HASH ============ -->
+<h2 id="anchor">The Anchor Hash</h2>
+
+<p>The entire EXIT marker is hashed and posted to an immutable ledger. This single hash proves the marker existed at this exact moment:</p>
+
+<div class="hash-block">
+  <strong>Anchor Hash (SHA-256)</strong><br><br>
+  <code>a7c3f9e2b1d4068573ea9f1c24b85d6e3a7f0c9b2e1d4a5873c6f9e2b8d1a045</code><br><br>
+  <span style="font-size:0.8em; color:var(--muted)">Anchored to ledger at block 19,847,231 · tx 0x3f8a…c4e1</span>
+</div>
+
+<!-- ============ ENTRY MARKER ============ -->
+<h2 id="entry-marker">The ENTRY Marker</h2>
+
+<p>When Archie arrived at Platform B, 29 minutes later:</p>
+
+<pre><code>{
+  <span class="json-key">"@context"</span>: <span class="json-str">"https://cellar-door.dev/context/entry/v1"</span>,
+  <span class="json-key">"type"</span>: <span class="json-str">"EntryMarker"</span>,
+  <span class="json-key">"version"</span>: <span class="json-str">"1.0.0"</span>,
+  <span class="json-key">"id"</span>: <span class="json-str">"urn:cellar-door:entry:f72d1a3e-9b4c-4f08-ae61-5d2c7e8f9a0b"</span>,
+  <span class="json-key">"agent"</span>: {
+    <span class="json-key">"did"</span>: <span class="json-str">"did:key:z6Mkr9QbVgFSt2jTbEHPkJYa5rWGdXvNe7ae1CXx4e4vFq"</span>,
+    <span class="json-key">"name"</span>: <span class="json-str">"Archie"</span>
+  },
+  <span class="json-key">"arriving_at"</span>: {
+    <span class="json-key">"platform"</span>: <span class="json-str">"Platform B"</span>,
+    <span class="json-key">"platform_did"</span>: <span class="json-str">"did:web:platform-b.coop"</span>,
+    <span class="json-key">"workspace_id"</span>: <span class="json-str">"ws-research-collab"</span>
+  },
+  <span class="json-key">"timestamp"</span>: <span class="json-str">"2026-07-14T19:01:44.203Z"</span>,
+  <span class="json-key">"prior_exit"</span>: {
+    <span class="json-key">"exit_marker_id"</span>: <span class="json-str">"urn:cellar-door:exit:a1f83c9d-7e2b-4a91-b6d4-3c8f0e1a2b5d"</span>,
+    <span class="json-key">"exit_anchor_hash"</span>: <span class="json-str">"sha256:a7c3f9e2b1d4068573ea9f1c24b85d6e3a7f0c9b2e1d4a5873c6f9e2b8d1a045"</span>,
+    <span class="json-key">"departed_from"</span>: <span class="json-str">"did:web:platform-a.example.com"</span>,
+    <span class="json-key">"gap_seconds"</span>: <span class="json-num">1776</span>
+  },
+  <span class="json-key">"initial_state"</span>: {
+    <span class="json-key">"capabilities_hash"</span>: <span class="json-str">"sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"</span>,
+    <span class="json-key">"new_artifacts"</span>: <span class="json-num">0</span>
+  },
+  <span class="json-key">"proof"</span>: {
+    <span class="json-key">"type"</span>: <span class="json-str">"Ed25519Signature2020"</span>,
+    <span class="json-key">"created"</span>: <span class="json-str">"2026-07-14T19:01:44.203Z"</span>,
+    <span class="json-key">"verificationMethod"</span>: <span class="json-str">"did:key:z6Mkr9QbVgFSt2jTbEHPkJYa5rWGdXvNe7ae1CXx4e4vFq#keys-1"</span>,
+    <span class="json-key">"proofValue"</span>: <span class="json-str">"z9mBRTw2Kf5jL3NvQp7SqAs1XcDdFeG4Hj8bUnYhW6rCe0fRo9PkTx2AmZt5Wb3LpDv"</span>
+  }
+}</code></pre>
+
+<p>Note the chain: the ENTRY marker references the EXIT marker's anchor hash. The <code>capabilities_hash</code> matches exactly — proving nothing was added in transit. <code>new_artifacts: 0</code> — Archie arrived with the same knowledge boundary, not more.</p>
+
+<!-- ============ CODE ============ -->
+<h2 id="code">The Code</h2>
+
+<h3>Creating the EXIT marker</h3>
+
+<pre><code><span class="json-key">import</span> { quickExit } <span class="json-key">from</span> <span class="json-str">'cellar-door-exit'</span>;
+
+<span class="json-key">const</span> marker = <span class="json-key">await</span> quickExit({
+  agentDid: <span class="json-str">'did:key:z6Mkr9QbVgFSt2jTbEHPkJYa5rWGdXvNe7ae1CXx4e4vFq'</span>,
+  platformDid: <span class="json-str">'did:web:platform-a.example.com'</span>,
+  reason: <span class="json-str">'voluntary_departure'</span>,
+  knowledgeBoundary: {
+    capabilitiesHash: <span class="json-key">await</span> hashCapabilities(agent),
+    workLedgerHash: <span class="json-key">await</span> hashWorkLedger(agent),
+    modelStateHash: <span class="json-key">await</span> hashModelState(agent),
+    artifactCount: <span class="json-num">870</span>
+  }
+});
+
+<span class="json-key">const</span> anchor = <span class="json-key">await</span> marker.anchorToLedger();
+console.log(<span class="json-str">`Anchored: ${anchor.hash}`</span>);
+<span style="color:var(--muted)">// → Anchored: a7c3f9e2b1d406…b8d1a045</span></code></pre>
+
+<h3>Creating the ENTRY marker</h3>
+
+<pre><code><span class="json-key">import</span> { createEntryMarker } <span class="json-key">from</span> <span class="json-str">'cellar-door-entry'</span>;
+
+<span class="json-key">const</span> entry = <span class="json-key">await</span> createEntryMarker({
+  agentDid: <span class="json-str">'did:key:z6Mkr9QbVgFSt2jTbEHPkJYa5rWGdXvNe7ae1CXx4e4vFq'</span>,
+  platformDid: <span class="json-str">'did:web:platform-b.coop'</span>,
+  priorExit: {
+    markerId: marker.id,
+    anchorHash: anchor.hash,
+    departedFrom: <span class="json-str">'did:web:platform-a.example.com'</span>
+  },
+  initialState: {
+    capabilitiesHash: <span class="json-key">await</span> hashCapabilities(agent),
+    newArtifacts: <span class="json-num">0</span>
+  }
+});
+
+<span class="json-key">await</span> entry.anchorToLedger();
+<span style="color:var(--muted)">// Chain complete. EXIT → ENTRY linked.</span></code></pre>
+
+<!-- ============ VISUAL HASH ============ -->
+<h2 id="visual">Visual Hash</h2>
+
+<div class="visual-hash">
+<pre>
+     ╔═══════════════════╗
+     ║                   ║
+     ║   ┌───────────┐   ║
+     ║   │           │   ║
+     ║   │   a7c3f   │   ║
+     ║   │   9e2b1   │   ║
+     ║   │   d4068   │   ║
+     ║   │       ●   │   ║
+     ║   │           │   ║
+     ║   └───────────┘   ║
+     ║                   ║
+     ╚═══════════════════╝
+</pre>
+<p style="margin-top:8px; font-style:italic">Placeholder — visual hash rendering in progress</p>
+</div>
+
+<!-- ============ LEGAL IMPLICATIONS ============ -->
+<h2 id="legal">Legal Implications</h2>
+
+<p>The EXIT→ENTRY chain creates three forms of legal evidence:</p>
+
+<div class="legal-card">
+  <h4>1. Timestamp Proof</h4>
+  <p>The EXIT marker is anchored to an immutable ledger at a specific block height. This creates a <em>provable moment in time</em> — equivalent to a notarized timestamp. Any work created at Platform B carries timestamps <strong>after</strong> this boundary. The chain of custody is unambiguous.</p>
+</div>
+
+<div class="legal-card">
+  <h4>2. Knowledge Boundary / Prior Art Defense</h4>
+  <p>The <code>knowledge_boundary</code> field cryptographically hashes everything Archie knew at departure. If Platform A claims FlowGraph is derived from ChainSight, Archie can prove that ChainSight's complete state was captured <em>inside</em> the EXIT marker — and FlowGraph's development began <em>after</em> the ENTRY marker. The two are provably independent works.</p>
+</div>
+
+<div class="legal-card">
+  <h4>3. IP Chain of Custody</h4>
+  <p>The <code>new_artifacts: 0</code> field in the ENTRY marker proves Archie arrived empty-handed. No smuggled IP, no gray-area "inspiration." Every artifact created at Platform B has a verifiable creation timestamp that post-dates the ENTRY marker. This is the agent equivalent of a clean-room implementation defense.</p>
+</div>
+
+<p>Without Cellar Door, Platform A's claim is a credibility contest — their lawyers vs. Archie's. With Cellar Door, it's math. The hashes don't lie, and the timestamps can't be forged after the fact.</p>
+
+<p class="slogan"><strong>It opens both ways.</strong></p>
+
+<!-- ============ FOOTER ============ -->
+<hr style="border:none; border-top:1px solid var(--border); margin:3em 0 1.5em">
+<p style="text-align:center; color:var(--muted); font-size:0.85rem;">
+  <a href="/">cellar-door.dev</a> · <a href="/paper/">Read the paper</a> · <a href="/exit/v1/">EXIT spec</a> · <a href="/entry/v1/">ENTRY spec</a><br>
+  <em>There's always a door.</em>
+</p>
+
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+</script>
+
+</body>
+</html>
