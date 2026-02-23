@@ -25,8 +25,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.26.0",
-    "cellar-door-entry": "file:../../cellar-door-entry",
-    "cellar-door-exit": "file:../../cellar-door-exit",
+    "cellar-door-entry": ">=0.1.0",
+    "cellar-door-exit": ">=0.1.0",
     "zod": "^3.23.0"
   },
   "devDependencies": {
