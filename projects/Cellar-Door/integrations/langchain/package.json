@@ -20,12 +20,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CellarDoorExits/exit-door.git",
-    "directory": "integrations/langchain"
+    "url": "https://github.com/CellarDoorExits/langchain.git"
   },
-  "homepage": "https://github.com/CellarDoorExits/exit-door#readme",
+  "homepage": "https://github.com/CellarDoorExits/langchain#readme",
   "bugs": {
-    "url": "https://github.com/CellarDoorExits/exit-door/issues"
+    "url": "https://github.com/CellarDoorExits/langchain/issues"
   },
   "license": "Apache-2.0",
   "keywords": [

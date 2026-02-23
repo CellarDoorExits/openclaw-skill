@@ -3,6 +3,14 @@
   "version": "0.1.0",
   "description": "MCP server exposing cellar-door EXIT and ENTRY verifiable markers as AI-native tools",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CellarDoorExits/mcp-server.git"
+  },
+  "homepage": "https://github.com/CellarDoorExits/mcp-server#readme",
+  "bugs": {
+    "url": "https://github.com/CellarDoorExits/mcp-server/issues"
+  },
   "type": "module",
   "bin": {
     "@cellar-door/mcp-server": "./dist/index.js",

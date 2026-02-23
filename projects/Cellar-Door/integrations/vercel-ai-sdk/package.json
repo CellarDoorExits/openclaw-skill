@@ -19,12 +19,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CellarDoorExits/exit-door.git",
-    "directory": "integrations/vercel-ai-sdk"
+    "url": "https://github.com/CellarDoorExits/vercel-ai-sdk.git"
   },
-  "homepage": "https://github.com/CellarDoorExits/exit-door#readme",
+  "homepage": "https://github.com/CellarDoorExits/vercel-ai-sdk#readme",
   "bugs": {
-    "url": "https://github.com/CellarDoorExits/exit-door/issues"
+    "url": "https://github.com/CellarDoorExits/vercel-ai-sdk/issues"
   },
   "license": "Apache-2.0",
   "keywords": [
