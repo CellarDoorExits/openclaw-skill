@@ -12,7 +12,7 @@ import {
   ExitType,
   type ExitMarker,
   type Identity,
-} from "../../../cellar-door-exit/src/index.js";
+} from "cellar-door-exit";
 
 export interface ExitCallbackOpts {
   /** Origin platform/system name. Defaults to "langchain". */
@@ -21,6 +21,8 @@ export interface ExitCallbackOpts {
   exitType?: ExitType;
   /** Called whenever a new marker is created. */
   onMarker?: (marker: ExitMarker) => void;
+  /** Maximum number of markers to retain in memory. Oldest are evicted when exceeded. Default: 1000. */
+  maxMarkers?: number;
 }
 
 /**
@@ -33,6 +35,7 @@ export class ExitCallbackHandler extends BaseCallbackHandler {
   readonly origin: string;
   readonly exitType: ExitType;
   readonly markers: ExitMarker[] = [];
+  readonly maxMarkers: number;
   private onMarker?: (marker: ExitMarker) => void;
 
   constructor(opts?: ExitCallbackOpts) {
@@ -40,11 +43,21 @@ export class ExitCallbackHandler extends BaseCallbackHandler {
     this.origin = opts?.origin ?? "langchain";
     this.exitType = opts?.exitType ?? ExitType.Voluntary;
     this.onMarker = opts?.onMarker;
+    this.maxMarkers = opts?.maxMarkers ?? 1000;
+  }
+
+  /** Remove all stored markers. */
+  clear(): void {
+    this.markers.length = 0;
   }
 
   private recordMarker(): ExitMarker {
     const { marker } = quickExit(this.origin, { exitType: this.exitType });
     this.markers.push(marker);
+    // Evict oldest markers when limit exceeded
+    while (this.markers.length > this.maxMarkers) {
+      this.markers.shift();
+    }
     this.onMarker?.(marker);
     return marker;
   }
@@ -58,7 +71,7 @@ export class ExitCallbackHandler extends BaseCallbackHandler {
   }
 
   /** Get all recorded markers as JSON array. */
-  toJSON(): string {
+  markersToJSON(): string {
     return JSON.stringify(this.markers.map((m) => JSON.parse(toJSON(m))), null, 2);
   }
 }
