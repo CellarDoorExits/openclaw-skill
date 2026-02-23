@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { createExitOnFinish, withExitMarker } from "../exit-middleware.js";
-import { ExitType } from "../../../../cellar-door-exit/src/index.js";
+import { ExitType } from "cellar-door-exit";
 
 describe("createExitOnFinish", () => {
   it("returns a function", () => {

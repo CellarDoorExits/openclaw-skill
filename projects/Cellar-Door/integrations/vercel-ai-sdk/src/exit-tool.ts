@@ -14,7 +14,7 @@ import {
   ExitType,
   toJSON,
   type QuickExitResult,
-} from "../../cellar-door-exit/src/index.js";
+} from "cellar-door-exit";
 
 /**
  * Vercel AI SDK tool that creates a signed EXIT marker.
@@ -48,7 +48,7 @@ export const exitMarkerTool = tool({
       subject: result.marker.subject,
       origin: result.marker.origin,
       exitType: result.marker.exitType,
-      timestamp: result.marker.issuanceDate,
+      timestamp: result.marker.timestamp,
     };
   },
 });

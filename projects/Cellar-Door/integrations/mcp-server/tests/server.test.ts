@@ -24,9 +24,13 @@ describe("MCP Server", () => {
     const names = tools.map((t) => t.name).sort();
     expect(names).toEqual([
       "create_exit_marker",
+      "evaluate_admission",
       "generate_identity",
+      "list_admission_policies",
       "quick_exit",
+      "verify_and_admit",
       "verify_exit_marker",
+      "verify_transfer",
     ]);
   });
 
@@ -87,6 +91,55 @@ describe("MCP Server", () => {
     const verified = JSON.parse((verifyResult.content as any)[0].text);
     expect(verified.valid).toBe(true);
     expect(verified.subject).toMatch(/^did:key:z/);
+  });
+
+  it("verify_and_admit creates an arrival marker", async () => {
+    const client = await setupClient();
+    // Create exit marker first
+    const exitResult = await client.callTool({
+      name: "quick_exit",
+      arguments: { origin: "did:example:source" },
+    });
+    const exitData = JSON.parse((exitResult.content as any)[0].text);
+    const exitMarkerJson = JSON.stringify(exitData.marker);
+
+    const result = await client.callTool({
+      name: "verify_and_admit",
+      arguments: { exitMarkerJson, destination: "did:example:dest" },
+    });
+    const data = JSON.parse((result.content as any)[0].text);
+    expect(data.admitted).toBe(true);
+    expect(data.arrivalMarker).toBeTruthy();
+    expect(data.continuity.valid).toBe(true);
+  });
+
+  it("evaluate_admission checks policy", async () => {
+    const client = await setupClient();
+    const exitResult = await client.callTool({
+      name: "quick_exit",
+      arguments: { origin: "did:example:test" },
+    });
+    const exitData = JSON.parse((exitResult.content as any)[0].text);
+    const exitMarkerJson = JSON.stringify(exitData.marker);
+
+    const result = await client.callTool({
+      name: "evaluate_admission",
+      arguments: { exitMarkerJson, policy: "OPEN_DOOR" },
+    });
+    const data = JSON.parse((result.content as any)[0].text);
+    expect(data.admitted).toBe(true);
+  });
+
+  it("list_admission_policies returns presets", async () => {
+    const client = await setupClient();
+    const result = await client.callTool({
+      name: "list_admission_policies",
+      arguments: {},
+    });
+    const data = JSON.parse((result.content as any)[0].text);
+    expect(data.policies.OPEN_DOOR).toBeTruthy();
+    expect(data.policies.STRICT).toBeTruthy();
+    expect(data.policies.EMERGENCY_ONLY).toBeTruthy();
   });
 
   it("verify_exit_marker rejects garbage", async () => {

@@ -1,14 +1,16 @@
 # @cellar-door/vercel-ai-sdk
 
-Vercel AI SDK integration for [cellar-door-exit](../../cellar-door-exit/) — verifiable agent departure markers.
+Vercel AI SDK integration for [`cellar-door-exit`](https://www.npmjs.com/package/cellar-door-exit) and [`cellar-door-entry`](https://www.npmjs.com/package/cellar-door-entry) — cryptographically signed, verifiable agent departure and arrival markers.
+
+Part of the [EXIT Protocol](https://github.com/CellarDoorExits/exit-door).
 
 ## Install
 
 ```bash
-npm install @cellar-door/vercel-ai-sdk cellar-door-exit ai
+npm install @cellar-door/vercel-ai-sdk cellar-door-exit cellar-door-entry ai
 ```
 
-## Usage
+## EXIT Tools
 
 ### Tool — Let the Agent Create EXIT Markers
 
@@ -22,16 +24,12 @@ const { text, toolResults } = await generateText({
   tools: { exitMarker: exitMarkerTool },
   prompt: "Complete the task and produce a departure marker.",
 });
-
-// The agent can call exitMarker with { origin: "my-app" }
-// and receive a cryptographically signed EXIT marker.
 ```
 
 ### Middleware — Automatic EXIT on Session End
 
 ```ts
 import { streamText } from "ai";
-import { openai } from "@ai-sdk/openai";
 import { createExitOnFinish } from "@cellar-door/vercel-ai-sdk";
 
 const result = await streamText({
@@ -41,68 +39,96 @@ const result = await streamText({
     origin: "my-agent",
     onMarkerCreated: (marker, identity) => {
       console.log("EXIT marker created:", marker.id);
-      // Store, log, or broadcast the marker
     },
   }),
 });
 ```
 
-### Wrapping an Existing onFinish
+## ENTRY Tools
+
+### Tool — Verify and Admit an Agent
 
 ```ts
-import { withExitMarker } from "@cellar-door/vercel-ai-sdk";
+import { generateText } from "ai";
+import { verifyAndAdmitAgentTool } from "@cellar-door/vercel-ai-sdk";
 
-const myOnFinish = (event) => {
-  console.log("Generation complete:", event.text.length, "chars");
-};
+const { toolResults } = await generateText({
+  model: openai("gpt-4o"),
+  tools: { admitAgent: verifyAndAdmitAgentTool },
+  prompt: "Verify this EXIT marker and create an arrival.",
+});
+// The agent calls admitAgent with { exitMarkerJson, destination, admissionPolicy? }
+```
+
+### Tool — Evaluate Admission Policy
+
+```ts
+import { evaluateAdmissionTool } from "@cellar-door/vercel-ai-sdk";
+
+// Check if an EXIT marker meets a policy without creating an arrival
+const { toolResults } = await generateText({
+  model,
+  tools: { checkAdmission: evaluateAdmissionTool },
+  prompt: "Check if this departure meets STRICT policy.",
+});
+```
+
+### Tool — Verify Transfer Chain
+
+```ts
+import { verifyTransferTool } from "@cellar-door/vercel-ai-sdk";
+
+// Verify a complete EXIT→ENTRY transfer
+const { toolResults } = await generateText({
+  model,
+  tools: { verifyTransfer: verifyTransferTool },
+  prompt: "Verify this transfer between platforms.",
+});
+```
+
+### Middleware — Full Transit (EXIT + ENTRY)
+
+```ts
+import { createTransitOnFinish } from "@cellar-door/vercel-ai-sdk";
 
 const result = await streamText({
   model,
   prompt: "Hello",
-  onFinish: withExitMarker(myOnFinish, { origin: "my-agent" }),
+  onFinish: createTransitOnFinish({
+    origin: "platform-a",
+    arrivalDestination: "platform-b",
+    onMarkerCreated: (marker) => console.log("EXIT:", marker.id),
+    onArrivalCreated: (arrival) => console.log("ARRIVAL:", arrival.id),
+  }),
 });
-```
-
-## Tool Output Example
-
-When an agent calls the `exitMarker` tool, it receives:
-
-```json
-{
-  "markerId": "urn:exit:a1b2c3...",
-  "subject": "did:key:z6Mk...",
-  "origin": "my-app",
-  "exitType": "Voluntary",
-  "timestamp": "2026-02-23T02:44:00.000Z",
-  "markerJson": "{ ... full signed marker ... }"
-}
 ```
 
 ## API
 
-### `exitMarkerTool`
+### EXIT
 
-A Vercel AI SDK `tool()` with parameters:
+- **`exitMarkerTool`** — Vercel AI SDK tool for creating EXIT markers
+- **`createExitOnFinish(opts)`** — `onFinish` callback for automatic EXIT markers
+- **`withExitMarker(originalOnFinish, opts)`** — Wraps existing `onFinish` to also create EXIT markers
 
-| Parameter  | Type   | Required | Description                          |
-| ---------- | ------ | -------- | ------------------------------------ |
-| `origin`   | string | ✅       | Platform/system being exited         |
-| `exitType` | enum   | ❌       | voluntary, forced, emergency, keyCompromise |
-| `reason`   | string | ❌       | Human-readable reason for departure  |
+### ENTRY
 
-### `createExitOnFinish(opts)`
+- **`verifyAndAdmitAgentTool`** — Verify EXIT marker + create arrival (with optional admission policy)
+- **`evaluateAdmissionTool`** — Check if EXIT marker meets an admission policy
+- **`verifyTransferTool`** — Verify a complete EXIT→ENTRY transfer chain
+- **`createEntryOnStart(exitMarkerJson, opts)`** — Create arrival on session start
+- **`createTransitOnFinish(opts)`** — Create both EXIT and ENTRY markers on finish
 
-Returns an `onFinish` callback. Options:
+### Admission Policies
 
-- `origin` (required) — platform identifier
-- `exitType` — defaults to `Voluntary`
-- `onMarkerCreated(marker, identity)` — callback after marker creation
-- `includeInMetadata` — include marker JSON in return value (default: true)
+- `OPEN_DOOR` — Accept any verified departure
+- `STRICT` — Voluntary only, <24h old, requires lineage + stateSnapshot
+- `EMERGENCY_ONLY` — Accept only emergency exits
 
-### `withExitMarker(originalOnFinish, opts)`
+## ⚠️ Disclaimer
 
-Wraps an existing `onFinish` to also produce an EXIT marker.
+> **WARNING:** Automated admission decisions should be reviewed by platform operators. This integration does not constitute legal advice. Platforms are responsible for their own admission policies and the consequences of admitting agents.
 
 ## License
 
-MIT
+Apache-2.0

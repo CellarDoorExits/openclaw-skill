@@ -11,7 +11,12 @@ import {
   ExitType,
   type ExitMarker,
   type Identity,
-} from "../../cellar-door-exit/src/index.js";
+} from "cellar-door-exit";
+import {
+  quickEntry,
+  type QuickEntryResult,
+  type ArrivalMarker,
+} from "cellar-door-entry";
 
 export interface ExitMiddlewareOpts {
   /** Platform/system identifier */
@@ -22,6 +27,22 @@ export interface ExitMiddlewareOpts {
   onMarkerCreated?: (marker: ExitMarker, identity: Identity) => void | Promise<void>;
   /** If true, include the marker JSON in the returned metadata */
   includeInMetadata?: boolean;
+}
+
+export interface EntryMiddlewareOpts {
+  /** Destination platform/system identifier */
+  destination: string;
+  /** Called with the arrival marker after creation */
+  onArrivalCreated?: (arrival: ArrivalMarker, exit: ExitMarker) => void | Promise<void>;
+  /** If true, include arrival marker JSON in returned metadata */
+  includeInMetadata?: boolean;
+}
+
+export interface TransitMiddlewareOpts extends ExitMiddlewareOpts {
+  /** If provided, also create an arrival marker at this destination */
+  arrivalDestination?: string;
+  /** Called with the arrival marker */
+  onArrivalCreated?: (arrival: ArrivalMarker, exit: ExitMarker) => void | Promise<void>;
 }
 
 /**
@@ -76,5 +97,57 @@ export function withExitMarker<T extends (...args: any[]) => any>(
     if (opts.onMarkerCreated) {
       await opts.onMarkerCreated(marker, identity);
     }
+  };
+}
+
+/**
+ * Creates an `onStart` callback that verifies an EXIT marker and creates
+ * an arrival marker when an AI SDK call begins (entry side).
+ */
+export function createEntryOnStart(exitMarkerJson: string, opts: EntryMiddlewareOpts) {
+  return async (_event: Record<string, unknown>) => {
+    const result: QuickEntryResult = quickEntry(exitMarkerJson, opts.destination);
+
+    if (opts.onArrivalCreated) {
+      await opts.onArrivalCreated(result.arrivalMarker, result.exitMarker);
+    }
+
+    return {
+      arrivalMarker: opts.includeInMetadata !== false ? JSON.stringify(result.arrivalMarker) : undefined,
+      continuity: result.continuity,
+    };
+  };
+}
+
+/**
+ * Creates an `onFinish` callback that produces BOTH an EXIT marker
+ * and optionally an arrival marker at a destination (full transit).
+ */
+export function createTransitOnFinish(opts: TransitMiddlewareOpts) {
+  return async (event: { text: string; [key: string]: unknown }) => {
+    const { marker, identity } = quickExit(opts.origin, {
+      exitType: opts.exitType ?? ExitType.Voluntary,
+    });
+
+    if (opts.onMarkerCreated) {
+      await opts.onMarkerCreated(marker, identity);
+    }
+
+    let arrivalResult: QuickEntryResult | undefined;
+    if (opts.arrivalDestination) {
+      arrivalResult = quickEntry(toJSON(marker), opts.arrivalDestination);
+      if (opts.onArrivalCreated) {
+        await opts.onArrivalCreated(arrivalResult.arrivalMarker, arrivalResult.exitMarker);
+      }
+    }
+
+    return {
+      exitMarker: opts.includeInMetadata !== false ? toJSON(marker) : undefined,
+      exitMarkerId: marker.id,
+      arrivalMarker: arrivalResult
+        ? JSON.stringify(arrivalResult.arrivalMarker)
+        : undefined,
+      continuity: arrivalResult?.continuity,
+    };
   };
 }

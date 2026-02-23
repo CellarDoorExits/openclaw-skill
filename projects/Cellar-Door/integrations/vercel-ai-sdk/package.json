@@ -1,35 +1,58 @@
 {
   "name": "@cellar-door/vercel-ai-sdk",
   "version": "0.1.0",
-  "description": "Vercel AI SDK integration for cellar-door-exit — verifiable agent departure markers",
+  "description": "Vercel AI SDK integration for cellar-door EXIT and ENTRY — verifiable agent departure and arrival markers",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "scripts": {
-    "build": "tsc",
-    "test": "npx vitest run"
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "test": "vitest run"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CellarDoorExits/exit-door.git",
+    "directory": "integrations/vercel-ai-sdk"
+  },
+  "homepage": "https://github.com/CellarDoorExits/exit-door#readme",
+  "bugs": {
+    "url": "https://github.com/CellarDoorExits/exit-door/issues"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "exit-protocol",
+    "cellar-door",
+    "vercel-ai-sdk",
+    "ai-agent",
+    "departure-marker",
+    "verifiable-credentials",
+    "agent-exit"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "peerDependencies": {
     "ai": ">=3.0.0",
-    "cellar-door-exit": "*"
-  },
-  "peerDependenciesMeta": {
-    "cellar-door-exit": { "optional": true }
-  },
-  "dependencies": {
-    "ai": "^4.3.19",
-    "zod": "^3.25.76"
+    "cellar-door-entry": ">=0.1.0",
+    "cellar-door-exit": ">=0.1.0"
   },
   "devDependencies": {
+    "ai": "^4.3.19",
+    "cellar-door-entry": "file:../../cellar-door-entry",
+    "cellar-door-exit": "file:../../cellar-door-exit",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "vitest": "^2.1.9"
-  },
-  "files": ["dist"],
-  "license": "MIT"
+    "vitest": "^2.1.9",
+    "zod": "^3.25.76"
+  }
 }

@@ -1,27 +1,60 @@
 {
   "name": "@cellar-door/langchain",
   "version": "0.1.0",
-  "description": "LangChain integration for cellar-door-exit — verifiable agent departure markers",
+  "description": "LangChain integration for cellar-door EXIT and ENTRY — verifiable agent departure and arrival markers",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
-    "build": "tsc",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
     "test": "vitest run",
     "test:watch": "vitest"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CellarDoorExits/exit-door.git",
+    "directory": "integrations/langchain"
+  },
+  "homepage": "https://github.com/CellarDoorExits/exit-door#readme",
+  "bugs": {
+    "url": "https://github.com/CellarDoorExits/exit-door/issues"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "exit-protocol",
+    "cellar-door",
+    "langchain",
+    "ai-agent",
+    "departure-marker",
+    "verifiable-credentials",
+    "agent-exit",
+    "callback-handler"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "peerDependencies": {
     "@langchain/core": ">=0.2.0",
+    "cellar-door-entry": ">=0.1.0",
     "cellar-door-exit": ">=0.1.0"
   },
   "devDependencies": {
-    "@langchain/core": "0.2.36",
-    "typescript": "5.4.5",
-    "vitest": "1.6.0",
-    "zod": "3.23.8"
-  },
-  "files": [
-    "dist"
-  ],
-  "license": "MIT"
+    "@langchain/core": "^0.2.36",
+    "cellar-door-entry": "file:../../cellar-door-entry",
+    "cellar-door-exit": "file:../../cellar-door-exit",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0",
+    "zod": "^3.23.8"
+  }
 }

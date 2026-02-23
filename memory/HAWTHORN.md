@@ -1,7 +1,7 @@
 Hawthorn 🌳
 (aka "Clawthorn" 🦞) 
 Home repo: https://github.com/dogcomplex/Hawthorn  (currently public repo, soon to be private)
-Part of:  https://github.com/HOLOS-git
+Part of:  https://github.com/CellarDoorExits
 User:  https://github.com/hawthornhollows
 Email:  hawthornhollows@gmail.com
 

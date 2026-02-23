@@ -1,78 +1,104 @@
 # @cellar-door/langchain
 
-LangChain integration for [cellar-door-exit](../../cellar-door-exit/) — verifiable agent departure markers.
+LangChain integration for [`cellar-door-exit`](https://www.npmjs.com/package/cellar-door-exit) and [`cellar-door-entry`](https://www.npmjs.com/package/cellar-door-entry) — cryptographically signed, verifiable agent departure and arrival markers.
+
+Part of the [EXIT Protocol](https://github.com/CellarDoorExits/exit-door).
 
 ## Installation
 
 ```bash
-npm install @cellar-door/langchain @langchain/core cellar-door-exit
+npm install @cellar-door/langchain @langchain/core cellar-door-exit cellar-door-entry
 ```
 
-## Usage
+## EXIT Tools
 
 ### Exit Tool
 
-Give your LangChain agent the ability to create signed EXIT markers:
-
 ```ts
 import { createExitTool } from "@cellar-door/langchain";
-import { ChatOpenAI } from "@langchain/openai";
-import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
 
 const tool = createExitTool();
-
-// Add to your agent's tool list
-const agent = await createOpenAIFunctionsAgent({
-  llm: new ChatOpenAI({ model: "gpt-4" }),
-  tools: [tool],
-  prompt: yourPrompt,
-});
-
-const executor = new AgentExecutor({ agent, tools: [tool] });
+// Use with any LangChain agent — creates signed EXIT markers
 ```
 
-The tool accepts:
-- `origin` (required) — platform/system being exited
-- `exitType` (optional) — `"voluntary"`, `"involuntary"`, `"emergency"`, `"constructive"`, `"planned"`
-- `reason` (optional) — reason for exit
-
 ### Exit Callback Handler
-
-Automatically create EXIT markers when chains or agents finish:
 
 ```ts
 import { ExitCallbackHandler } from "@cellar-door/langchain";
 
-const exitHandler = new ExitCallbackHandler({
+const handler = new ExitCallbackHandler({
   origin: "my-app",
-  onMarker: (marker) => {
-    console.log("Agent departed:", marker.id);
-  },
+  onMarker: (marker) => console.log("Departed:", marker.id),
 });
 
-// Attach to any chain or agent
-const result = await chain.invoke(input, {
-  callbacks: [exitHandler],
+const result = await chain.invoke(input, { callbacks: [handler] });
+```
+
+## ENTRY Tools
+
+### Entry Tool — Verify and Create Arrival
+
+```ts
+import { createEntryTool } from "@cellar-door/langchain";
+
+const entryTool = createEntryTool();
+// Agent calls with { exitMarkerJson, destination }
+// Returns signed arrival marker with continuity verification
+```
+
+### Admission Policy Tool
+
+```ts
+import { createAdmissionPolicyTool } from "@cellar-door/langchain";
+
+const admissionTool = createAdmissionPolicyTool();
+// Agent calls with { exitMarkerJson, policy: "OPEN_DOOR" | "STRICT" | "EMERGENCY_ONLY" }
+```
+
+### Transfer Verification Tool
+
+```ts
+import { createTransferVerificationTool } from "@cellar-door/langchain";
+
+const transferTool = createTransferVerificationTool();
+// Agent calls with { exitMarkerJson, arrivalMarkerJson }
+// Returns { verified, transferTime, errors, continuity }
+```
+
+### Callback Handler with Arrival
+
+```ts
+import { ExitCallbackHandler } from "@cellar-door/langchain";
+
+const handler = new ExitCallbackHandler({
+  origin: "platform-a",
+  arrivalDestination: "platform-b", // Automatically create arrivals too
+  onMarker: (marker) => console.log("EXIT:", marker.id),
+  onArrival: (arrival) => console.log("ARRIVAL:", arrival.id),
 });
 
-// Access all recorded markers
-console.log(exitHandler.markers);
-console.log(exitHandler.toJSON());
+// handler.markers — all EXIT markers
+// handler.arrivals — all ARRIVAL markers
+// handler.recordArrival(exitJson, dest?) — manually trigger entry
 ```
 
 ## API
 
-### `createExitTool(opts?)`
+### EXIT
 
-Returns a `DynamicStructuredTool` for creating EXIT markers.
+- **`createExitTool(opts?)`** — `DynamicStructuredTool` for creating EXIT markers
+- **`ExitCallbackHandler`** — Callback handler for automatic EXIT (and optionally ENTRY) markers
 
-### `ExitCallbackHandler`
+### ENTRY
 
-A `BaseCallbackHandler` that records EXIT markers on chain/agent completion.
+- **`createEntryTool()`** — Tool to verify EXIT + create arrival
+- **`createAdmissionPolicyTool()`** — Tool to evaluate admission policies
+- **`createTransferVerificationTool()`** — Tool to verify EXIT→ENTRY transfers
 
-- `markers: ExitMarker[]` — all recorded markers
-- `toJSON(): string` — serialize markers to JSON array
+## ⚠️ Disclaimer
+
+> **WARNING:** Automated admission decisions should be reviewed by platform operators. This integration does not constitute legal advice. Platforms are responsible for their own admission policies and the consequences of admitting agents.
 
 ## License
 
-MIT
+Apache-2.0

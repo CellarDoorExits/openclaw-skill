@@ -37,7 +37,7 @@ describe("ExitCallbackHandler", () => {
     await handler.handleChainEnd({});
     await handler.handleChainEnd({});
 
-    const json = handler.toJSON();
+    const json = handler.markersToJSON();
     const parsed = JSON.parse(json);
     expect(parsed).toHaveLength(2);
   });

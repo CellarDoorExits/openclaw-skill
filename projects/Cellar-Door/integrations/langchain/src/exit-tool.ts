@@ -10,7 +10,7 @@ import {
   toJSON,
   type Identity,
   type QuickExitOpts,
-} from "../../../cellar-door-exit/src/index.js";
+} from "cellar-door-exit";
 
 const exitTypeValues = ["voluntary", "forced", "emergency", "keyCompromise"] as const;
 
