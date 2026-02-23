@@ -21,7 +21,10 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var index_exports = {};
 __export(index_exports, {
   ExitCallbackHandler: () => ExitCallbackHandler,
-  createExitTool: () => createExitTool
+  createAdmissionPolicyTool: () => createAdmissionPolicyTool,
+  createEntryTool: () => createEntryTool,
+  createExitTool: () => createExitTool,
+  createTransferVerificationTool: () => createTransferVerificationTool
 });
 module.exports = __toCommonJS(index_exports);
 
@@ -4104,37 +4107,162 @@ function createExitTool(opts) {
 // src/exit-callback.ts
 var import_base = require("@langchain/core/callbacks/base");
 var import_cellar_door_exit2 = require("cellar-door-exit");
+var import_cellar_door_entry = require("cellar-door-entry");
 var ExitCallbackHandler = class extends import_base.BaseCallbackHandler {
   name = "ExitCallbackHandler";
   origin;
   exitType;
   markers = [];
+  arrivals = [];
+  maxMarkers;
+  arrivalDestination;
   onMarker;
+  onArrival;
+  /** Stores the last exit marker JSON for creating arrivals */
+  lastExitMarkerJson;
   constructor(opts) {
     super();
     this.origin = opts?.origin ?? "langchain";
     this.exitType = opts?.exitType ?? import_cellar_door_exit2.ExitType.Voluntary;
     this.onMarker = opts?.onMarker;
+    this.onArrival = opts?.onArrival;
+    this.maxMarkers = opts?.maxMarkers ?? 1e3;
+    this.arrivalDestination = opts?.arrivalDestination;
+  }
+  /** Remove all stored markers and arrivals. */
+  clear() {
+    this.markers.length = 0;
+    this.arrivals.length = 0;
+  }
+  /**
+   * Record an arrival from an EXIT marker JSON string.
+   * Call this to manually trigger entry processing.
+   */
+  recordArrival(exitMarkerJson, destination) {
+    const dest = destination ?? this.arrivalDestination ?? this.origin;
+    const result = (0, import_cellar_door_entry.quickEntry)(exitMarkerJson, dest);
+    this.arrivals.push(result.arrivalMarker);
+    while (this.arrivals.length > this.maxMarkers) {
+      this.arrivals.shift();
+    }
+    this.onArrival?.(result.arrivalMarker);
+    return result;
   }
   recordMarker() {
     const { marker } = (0, import_cellar_door_exit2.quickExit)(this.origin, { exitType: this.exitType });
     this.markers.push(marker);
+    while (this.markers.length > this.maxMarkers) {
+      this.markers.shift();
+    }
     this.onMarker?.(marker);
     return marker;
   }
   async handleChainEnd(_outputs) {
-    this.recordMarker();
+    const marker = this.recordMarker();
+    if (this.arrivalDestination) {
+      this.lastExitMarkerJson = (0, import_cellar_door_exit2.toJSON)(marker);
+      this.recordArrival(this.lastExitMarkerJson, this.arrivalDestination);
+    }
   }
   async handleAgentEnd(_action) {
-    this.recordMarker();
+    const marker = this.recordMarker();
+    if (this.arrivalDestination) {
+      this.lastExitMarkerJson = (0, import_cellar_door_exit2.toJSON)(marker);
+      this.recordArrival(this.lastExitMarkerJson, this.arrivalDestination);
+    }
   }
   /** Get all recorded markers as JSON array. */
   markersToJSON() {
     return JSON.stringify(this.markers.map((m) => JSON.parse((0, import_cellar_door_exit2.toJSON)(m))), null, 2);
   }
 };
+
+// src/entry-tool.ts
+var import_tools2 = require("@langchain/core/tools");
+var import_cellar_door_entry2 = require("cellar-door-entry");
+var entryToolSchema = external_exports.object({
+  exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker to verify and admit"),
+  destination: external_exports.string().describe("The platform or system where the agent is arriving")
+});
+function createEntryTool() {
+  return new import_tools2.DynamicStructuredTool({
+    name: "verify_and_create_arrival",
+    description: "Verify a cryptographically signed EXIT marker and create a linked arrival marker at this destination. Returns the signed arrival marker with continuity verification.",
+    schema: entryToolSchema,
+    func: async (input) => {
+      const result = (0, import_cellar_door_entry2.quickEntry)(input.exitMarkerJson, input.destination);
+      return JSON.stringify({
+        arrivalMarker: result.arrivalMarker,
+        exitMarkerId: result.exitMarker.id,
+        continuity: result.continuity
+      });
+    }
+  });
+}
+
+// src/admission-tool.ts
+var import_tools3 = require("@langchain/core/tools");
+var import_cellar_door_entry3 = require("cellar-door-entry");
+var import_cellar_door_exit3 = require("cellar-door-exit");
+var presets = { OPEN_DOOR: import_cellar_door_entry3.OPEN_DOOR, STRICT: import_cellar_door_entry3.STRICT, EMERGENCY_ONLY: import_cellar_door_entry3.EMERGENCY_ONLY };
+var admissionSchema = external_exports.object({
+  exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker to evaluate"),
+  policy: external_exports.enum(["OPEN_DOOR", "STRICT", "EMERGENCY_ONLY"]).describe("Admission policy preset to evaluate against")
+});
+function createAdmissionPolicyTool() {
+  return new import_tools3.DynamicStructuredTool({
+    name: "evaluate_admission_policy",
+    description: "Evaluate whether an EXIT departure marker meets an admission policy. Does not create an arrival \u2014 just checks the policy.",
+    schema: admissionSchema,
+    func: async (input) => {
+      const exitMarker = (0, import_cellar_door_exit3.fromJSON)(input.exitMarkerJson);
+      const result = (0, import_cellar_door_entry3.evaluateAdmission)(exitMarker, presets[input.policy]);
+      return JSON.stringify({ ...result, policy: input.policy });
+    }
+  });
+}
+
+// src/transfer-tool.ts
+var import_tools4 = require("@langchain/core/tools");
+var import_cellar_door_entry4 = require("cellar-door-entry");
+var import_cellar_door_exit4 = require("cellar-door-exit");
+var transferSchema = external_exports.object({
+  exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker"),
+  arrivalMarkerJson: external_exports.string().describe("JSON string of the ARRIVAL marker")
+});
+function createTransferVerificationTool() {
+  return new import_tools4.DynamicStructuredTool({
+    name: "verify_transfer",
+    description: "Verify a complete EXIT\u2192ENTRY transfer chain: check both markers' signatures and continuity.",
+    schema: transferSchema,
+    func: async (input) => {
+      const exitMarker = (0, import_cellar_door_exit4.fromJSON)(input.exitMarkerJson);
+      let arrivalMarker;
+      try {
+        arrivalMarker = JSON.parse(input.arrivalMarkerJson);
+      } catch {
+        return JSON.stringify({
+          verified: false,
+          transferTime: null,
+          errors: ["Invalid arrival marker JSON: failed to parse"],
+          continuity: null
+        });
+      }
+      const record = (0, import_cellar_door_entry4.verifyTransfer)(exitMarker, arrivalMarker);
+      return JSON.stringify({
+        verified: record.verified,
+        transferTime: record.transferTime,
+        errors: record.errors,
+        continuity: record.continuity
+      });
+    }
+  });
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   ExitCallbackHandler,
-  createExitTool
+  createAdmissionPolicyTool,
+  createEntryTool,
+  createExitTool,
+  createTransferVerificationTool
 });

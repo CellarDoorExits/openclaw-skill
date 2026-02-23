@@ -4083,6 +4083,9 @@ import {
   toJSON as toJSON2,
   ExitType as ExitType2
 } from "cellar-door-exit";
+import {
+  quickEntry
+} from "cellar-door-entry";
 function createExitOnFinish(opts) {
   return async (event) => {
     const { marker, identity } = quickExit2(opts.origin, {
@@ -4110,8 +4113,141 @@ function withExitMarker(originalOnFinish, opts) {
     }
   };
 }
+function createEntryOnStart(exitMarkerJson, opts) {
+  return async (_event) => {
+    const result = quickEntry(exitMarkerJson, opts.destination);
+    if (opts.onArrivalCreated) {
+      await opts.onArrivalCreated(result.arrivalMarker, result.exitMarker);
+    }
+    return {
+      arrivalMarker: opts.includeInMetadata !== false ? JSON.stringify(result.arrivalMarker) : void 0,
+      continuity: result.continuity
+    };
+  };
+}
+function createTransitOnFinish(opts) {
+  return async (event) => {
+    const { marker, identity } = quickExit2(opts.origin, {
+      exitType: opts.exitType ?? ExitType2.Voluntary
+    });
+    if (opts.onMarkerCreated) {
+      await opts.onMarkerCreated(marker, identity);
+    }
+    let arrivalResult;
+    if (opts.arrivalDestination) {
+      arrivalResult = quickEntry(toJSON2(marker), opts.arrivalDestination);
+      if (opts.onArrivalCreated) {
+        await opts.onArrivalCreated(arrivalResult.arrivalMarker, arrivalResult.exitMarker);
+      }
+    }
+    return {
+      exitMarker: opts.includeInMetadata !== false ? toJSON2(marker) : void 0,
+      exitMarkerId: marker.id,
+      arrivalMarker: arrivalResult ? JSON.stringify(arrivalResult.arrivalMarker) : void 0,
+      continuity: arrivalResult?.continuity
+    };
+  };
+}
+
+// src/entry-tools.ts
+import { tool as tool2 } from "ai";
+import {
+  quickEntry as quickEntry2,
+  evaluateAdmission,
+  verifyTransfer,
+  OPEN_DOOR,
+  STRICT,
+  EMERGENCY_ONLY
+} from "cellar-door-entry";
+import { fromJSON } from "cellar-door-exit";
+var admissionPresets = {
+  OPEN_DOOR,
+  STRICT,
+  EMERGENCY_ONLY
+};
+var verifyAndAdmitAgentTool = tool2({
+  description: "Verify an EXIT departure marker and create a signed arrival marker at this destination. Wraps the full ENTRY flow: verify departure, evaluate admission, create arrival, check continuity.",
+  parameters: external_exports.object({
+    exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker to verify and admit"),
+    destination: external_exports.string().describe("Identifier for this platform/system (the arrival destination)"),
+    admissionPolicy: external_exports.enum(["OPEN_DOOR", "STRICT", "EMERGENCY_ONLY"]).optional().describe("Admission policy preset to apply before admitting. Default: OPEN_DOOR")
+  }),
+  execute: async ({ exitMarkerJson, destination, admissionPolicy }) => {
+    const policyName = admissionPolicy ?? "OPEN_DOOR";
+    const policy = admissionPresets[policyName];
+    const exitMarker = fromJSON(exitMarkerJson);
+    const admission = evaluateAdmission(exitMarker, policy);
+    if (!admission.admitted) {
+      return {
+        admitted: false,
+        reasons: admission.reasons,
+        arrivalMarker: null
+      };
+    }
+    const result = quickEntry2(exitMarkerJson, destination);
+    return {
+      admitted: true,
+      arrivalMarker: JSON.parse(JSON.stringify(result.arrivalMarker)),
+      exitMarkerId: result.exitMarker.id,
+      subject: result.arrivalMarker.subject,
+      destination: result.arrivalMarker.destination,
+      continuity: result.continuity
+    };
+  }
+});
+var evaluateAdmissionTool = tool2({
+  description: "Check whether an EXIT departure marker meets an admission policy. Does NOT create an arrival \u2014 just evaluates the policy.",
+  parameters: external_exports.object({
+    exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker to evaluate"),
+    policy: external_exports.enum(["OPEN_DOOR", "STRICT", "EMERGENCY_ONLY"]).describe("Admission policy preset to evaluate against")
+  }),
+  execute: async ({ exitMarkerJson, policy: policyName }) => {
+    const exitMarker = fromJSON(exitMarkerJson);
+    const policy = admissionPresets[policyName];
+    const result = evaluateAdmission(exitMarker, policy);
+    return {
+      admitted: result.admitted,
+      conditions: result.conditions,
+      reasons: result.reasons,
+      policy: policyName
+    };
+  }
+});
+var verifyTransferTool = tool2({
+  description: "Verify a complete EXIT\u2192ENTRY transfer: check both markers' signatures and continuity between them.",
+  parameters: external_exports.object({
+    exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker"),
+    arrivalMarkerJson: external_exports.string().describe("JSON string of the ARRIVAL marker")
+  }),
+  execute: async ({ exitMarkerJson, arrivalMarkerJson }) => {
+    const exitMarker = fromJSON(exitMarkerJson);
+    let arrivalMarker;
+    try {
+      arrivalMarker = JSON.parse(arrivalMarkerJson);
+    } catch {
+      return {
+        verified: false,
+        transferTime: null,
+        errors: ["Invalid arrival marker JSON: failed to parse"],
+        continuity: null
+      };
+    }
+    const record = verifyTransfer(exitMarker, arrivalMarker);
+    return {
+      verified: record.verified,
+      transferTime: record.transferTime,
+      errors: record.errors,
+      continuity: record.continuity
+    };
+  }
+});
 export {
+  createEntryOnStart,
   createExitOnFinish,
+  createTransitOnFinish,
+  evaluateAdmissionTool,
   exitMarkerTool,
+  verifyAndAdmitAgentTool,
+  verifyTransferTool,
   withExitMarker
 };

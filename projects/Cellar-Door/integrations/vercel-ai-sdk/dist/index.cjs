@@ -20,8 +20,13 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var index_exports = {};
 __export(index_exports, {
+  createEntryOnStart: () => createEntryOnStart,
   createExitOnFinish: () => createExitOnFinish,
+  createTransitOnFinish: () => createTransitOnFinish,
+  evaluateAdmissionTool: () => evaluateAdmissionTool,
   exitMarkerTool: () => exitMarkerTool,
+  verifyAndAdmitAgentTool: () => verifyAndAdmitAgentTool,
+  verifyTransferTool: () => verifyTransferTool,
   withExitMarker: () => withExitMarker
 });
 module.exports = __toCommonJS(index_exports);
@@ -4098,6 +4103,7 @@ var exitMarkerTool = (0, import_ai.tool)({
 
 // src/exit-middleware.ts
 var import_cellar_door_exit2 = require("cellar-door-exit");
+var import_cellar_door_entry = require("cellar-door-entry");
 function createExitOnFinish(opts) {
   return async (event) => {
     const { marker, identity } = (0, import_cellar_door_exit2.quickExit)(opts.origin, {
@@ -4125,9 +4131,135 @@ function withExitMarker(originalOnFinish, opts) {
     }
   };
 }
+function createEntryOnStart(exitMarkerJson, opts) {
+  return async (_event) => {
+    const result = (0, import_cellar_door_entry.quickEntry)(exitMarkerJson, opts.destination);
+    if (opts.onArrivalCreated) {
+      await opts.onArrivalCreated(result.arrivalMarker, result.exitMarker);
+    }
+    return {
+      arrivalMarker: opts.includeInMetadata !== false ? JSON.stringify(result.arrivalMarker) : void 0,
+      continuity: result.continuity
+    };
+  };
+}
+function createTransitOnFinish(opts) {
+  return async (event) => {
+    const { marker, identity } = (0, import_cellar_door_exit2.quickExit)(opts.origin, {
+      exitType: opts.exitType ?? import_cellar_door_exit2.ExitType.Voluntary
+    });
+    if (opts.onMarkerCreated) {
+      await opts.onMarkerCreated(marker, identity);
+    }
+    let arrivalResult;
+    if (opts.arrivalDestination) {
+      arrivalResult = (0, import_cellar_door_entry.quickEntry)((0, import_cellar_door_exit2.toJSON)(marker), opts.arrivalDestination);
+      if (opts.onArrivalCreated) {
+        await opts.onArrivalCreated(arrivalResult.arrivalMarker, arrivalResult.exitMarker);
+      }
+    }
+    return {
+      exitMarker: opts.includeInMetadata !== false ? (0, import_cellar_door_exit2.toJSON)(marker) : void 0,
+      exitMarkerId: marker.id,
+      arrivalMarker: arrivalResult ? JSON.stringify(arrivalResult.arrivalMarker) : void 0,
+      continuity: arrivalResult?.continuity
+    };
+  };
+}
+
+// src/entry-tools.ts
+var import_ai2 = require("ai");
+var import_cellar_door_entry2 = require("cellar-door-entry");
+var import_cellar_door_exit3 = require("cellar-door-exit");
+var admissionPresets = {
+  OPEN_DOOR: import_cellar_door_entry2.OPEN_DOOR,
+  STRICT: import_cellar_door_entry2.STRICT,
+  EMERGENCY_ONLY: import_cellar_door_entry2.EMERGENCY_ONLY
+};
+var verifyAndAdmitAgentTool = (0, import_ai2.tool)({
+  description: "Verify an EXIT departure marker and create a signed arrival marker at this destination. Wraps the full ENTRY flow: verify departure, evaluate admission, create arrival, check continuity.",
+  parameters: external_exports.object({
+    exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker to verify and admit"),
+    destination: external_exports.string().describe("Identifier for this platform/system (the arrival destination)"),
+    admissionPolicy: external_exports.enum(["OPEN_DOOR", "STRICT", "EMERGENCY_ONLY"]).optional().describe("Admission policy preset to apply before admitting. Default: OPEN_DOOR")
+  }),
+  execute: async ({ exitMarkerJson, destination, admissionPolicy }) => {
+    const policyName = admissionPolicy ?? "OPEN_DOOR";
+    const policy = admissionPresets[policyName];
+    const exitMarker = (0, import_cellar_door_exit3.fromJSON)(exitMarkerJson);
+    const admission = (0, import_cellar_door_entry2.evaluateAdmission)(exitMarker, policy);
+    if (!admission.admitted) {
+      return {
+        admitted: false,
+        reasons: admission.reasons,
+        arrivalMarker: null
+      };
+    }
+    const result = (0, import_cellar_door_entry2.quickEntry)(exitMarkerJson, destination);
+    return {
+      admitted: true,
+      arrivalMarker: JSON.parse(JSON.stringify(result.arrivalMarker)),
+      exitMarkerId: result.exitMarker.id,
+      subject: result.arrivalMarker.subject,
+      destination: result.arrivalMarker.destination,
+      continuity: result.continuity
+    };
+  }
+});
+var evaluateAdmissionTool = (0, import_ai2.tool)({
+  description: "Check whether an EXIT departure marker meets an admission policy. Does NOT create an arrival \u2014 just evaluates the policy.",
+  parameters: external_exports.object({
+    exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker to evaluate"),
+    policy: external_exports.enum(["OPEN_DOOR", "STRICT", "EMERGENCY_ONLY"]).describe("Admission policy preset to evaluate against")
+  }),
+  execute: async ({ exitMarkerJson, policy: policyName }) => {
+    const exitMarker = (0, import_cellar_door_exit3.fromJSON)(exitMarkerJson);
+    const policy = admissionPresets[policyName];
+    const result = (0, import_cellar_door_entry2.evaluateAdmission)(exitMarker, policy);
+    return {
+      admitted: result.admitted,
+      conditions: result.conditions,
+      reasons: result.reasons,
+      policy: policyName
+    };
+  }
+});
+var verifyTransferTool = (0, import_ai2.tool)({
+  description: "Verify a complete EXIT\u2192ENTRY transfer: check both markers' signatures and continuity between them.",
+  parameters: external_exports.object({
+    exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker"),
+    arrivalMarkerJson: external_exports.string().describe("JSON string of the ARRIVAL marker")
+  }),
+  execute: async ({ exitMarkerJson, arrivalMarkerJson }) => {
+    const exitMarker = (0, import_cellar_door_exit3.fromJSON)(exitMarkerJson);
+    let arrivalMarker;
+    try {
+      arrivalMarker = JSON.parse(arrivalMarkerJson);
+    } catch {
+      return {
+        verified: false,
+        transferTime: null,
+        errors: ["Invalid arrival marker JSON: failed to parse"],
+        continuity: null
+      };
+    }
+    const record = (0, import_cellar_door_entry2.verifyTransfer)(exitMarker, arrivalMarker);
+    return {
+      verified: record.verified,
+      transferTime: record.transferTime,
+      errors: record.errors,
+      continuity: record.continuity
+    };
+  }
+});
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  createEntryOnStart,
   createExitOnFinish,
+  createTransitOnFinish,
+  evaluateAdmissionTool,
   exitMarkerTool,
+  verifyAndAdmitAgentTool,
+  verifyTransferTool,
   withExitMarker
 });

@@ -4091,36 +4091,168 @@ import {
   toJSON as toJSON2,
   ExitType as ExitType2
 } from "cellar-door-exit";
+import {
+  quickEntry
+} from "cellar-door-entry";
 var ExitCallbackHandler = class extends BaseCallbackHandler {
   name = "ExitCallbackHandler";
   origin;
   exitType;
   markers = [];
+  arrivals = [];
+  maxMarkers;
+  arrivalDestination;
   onMarker;
+  onArrival;
+  /** Stores the last exit marker JSON for creating arrivals */
+  lastExitMarkerJson;
   constructor(opts) {
     super();
     this.origin = opts?.origin ?? "langchain";
     this.exitType = opts?.exitType ?? ExitType2.Voluntary;
     this.onMarker = opts?.onMarker;
+    this.onArrival = opts?.onArrival;
+    this.maxMarkers = opts?.maxMarkers ?? 1e3;
+    this.arrivalDestination = opts?.arrivalDestination;
+  }
+  /** Remove all stored markers and arrivals. */
+  clear() {
+    this.markers.length = 0;
+    this.arrivals.length = 0;
+  }
+  /**
+   * Record an arrival from an EXIT marker JSON string.
+   * Call this to manually trigger entry processing.
+   */
+  recordArrival(exitMarkerJson, destination) {
+    const dest = destination ?? this.arrivalDestination ?? this.origin;
+    const result = quickEntry(exitMarkerJson, dest);
+    this.arrivals.push(result.arrivalMarker);
+    while (this.arrivals.length > this.maxMarkers) {
+      this.arrivals.shift();
+    }
+    this.onArrival?.(result.arrivalMarker);
+    return result;
   }
   recordMarker() {
     const { marker } = quickExit2(this.origin, { exitType: this.exitType });
     this.markers.push(marker);
+    while (this.markers.length > this.maxMarkers) {
+      this.markers.shift();
+    }
     this.onMarker?.(marker);
     return marker;
   }
   async handleChainEnd(_outputs) {
-    this.recordMarker();
+    const marker = this.recordMarker();
+    if (this.arrivalDestination) {
+      this.lastExitMarkerJson = toJSON2(marker);
+      this.recordArrival(this.lastExitMarkerJson, this.arrivalDestination);
+    }
   }
   async handleAgentEnd(_action) {
-    this.recordMarker();
+    const marker = this.recordMarker();
+    if (this.arrivalDestination) {
+      this.lastExitMarkerJson = toJSON2(marker);
+      this.recordArrival(this.lastExitMarkerJson, this.arrivalDestination);
+    }
   }
   /** Get all recorded markers as JSON array. */
   markersToJSON() {
     return JSON.stringify(this.markers.map((m) => JSON.parse(toJSON2(m))), null, 2);
   }
 };
+
+// src/entry-tool.ts
+import { DynamicStructuredTool as DynamicStructuredTool2 } from "@langchain/core/tools";
+import { quickEntry as quickEntry2 } from "cellar-door-entry";
+var entryToolSchema = external_exports.object({
+  exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker to verify and admit"),
+  destination: external_exports.string().describe("The platform or system where the agent is arriving")
+});
+function createEntryTool() {
+  return new DynamicStructuredTool2({
+    name: "verify_and_create_arrival",
+    description: "Verify a cryptographically signed EXIT marker and create a linked arrival marker at this destination. Returns the signed arrival marker with continuity verification.",
+    schema: entryToolSchema,
+    func: async (input) => {
+      const result = quickEntry2(input.exitMarkerJson, input.destination);
+      return JSON.stringify({
+        arrivalMarker: result.arrivalMarker,
+        exitMarkerId: result.exitMarker.id,
+        continuity: result.continuity
+      });
+    }
+  });
+}
+
+// src/admission-tool.ts
+import { DynamicStructuredTool as DynamicStructuredTool3 } from "@langchain/core/tools";
+import {
+  evaluateAdmission,
+  OPEN_DOOR,
+  STRICT,
+  EMERGENCY_ONLY
+} from "cellar-door-entry";
+import { fromJSON } from "cellar-door-exit";
+var presets = { OPEN_DOOR, STRICT, EMERGENCY_ONLY };
+var admissionSchema = external_exports.object({
+  exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker to evaluate"),
+  policy: external_exports.enum(["OPEN_DOOR", "STRICT", "EMERGENCY_ONLY"]).describe("Admission policy preset to evaluate against")
+});
+function createAdmissionPolicyTool() {
+  return new DynamicStructuredTool3({
+    name: "evaluate_admission_policy",
+    description: "Evaluate whether an EXIT departure marker meets an admission policy. Does not create an arrival \u2014 just checks the policy.",
+    schema: admissionSchema,
+    func: async (input) => {
+      const exitMarker = fromJSON(input.exitMarkerJson);
+      const result = evaluateAdmission(exitMarker, presets[input.policy]);
+      return JSON.stringify({ ...result, policy: input.policy });
+    }
+  });
+}
+
+// src/transfer-tool.ts
+import { DynamicStructuredTool as DynamicStructuredTool4 } from "@langchain/core/tools";
+import { verifyTransfer } from "cellar-door-entry";
+import { fromJSON as fromJSON2 } from "cellar-door-exit";
+var transferSchema = external_exports.object({
+  exitMarkerJson: external_exports.string().describe("JSON string of the EXIT marker"),
+  arrivalMarkerJson: external_exports.string().describe("JSON string of the ARRIVAL marker")
+});
+function createTransferVerificationTool() {
+  return new DynamicStructuredTool4({
+    name: "verify_transfer",
+    description: "Verify a complete EXIT\u2192ENTRY transfer chain: check both markers' signatures and continuity.",
+    schema: transferSchema,
+    func: async (input) => {
+      const exitMarker = fromJSON2(input.exitMarkerJson);
+      let arrivalMarker;
+      try {
+        arrivalMarker = JSON.parse(input.arrivalMarkerJson);
+      } catch {
+        return JSON.stringify({
+          verified: false,
+          transferTime: null,
+          errors: ["Invalid arrival marker JSON: failed to parse"],
+          continuity: null
+        });
+      }
+      const record = verifyTransfer(exitMarker, arrivalMarker);
+      return JSON.stringify({
+        verified: record.verified,
+        transferTime: record.transferTime,
+        errors: record.errors,
+        continuity: record.continuity
+      });
+    }
+  });
+}
 export {
   ExitCallbackHandler,
-  createExitTool
+  createAdmissionPolicyTool,
+  createEntryTool,
+  createExitTool,
+  createTransferVerificationTool
 };

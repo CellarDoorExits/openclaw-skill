@@ -14,7 +14,7 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean --external cellar-door-exit --external cellar-door-entry --external zod --external @langchain/core --external ai",
     "test": "vitest run"
   },
   "repository": {
@@ -47,8 +47,8 @@
   },
   "devDependencies": {
     "ai": "^4.3.19",
-    "cellar-door-entry": ">=0.1.0",
-    "cellar-door-exit": ">=0.1.0",
+    "cellar-door-entry": "^0.1.0",
+    "cellar-door-exit": "^0.1.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^2.1.9",
