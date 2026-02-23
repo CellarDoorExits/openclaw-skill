@@ -10,7 +10,7 @@
 
 **Date:** March 2026
 
-**Contact:** Warren Koch — warren@fool-hardy.com
+**Contact:** Warren Koch — warrenkoch@gmail.com
 
 ---
 
