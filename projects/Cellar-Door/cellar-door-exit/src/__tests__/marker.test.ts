@@ -11,6 +11,7 @@ import {
   ExitType,
   ExitStatus,
   EXIT_CONTEXT_V1,
+  EXIT_SPEC_VERSION,
   type ModuleA,
 } from "../index.js";
 
@@ -74,6 +75,7 @@ describe("ExitMarker", () => {
   it("validates schema — missing required field produces error", () => {
     const incomplete = {
       "@context": EXIT_CONTEXT_V1,
+      specVersion: EXIT_SPEC_VERSION,
       id: "test",
       subject: "did:key:z123",
       // missing origin, timestamp, exitType, status, proof
@@ -165,6 +167,7 @@ describe("Compliance Validation", () => {
   it("requires emergencyJustification for emergency exits", () => {
     const marker = {
       "@context": EXIT_CONTEXT_V1,
+      specVersion: EXIT_SPEC_VERSION,
       id: "urn:exit:test",
       subject: "did:key:z123",
       origin: "https://example.com",
@@ -188,6 +191,7 @@ describe("Compliance Validation", () => {
   it("passes validation when emergency exit has justification", () => {
     const marker = {
       "@context": EXIT_CONTEXT_V1,
+      specVersion: EXIT_SPEC_VERSION,
       id: "urn:exit:test",
       subject: "did:key:z123",
       origin: "https://example.com",
@@ -211,6 +215,7 @@ describe("Compliance Validation", () => {
   it("validates legalHold structure when present", () => {
     const marker = {
       "@context": EXIT_CONTEXT_V1,
+      specVersion: EXIT_SPEC_VERSION,
       id: "urn:exit:test",
       subject: "did:key:z123",
       origin: "https://example.com",
@@ -240,6 +245,7 @@ describe("Compliance Validation", () => {
   it("rejects invalid legalHold structure", () => {
     const marker = {
       "@context": EXIT_CONTEXT_V1,
+      specVersion: EXIT_SPEC_VERSION,
       id: "urn:exit:test",
       subject: "did:key:z123",
       origin: "https://example.com",
@@ -271,6 +277,7 @@ describe("Compliance Validation", () => {
   it("accepts keyCompromise exit type", () => {
     const marker = {
       "@context": EXIT_CONTEXT_V1,
+      specVersion: EXIT_SPEC_VERSION,
       id: "urn:exit:test",
       subject: "did:key:z123",
       origin: "https://example.com",

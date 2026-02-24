@@ -2,7 +2,7 @@
  * cellar-door-exit — Schema Validation
  */
 
-import { ExitType, ExitStatus, EXIT_CONTEXT_V1 } from "./types.js";
+import { ExitType, ExitStatus, EXIT_CONTEXT_V1, EXIT_SPEC_VERSION } from "./types.js";
 import type { ExitMarker } from "./types.js";
 
 export interface ValidationResult {
@@ -49,6 +49,13 @@ export function validateMarker(marker: unknown): ValidationResult {
   // @context
   if (m["@context"] !== EXIT_CONTEXT_V1) {
     errors.push(`Invalid @context: expected "${EXIT_CONTEXT_V1}"`);
+  }
+
+  // specVersion
+  if (typeof m.specVersion !== "string" || !m.specVersion) {
+    errors.push("Missing or invalid required field: specVersion");
+  } else if (m.specVersion !== EXIT_SPEC_VERSION) {
+    errors.push(`Unsupported specVersion: expected "${EXIT_SPEC_VERSION}", got "${m.specVersion}"`);
   }
 
   // 7 required fields

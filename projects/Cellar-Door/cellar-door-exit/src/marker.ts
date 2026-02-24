@@ -15,6 +15,7 @@ import {
   ExitType,
   ExitStatus,
   EXIT_CONTEXT_V1,
+  EXIT_SPEC_VERSION,
 } from "./types.js";
 import { ValidationError } from "./errors.js";
 
@@ -67,6 +68,7 @@ export function createMarker(opts: CreateMarkerOpts): ExitMarker {
   const timestamp = opts.timestamp ?? new Date().toISOString();
   const marker: ExitMarker = {
     "@context": EXIT_CONTEXT_V1,
+    specVersion: EXIT_SPEC_VERSION,
     id: opts.id ?? "",
     subject: opts.subject,
     origin: opts.origin,
@@ -94,10 +96,15 @@ function defaultStatus(exitType: ExitType): ExitStatus {
     case ExitType.Voluntary:
       return ExitStatus.GoodStanding;
     case ExitType.Forced:
+    case ExitType.Directed:
+    case ExitType.Constructive:
       return ExitStatus.Disputed;
     case ExitType.Emergency:
-      return ExitStatus.Unverified;
     case ExitType.KeyCompromise:
+    case ExitType.PlatformShutdown:
+    case ExitType.Acquisition:
+      return ExitStatus.Unverified;
+    default:
       return ExitStatus.Unverified;
   }
 }

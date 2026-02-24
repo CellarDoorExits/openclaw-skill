@@ -28,6 +28,7 @@ export {
   type ModuleF,
 
   // Module subtypes
+  type CompletenessAttestation,
   type ContinuityProof,
   type Dispute,
   type ChallengeWindow,
@@ -57,6 +58,7 @@ export {
 
   // Constants
   EXIT_CONTEXT_V1,
+  EXIT_SPEC_VERSION,
 } from "./types.js";
 
 export {
@@ -170,7 +172,9 @@ export {
   verifyBatchMembership,
   computeMerkleRoot,
   computeMerkleProof,
+  createShutdownBatch,
   type BatchExit,
+  type BatchShutdownCeremony,
   type MerkleProof,
 } from "./batch.js";
 
@@ -265,6 +269,8 @@ export {
   createCompromiseMarker,
   verifyCompromiseRecovery,
   linkCompromisedMarkers,
+  flagCompromisedPlatformMarkers,
+  type PlatformCompromiseDeclaration,
 } from "./key-compromise.js";
 
 // Visual — Door Hash visualization

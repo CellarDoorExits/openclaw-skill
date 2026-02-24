@@ -1203,6 +1203,37 @@ The canonical TypeScript type definitions are maintained in `src/types.ts`. The 
 
 ---
 
+## Transition Period
+
+The **transition period** is the gap between an EXIT marker's `timestamp` and the corresponding ENTRY marker's timestamp at the destination. This is an implicit state — no new data structure is needed.
+
+### Recommendations
+
+- **Maximum transition window:** Implementations SHOULD consider a transition lasting more than **72 hours** as potentially abandoned. After this threshold, external monitoring or recovery services may be appropriate.
+
+- **Indefinite transitions:** A transition that never resolves (no ENTRY marker is created) is the digital analog of a **missing persons** case. This may require:
+  - External lookup services that track unresolved transitions
+  - Periodic health-check protocols between known peers
+  - Escalation to human operators or governance bodies
+
+- **Unpaired markers are valid:**
+  - An EXIT marker with no corresponding ENTRY is a **legitimate "death" event** — the entity ceased to exist.
+  - An ENTRY marker with no corresponding EXIT is a **legitimate "birth" event** — the entity was created fresh at the destination.
+  - Neither case is an error. Both are first-class states in the protocol.
+
+- **Checkpoint markers:** Agents MAY create pre-signed EXIT markers and store them securely without submitting them. These serve as **emergency escape hatches** — if the agent loses the ability to create new markers (e.g., platform becomes unresponsive), the pre-signed marker can be submitted by a trusted third party.
+
+  Pre-signed checkpoint markers SHOULD include:
+  - `exitType: "emergency"`
+  - An `emergencyJustification` explaining the checkpoint purpose
+  - A `sunsetDate` after which the checkpoint is considered stale
+
+### No New State Needed
+
+The transition period is defined entirely by the timestamps on existing markers. Implementations MUST NOT create a separate "transitioning" state or marker type. The EXIT and ENTRY timestamps are sufficient.
+
+---
+
 ## References
 
 - [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) — Key words for use in RFCs

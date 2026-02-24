@@ -19,6 +19,14 @@ export enum ExitType {
   Emergency = "emergency",
   /** Subject declares a key compromise, invalidating markers signed with the compromised key. */
   KeyCompromise = "keyCompromise",
+  /** Platform is shutting down, initiating departures for all agents. */
+  PlatformShutdown = "platform_shutdown",
+  /** Ordered by operator/authority. */
+  Directed = "directed",
+  /** Conditions effectively forced departure (constructive dismissal analog). */
+  Constructive = "constructive",
+  /** Platform acquired/merged, triggering departure. */
+  Acquisition = "acquisition",
 }
 
 /** Standing at departure. Minimal reputation portability. */
@@ -97,9 +105,22 @@ export interface LegalHold {
  * Remove any one and the marker breaks.
  * ~300-500 bytes. Intentionally small.
  */
+/** Completeness attestation — subject voluntarily attests "these are ALL my markers". */
+export interface CompletenessAttestation {
+  /** When the attestation was made (ISO 8601 UTC). */
+  attestedAt: string;
+  /** Number of markers the subject attests to having created. */
+  markerCount: number;
+  /** Signature over the attestation by the subject. */
+  signature: string;
+}
+
 export interface ExitMarker {
   /** JSON-LD context. Always "https://cellar-door.org/exit/v1" for v1 markers. */
   "@context": string;
+
+  /** Spec version this marker conforms to. */
+  specVersion: string;
 
   /** 1. Globally unique identifier (URI / content-addressed hash). */
   id: string;
@@ -154,6 +175,8 @@ export interface ExitMarker {
   coercionLabel?: CoercionLabel;
   /** Sunset/expiry date (ISO 8601). After this date the marker is considered expired. */
   sunsetDate?: string;
+  /** Optional completeness attestation — subject attests "these are ALL my markers". Purely opt-in. */
+  completenessAttestation?: CompletenessAttestation;
 }
 
 // ─── Module A: Lineage (Agent Continuity) ────────────────────────────────────
@@ -233,6 +256,12 @@ export interface Dispute {
   evidenceHash?: string;
   /** When the challenge was filed (ISO 8601). */
   filedAt: string;
+  /** When the dispute expires (ISO 8601). */
+  disputeExpiry?: string;
+  /** Resolution status of the dispute. */
+  resolution?: "settled" | "expired" | "withdrawn";
+  /** DID of the arbiter handling the dispute. */
+  arbiterDid?: string;
 }
 
 export interface ChallengeWindow {
@@ -562,3 +591,4 @@ export interface EthicsReport {
 }
 
 export const EXIT_CONTEXT_V1 = "https://cellar-door.org/exit/v1" as const;
+export const EXIT_SPEC_VERSION = "1.1" as const;
