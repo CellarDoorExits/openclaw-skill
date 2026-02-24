@@ -4,7 +4,7 @@
  * The EXIT primitive: a verifiable transition marker — the authenticated
  * declaration of departure that preserves continuity across contexts.
  *
- * @see https://cellar-door.org/exit/v1
+ * @see https://cellar-door.dev/exit/v1
  */
 
 // ─── Enums ───────────────────────────────────────────────────────────────────
@@ -116,7 +116,7 @@ export interface CompletenessAttestation {
 }
 
 export interface ExitMarker {
-  /** JSON-LD context. Always "https://cellar-door.org/exit/v1" for v1 markers. */
+  /** JSON-LD context. Always "https://cellar-door.dev/exit/v1" for v1 markers. */
   "@context": string;
 
   /** Spec version this marker conforms to. */
@@ -177,6 +177,10 @@ export interface ExitMarker {
   sunsetDate?: string;
   /** Optional completeness attestation — subject attests "these are ALL my markers". Purely opt-in. */
   completenessAttestation?: CompletenessAttestation;
+
+  // ─── Checkpoint & Dead-Man Fields ────────────────────────────────────────
+  /** Monotonically increasing checkpoint sequence number. When present, only the highest-sequence marker for a given subject+origin pair is authoritative. */
+  sequenceNumber?: number;
 }
 
 // ─── Module A: Lineage (Agent Continuity) ────────────────────────────────────
@@ -590,5 +594,5 @@ export interface EthicsReport {
   overallRisk: "low" | "medium" | "high" | "critical";
 }
 
-export const EXIT_CONTEXT_V1 = "https://cellar-door.org/exit/v1" as const;
+export const EXIT_CONTEXT_V1 = "https://cellar-door.dev/exit/v1" as const;
 export const EXIT_SPEC_VERSION = "1.1" as const;

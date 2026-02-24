@@ -1,50 +1,56 @@
-# Cellar Door API Quick Reference
+# 𓉸 Cellar Door API Quick Reference
+
+Docs: <https://cellar-door.dev>
 
 ## cellar-door-exit (npm: v0.1.0)
 
 ### Convenience Functions
-- `quickExit(origin: string) → { marker, identity }` — Generate identity + create + sign in one call
-- `quickVerify(json: string) → { valid, errors? }` — Verify a marker from JSON string
-- `toJSON(marker) → string` — Serialize marker to JSON
-- `fromJSON(json: string) → Marker` — Deserialize marker from JSON
+- `quickExit(origin, opts?) → { marker, identity }` — Generate identity + create + sign in one call
+- `quickVerify(json) → { valid, errors }` — Verify a marker from JSON string
+- `generateIdentity() → { did, publicKey, privateKey }` — Generate Ed25519 DID + keypair
+- `toJSON(marker) → string` / `fromJSON(json) → ExitMarker`
 
 ### Core Functions
-- `generateIdentity() → { did, publicKey, privateKey }` — Generate Ed25519 DID + keypair
-- `createMarker({ subject, origin, exitType?, status? }) → Marker` — Create unsigned marker
-- `signMarker(marker, privateKey, publicKey) → Marker` — Sign a marker
-- `verifyMarker(marker) → { valid, errors? }` — Verify a marker object
+- `createMarker({ subject, origin, exitType?, status? }) → ExitMarker`
+- `signMarker(marker, privateKey, publicKey) → ExitMarker`
+- `verifyMarker(marker) → { valid, errors }`
+- `validateMarker(obj) → { valid, errors }`
 
 ### Enums
 - `ExitType`: `Voluntary`, `Forced`, `Emergency`
 - `ExitStatus`: `GoodStanding`, `Disputed`, `Unverified`
 
-### CLI (`node .../dist/cli.js`)
-- `create --origin <uri> [--subject <did>] [--type <type>] [--status <status>] [--reason <text>] [--sign] [--key <path>]`
-- `verify <marker.json>`
-- `inspect <marker.json>`
-- `keygen`
+### Advanced
+- **Ceremony**: `CeremonyStateMachine` — multi-step exit with state transitions
+- **Modules A–F**: `addModule(marker, module)` — lineage, continuity, disputes, assets, fees, anchors
+- **Privacy**: `encryptMarker()`, `decryptMarker()`, `redactMarker()`, `createMinimalDisclosure()`
+- **Batch**: `createBatchExit()`, `createShutdownBatch()` — exit multiple contexts at once
+- **Anchoring**: `anchorToGit()`, `requestTimestamp()` (RFC 3161), chain adapters
+- **KERI**: `createInception()`, `createRotation()`, pre-rotation key management
+- **Ethics**: `detectCoercion()`, `detectWeaponization()`, `generateEthicsReport()`
+- **Visual**: `renderDoorASCII()`, `renderDoorSVG()` — Door Hash visualization
+- **Interop**: `serializeForTransport()` / `deserializeFromTransport()`
+
+## cellar-door-entry (npm: v0.1.0)
+
+### Convenience Functions
+- `quickEntry(exitMarkerJson, destination, opts?) → { arrivalMarker, exitMarker, continuity }`
+
+### Core Functions
+- `createArrivalMarker(exitMarker, destination, opts?) → ArrivalMarker`
+- `signArrivalMarker(marker, privateKey, publicKey) → ArrivalMarker`
+- `verifyArrivalMarker(marker) → { valid, errors }`
+- `verifyDeparture(exitMarker)` / `verifyDepartureJSON(json)` — Verify EXIT before admitting
+- `verifyContinuity(exitMarker, arrivalMarker) → { valid, errors }`
+- `verifyTransfer(exitMarker, arrivalMarker) → TransferRecord` — Full passage verification
+
+### Admission Policy
+- `evaluateAdmission(exitMarker, policy) → { admitted, reason }`
+- Built-in policies: `OPEN_DOOR`, `STRICT`, `EMERGENCY_ONLY`
 
 ### Advanced
-- `bindSuccessor(marker, successorDid)` — Designate successor via Module A
-- `createLineageModule(predecessor?, successor?)` — Lineage/continuity
-- `encryptMarker(marker, recipientPubKey)` / `decryptMarker(encrypted, privateKey)`
-- `createBatchExit(origins[], identity)` — Exit multiple contexts at once
-- `serializeForTransport(marker)` / `deserializeFromTransport(data)`
-
-## cellar-door-entry (not yet on npm)
-
-Entry records are currently constructed manually (see `entry.sh`). Expected schema:
-
-```json
-{
-  "@context": "https://cellar-door.org/entry/v1",
-  "id": "urn:entry:<hex>",
-  "subject": "<did>",
-  "origin": "<exit-origin-uri>",
-  "destination": "<destination-uri>",
-  "exitMarkerId": "<exit-marker-id>",
-  "timestamp": "<ISO-8601>",
-  "status": "admitted",
-  "exitVerified": true
-}
-```
+- **Probation**: `createProbationaryArrival()`, `isProbationComplete()`
+- **Capability Scope**: `scopeFromExitMarker()`, `createRestrictedScope()`, `mergeScopes()`
+- **Claim Tracking**: `InMemoryClaimStore` — prevent duplicate claims
+- **Revocation**: `createRevocationMarker()`, `verifyRevocationMarker()`, `isRevoked()`
+- **Validation**: `validateArrivalMarker(marker) → { valid, errors }`

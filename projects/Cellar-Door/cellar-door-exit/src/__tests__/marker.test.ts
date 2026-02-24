@@ -330,3 +330,38 @@ describe("Modules", () => {
     expect(marker.lineage).toBeUndefined();
   });
 });
+
+describe("New ExitType values (v1.1)", () => {
+  const newTypes = [
+    { type: ExitType.PlatformShutdown, label: "PlatformShutdown" },
+    { type: ExitType.Directed, label: "Directed" },
+    { type: ExitType.Constructive, label: "Constructive" },
+    { type: ExitType.Acquisition, label: "Acquisition" },
+  ];
+
+  for (const { type, label } of newTypes) {
+    it(`creates, validates, signs, and verifies a ${label} marker`, () => {
+      const { publicKey, privateKey } = generateKeyPair();
+      const marker = createMarker({
+        subject: `did:key:z${label}Test`,
+        origin: "https://example.com",
+        exitType: type,
+      });
+
+      expect(marker.exitType).toBe(type);
+
+      // Validate
+      const validation = validateMarker(marker);
+      expect(validation.valid).toBe(true);
+      expect(validation.errors).toHaveLength(0);
+
+      // Sign and verify
+      const signed = signMarker(marker, privateKey, publicKey);
+      expect(signed.proof.proofValue).toBeTruthy();
+
+      const result = verifyMarker(signed);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
+  }
+});

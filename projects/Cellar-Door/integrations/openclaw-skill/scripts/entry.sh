@@ -1,8 +1,6 @@
 #!/bin/bash
+# 𓉸 Cellar Door — Create a signed ENTRY (arrival) marker from an EXIT marker
 # Usage: entry.sh <exit-marker.json> <destination-uri>
-# Verifies an EXIT marker and creates a linked ENTRY/arrival record.
-# Since cellar-door-entry is not yet on npm, this uses cellar-door-exit
-# to verify the EXIT marker and constructs an ENTRY record.
 set -euo pipefail
 
 EXIT_MARKER="${1:?Usage: entry.sh <exit-marker.json> <destination-uri>}"
@@ -12,39 +10,26 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PKG_DIR="$SCRIPT_DIR/.."
 
 # Install if needed
-if [ ! -d "$PKG_DIR/node_modules/cellar-door-exit" ]; then
-  npm install --prefix "$PKG_DIR" cellar-door-exit >/dev/null 2>&1
+if [ ! -d "$PKG_DIR/node_modules/cellar-door-entry" ]; then
+  npm install --prefix "$PKG_DIR" cellar-door-exit cellar-door-entry >/dev/null 2>&1
 fi
 
 node -e "
-const { quickVerify, quickExit, generateIdentity, toJSON } = require('$PKG_DIR/node_modules/cellar-door-exit/dist/index.cjs');
 const fs = require('fs');
-const crypto = require('crypto');
+const { quickEntry } = require('cellar-door-entry');
 
 const exitJson = fs.readFileSync(process.argv[1], 'utf8');
 const destination = process.argv[2];
 
-// 1. Verify the EXIT marker
-const vResult = quickVerify(exitJson);
-if (!vResult.valid) {
-  console.error('✗ EXIT marker is INVALID:', vResult.errors);
-  process.exit(1);
-}
+const { arrivalMarker, exitMarker, continuity } = quickEntry(exitJson, destination);
 
-const exitMarker = JSON.parse(exitJson);
+// Output the signed arrival marker
+console.log(JSON.stringify(arrivalMarker, null, 2));
 
-// 2. Create ENTRY record linked to this EXIT
-const entry = {
-  '@context': 'https://cellar-door.org/entry/v1',
-  id: 'urn:entry:' + crypto.randomBytes(32).toString('hex'),
-  subject: exitMarker.subject,
-  origin: exitMarker.origin,
-  destination: destination,
-  exitMarkerId: exitMarker.id,
-  timestamp: new Date().toISOString(),
-  status: 'admitted',
-  exitVerified: true
-};
-
-console.log(JSON.stringify(entry, null, 2));
+// Log continuity info to stderr
+console.error('𓉸 ENTRY marker created');
+console.error('  Subject:       ' + exitMarker.subject);
+console.error('  Destination:   ' + destination);
+console.error('  Departure Ref: ' + arrivalMarker.departureRef);
+console.error('  Continuity:    ' + (continuity.valid ? '✓ verified' : '✗ ' + continuity.errors.join(', ')));
 " "$EXIT_MARKER" "$DESTINATION"

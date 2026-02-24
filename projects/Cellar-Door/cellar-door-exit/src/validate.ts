@@ -125,6 +125,38 @@ export function validateMarker(marker: unknown): ValidationResult {
     }
   }
 
+  // Validate sequenceNumber if present
+  if (m.sequenceNumber !== undefined) {
+    if (typeof m.sequenceNumber !== "number" || !Number.isInteger(m.sequenceNumber) || m.sequenceNumber < 0) {
+      errors.push("sequenceNumber must be a non-negative integer");
+    }
+  }
+
+  // Validate v1.1 optional fields
+  if (m.completenessAttestation !== undefined) {
+    if (typeof m.completenessAttestation !== "object" || m.completenessAttestation === null) {
+      errors.push("completenessAttestation must be an object");
+    }
+  }
+
+  if (m.disputeExpiry !== undefined) {
+    if (typeof m.disputeExpiry !== "string" || !isValidISO8601(m.disputeExpiry as string)) {
+      errors.push("disputeExpiry must be a valid ISO-8601 date string");
+    }
+  }
+
+  if (m.resolution !== undefined) {
+    if (typeof m.resolution !== "string" || !m.resolution) {
+      errors.push("resolution must be a non-empty string");
+    }
+  }
+
+  if (m.arbiterDid !== undefined) {
+    if (typeof m.arbiterDid !== "string" || !m.arbiterDid.startsWith("did:")) {
+      errors.push("arbiterDid must be a string starting with \"did:\"");
+    }
+  }
+
   // Validate optional modules if present
   if (m.lineage !== undefined && (typeof m.lineage !== "object" || m.lineage === null)) {
     errors.push("Module A (lineage) must be an object");

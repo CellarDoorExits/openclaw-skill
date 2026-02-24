@@ -76,9 +76,9 @@ export {
   addModule,
 } from "./marker.js";
 
-export { signMarker, verifyMarker } from "./proof.js";
+export { signMarker, verifyMarker, type VerificationResult } from "./proof.js";
 
-export { validateMarker } from "./validate.js";
+export { validateMarker, type ValidationResult } from "./validate.js";
 
 export { CeremonyStateMachine, getValidTransitions } from "./ceremony.js";
 

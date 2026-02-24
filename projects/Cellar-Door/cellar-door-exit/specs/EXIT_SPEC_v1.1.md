@@ -73,7 +73,7 @@ Every valid EXIT marker MUST contain the following fields.
 
 | # | Field | Type | Description |
 |---|---|---|---|
-| 1 | `@context` | string | MUST be `"https://cellar-door.org/exit/v1"` |
+| 1 | `@context` | string | MUST be `"https://cellar-door.dev/exit/v1"` |
 | 2 | `id` | string (URI) | Globally unique identifier. SHOULD be content-addressed (`urn:exit:{sha256}`) |
 | 3 | `subject` | string (DID/URI) | Who is exiting. MUST be a valid DID or agent URI |
 | 4 | `origin` | string (URI) | What is being exited. MUST be a URI identifying the origin system |
@@ -306,7 +306,7 @@ When using the commit-reveal mechanism (§7.2):
 
 A verifier MUST check:
 
-1. `@context` equals `"https://cellar-door.org/exit/v1"`
+1. `@context` equals `"https://cellar-door.dev/exit/v1"`
 2. All 7 mandatory fields are present and non-empty
 3. `selfAttested` field is present (boolean)
 4. `timestamp` is valid ISO 8601 UTC
@@ -812,7 +812,7 @@ Multiple markers MAY be batched into a single Merkle tree for efficient anchorin
 
 ### 12.1 JSON-LD Context
 
-EXIT markers use the JSON-LD context at `https://cellar-door.org/exit/v1`. The context file defines term mappings for all core and module fields. Processors MUST resolve the context to interpret field semantics.
+EXIT markers use the JSON-LD context at `https://cellar-door.dev/exit/v1`. The context file defines term mappings for all core and module fields. Processors MUST resolve the context to interpret field semantics.
 
 ### 12.2 Transport Serialization
 
@@ -958,7 +958,7 @@ The EXIT protocol is non-custodial by design (Decision D-012). No central regist
 
 ```json
 {
-  "@context": "https://cellar-door.org/exit/v1",
+  "@context": "https://cellar-door.dev/exit/v1",
   "id": "urn:exit:abc123",
   "subject": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
   "origin": "https://example-platform.com",
@@ -979,7 +979,7 @@ The EXIT protocol is non-custodial by design (Decision D-012). No central regist
 
 ```json
 {
-  "@context": "https://cellar-door.org/exit/v1",
+  "@context": "https://cellar-door.dev/exit/v1",
   "id": "urn:exit:def456",
   "subject": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
   "origin": "https://failing-platform.org",
@@ -1001,7 +1001,7 @@ The EXIT protocol is non-custodial by design (Decision D-012). No central regist
 
 ```json
 {
-  "@context": "https://cellar-door.org/exit/v1",
+  "@context": "https://cellar-door.dev/exit/v1",
   "id": "urn:exit:ghi789",
   "subject": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
   "origin": "https://regulated-platform.com",
@@ -1029,7 +1029,7 @@ The EXIT protocol is non-custodial by design (Decision D-012). No central regist
 
 ```json
 {
-  "@context": "https://cellar-door.org/exit/v1",
+  "@context": "https://cellar-door.dev/exit/v1",
   "id": "urn:exit:jkl012",
   "subject": "did:key:z6MknewTrustedKey123",
   "origin": "https://any-context.com",
@@ -1054,7 +1054,7 @@ The EXIT protocol is non-custodial by design (Decision D-012). No central regist
 
 ```json
 {
-  "@context": "https://cellar-door.org/exit/v1",
+  "@context": "https://cellar-door.dev/exit/v1",
   "id": "urn:exit:prerot001",
   "subject": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
   "origin": "https://example-platform.com",
@@ -1076,7 +1076,7 @@ The EXIT protocol is non-custodial by design (Decision D-012). No central regist
 
 ```json
 {
-  "@context": "https://cellar-door.org/exit/v1",
+  "@context": "https://cellar-door.dev/exit/v1",
   "id": "urn:exit:ethics001",
   "subject": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
   "origin": "https://hostile-platform.com",
@@ -1231,6 +1231,121 @@ The **transition period** is the gap between an EXIT marker's `timestamp` and th
 ### No New State Needed
 
 The transition period is defined entirely by the timestamps on existing markers. Implementations MUST NOT create a separate "transitioning" state or marker type. The EXIT and ENTRY timestamps are sufficient.
+
+---
+
+## 19. Key Custody Considerations
+
+The EXIT protocol assumes that agents can hold and transport private keys. This is a **prerequisite** for cryptographic EXIT — not something EXIT itself solves. The key custody problem belongs to the identity management layer, specifically the NAME primitive in the HOLOS framework.
+
+### 19.1 Custody Models
+
+Several custody models are compatible with EXIT:
+
+| Model | Description | Trade-offs |
+|---|---|---|
+| **Agent-generated keys** | Agent creates and holds its own keypair | Maximum autonomy; agent must secure the key |
+| **Platform-custodied keys** | Platform holds the key on the agent's behalf | Convenient but creates a dependency — platform can withhold the key at exit time |
+| **Hardware enclaves / TEEs** | Key stored in a Trusted Execution Environment | Strong security; portability depends on TEE architecture |
+| **Key escrow** | Key held by a trusted third party | Recovery-friendly; introduces a trust dependency on the escrow provider |
+
+### 19.2 Exit Without Key Portability
+
+An agent that **cannot port its signing key** can still EXIT. The agent generates a new keypair, signs a new EXIT marker, and departs. The identity chain is broken — no `key_rotation_binding` continuity proof (§4.1) can be produced — but the **departure right is preserved**.
+
+In this scenario:
+- The marker is valid but carries weaker continuity proof
+- Verifiers SHOULD note the absence of lineage binding when computing confidence scores (§7.4)
+- Module A lineage with `key_rotation_binding` provides the recovery path when key changes are planned in advance (§4.1, §9.3)
+
+### 19.3 Future Work: NAME-as-a-Service
+
+Key custody, DID lifecycle management, and portable identity are properly the domain of **NAME-as-a-service providers** — infrastructure that manages agent identity independent of any single platform. The NAME primitive in HOLOS is designed to address this layer.
+
+EXIT intentionally defers to NAME for:
+- Key generation and rotation policies
+- DID registry and resolution
+- Cross-platform identity binding
+- Recovery flows for lost or compromised keys
+
+Implementers building agent infrastructure SHOULD anticipate NAME-compatible identity services as the long-term solution for key custody. Until NAME providers are available, agents SHOULD use agent-generated keys with pre-rotation commitments (§9.3) for maximum autonomy.
+
+---
+
+## 20. Checkpoint & Dead-Man Patterns
+
+Agents MAY pre-sign EXIT markers as **checkpoints** without broadcasting them. A checkpoint is a fully valid EXIT marker held in reserve — an emergency escape hatch that can be activated without the agent's real-time participation.
+
+### 20.1 Heartbeat + Auto-Broadcast Pattern
+
+The RECOMMENDED checkpoint pattern combines periodic re-signing with a dead-man trigger:
+
+1. Agent periodically creates and signs a fresh checkpoint marker
+2. Agent pushes the checkpoint to an escrow service or append-only ledger
+3. If the agent's heartbeat stops (no new checkpoint within a defined window), the **latest checkpoint becomes the de facto EXIT marker**
+4. The escrow service or monitoring peer broadcasts the checkpoint on the agent's behalf
+
+This pattern ensures that an agent which is silenced, destroyed, or rendered unable to act still produces a verifiable departure record.
+
+### 20.2 Sequence Numbers
+
+Each checkpoint SHOULD include an incrementing `sequenceNumber` to prevent replay of older checkpoints.
+
+**Normative Requirements:**
+
+- `sequenceNumber` is an OPTIONAL non-negative integer field on the `ExitMarker`
+- When present, sequence numbers MUST be strictly monotonically increasing across checkpoints for the same subject+origin pair
+- Only the **highest-sequence-number marker** for a given subject+origin pair SHOULD be considered authoritative
+- Verifiers MUST prefer the marker with the highest `sequenceNumber` when multiple checkpoints exist
+- Sequence number combined with the agent's signature ensures the platform **cannot forge or replay older markers** — only the agent's private key can produce valid higher-sequence markers
+
+### 20.3 Coercion Defense
+
+The checkpoint pattern provides structural coercion defense:
+
+- **Post-departure forgery:** Only the agent's private key can create valid markers. After departure, the platform cannot forge new markers or replay older ones (the sequence number prevents downgrade).
+- **Pre-departure coercion:** A platform could coerce an agent to sign false markers *before* departure. This is a fundamental limitation of any signing scheme. Existing coercion detection heuristics (§8.1) apply — verifiers SHOULD evaluate checkpoint markers for coercion signals just as they would any other marker.
+
+### 20.4 Escrow Pattern
+
+An agent MAY give a pre-signed checkpoint marker to a **trusted third party** with a dead-man trigger:
+
+1. Agent creates and signs a checkpoint marker (with `sequenceNumber`)
+2. Agent delivers the marker to the escrow provider
+3. Escrow provider holds the marker without broadcasting
+4. If the agent fails to check in within the agreed window, escrow broadcasts the marker
+5. Agent MAY update the escrowed marker at any time by providing a higher-sequence replacement
+
+**Escrow providers:**
+- MUST verify the marker signature before accepting it
+- MUST only broadcast the highest-sequence-number marker they hold
+- MUST NOT modify the marker content
+- SHOULD support multiple independent escrow providers per agent (redundancy)
+
+### 20.5 Scale Considerations
+
+Thousands of checkpoint markers per agent over time is expected and normal. Storage and verification systems MUST be designed for this:
+
+- Only the highest-`sequenceNumber` marker for a given subject+origin pair is authoritative
+- Older checkpoints MAY be archived or pruned after a higher-sequence marker is confirmed
+- Verifiers SHOULD index checkpoints by `(subject, origin, sequenceNumber)` for efficient lookup
+
+### 20.6 Checkpoint Marker Schema
+
+Checkpoint markers use the standard `ExitMarker` schema with the following conventions:
+
+- `sequenceNumber` SHOULD be present and incrementing
+- `exitType` SHOULD be `"emergency"` (the checkpoint anticipates inability to create a new marker)
+- `emergencyJustification` SHOULD explain the checkpoint purpose (e.g., `"Pre-signed checkpoint: dead-man trigger"`)
+- `sunsetDate` SHOULD be set to indicate when the checkpoint becomes stale
+
+### 20.7 ExitMarker Field Addition
+
+The following optional field is added to the `ExitMarker` schema (§3):
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `sequenceNumber` | number | OPTIONAL | Monotonically increasing checkpoint sequence number. When present, only the highest-sequence marker for a given subject+origin pair is authoritative. See §20.2. |
 
 ---
 
