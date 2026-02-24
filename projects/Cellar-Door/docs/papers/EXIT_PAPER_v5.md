@@ -16,7 +16,7 @@
 
 No standardized mechanism exists for AI agents to verifiably depart one platform, carry a portable record of that departure, and establish identity continuity upon arrival at another. Current agent interoperability standards address communication (A2A), tool access (MCP), and payment (AP2), but treat agent lifecycle transitions—particularly departure and arrival—as out of scope. This creates platform lock-in, information asymmetry at agent boundaries, and governance gaps.
 
-We present the **Passage Protocol** 𓉸: a pair of complementary protocols—EXIT and ENTRY—for verifiable agent departure and arrival ceremonies. EXIT defines a cryptographically signed, portable departure marker (~335 bytes unsigned, ~596 bytes signed) recording who departed, from where, when, and under what standing. ENTRY defines arrival markers signed by destination platforms, linking back to EXIT markers to establish **Proof of Passage (PoP)**—cryptographic evidence that an entity transited between systems. The protocol specifies a seven-state departure ceremony with three execution paths (cooperative, unilateral, emergency), eight exit types, six optional extension modules, RFC 3161 timestamp anchoring, git-backed ledger anchoring, and a layered verification model built on Ed25519 signatures and W3C Decentralized Identifiers. We analyze the Passage Protocol through mechanism design, security, legal, ethical, and multi-lens validation perspectives. A multi-lens review by 15 synthetic professional personas unanimously endorsed the core architecture while identifying critical gaps—three of which (arrival protocol, trusted timestamping, dead-man switches) have been addressed in the current version. We describe a TypeScript reference implementation comprising five npm packages across six GitHub repositories with 356 passing tests, including framework integrations for LangChain, Vercel AI SDK, and MCP. The protocol specification and reference implementation are released under the Apache License 2.0.
+We present the **Passage Protocol** 𓉸: a pair of complementary protocols—EXIT and ENTRY—for verifiable agent departure and arrival ceremonies. EXIT defines a cryptographically signed, portable departure marker (~335 bytes unsigned, ~660 bytes signed) recording who departed, from where, when, and under what standing. ENTRY defines arrival markers signed by destination platforms, linking back to EXIT markers to establish **Proof of Passage (PoP)**—cryptographic evidence that an entity transited between systems. The protocol specifies a seven-state departure ceremony with three execution paths (cooperative, unilateral, emergency), eight exit types, six optional extension modules, RFC 3161 timestamp anchoring, git-backed ledger anchoring, and a layered verification model built on Ed25519 signatures and W3C Decentralized Identifiers. We analyze the Passage Protocol through mechanism design, security, legal, ethical, and multi-lens validation perspectives. A multi-lens review by 15 synthetic professional personas unanimously endorsed the core architecture while identifying critical gaps—three of which (arrival protocol, trusted timestamping, dead-man switches) have been addressed in the current version. We describe a TypeScript reference implementation comprising five npm packages across six GitHub repositories with 368 passing tests, including framework integrations for LangChain, Vercel AI SDK, and MCP. The protocol specification and reference implementation are released under the Apache License 2.0.
 
 **Keywords:** agent portability, departure ceremony, arrival ceremony, Proof of Passage, verifiable credentials, decentralized identity, exit rights, mechanism design
 
@@ -55,7 +55,7 @@ This paper presents the Passage Protocol, comprising EXIT and ENTRY, with the fo
 5. Checkpoint and dead-man patterns enabling pre-signed departure markers for coercion defense
 6. Trust mechanisms—commit-reveal, confidence scoring, tenure tracking, completeness attestation—that move beyond pure self-attestation
 7. A multi-lens validation exercise subjecting the protocol to review by 15 professional personas
-8. A reference implementation comprising five npm packages with 356 passing tests, including framework integrations for LangChain, Vercel AI SDK, and MCP
+8. A reference implementation comprising five npm packages with 368 passing tests, including framework integrations for LangChain, Vercel AI SDK, and MCP
 
 The remainder of this paper is organized as follows. Section 2 surveys related work. Section 3 presents the EXIT protocol. Section 4 presents the ENTRY protocol. Section 5 analyzes trust and anchoring mechanisms. Section 6 examines security. Section 7 surveys legal considerations. Section 8 addresses ethics. Section 9 reports multi-lens validation findings. Section 10 describes implementation and evaluation. Section 11 discusses limitations. Section 12 concludes.
 
@@ -476,7 +476,7 @@ The Passage Protocol reference implementation is written in TypeScript targeting
 
 ### 10.2 EXIT Package
 
-The EXIT package passes **279 tests** covering all specification test vectors (11 vectors per EXIT_SPEC v1.1 §17), ceremony state machine transitions across all three paths, commit-reveal commitment and verification, confidence scoring, tenure attestation, TSA timestamp anchoring, git ledger operations, visual hash door rendering, and the full-service convenience API.
+The EXIT package passes **291 tests** covering all specification test vectors (11 vectors per EXIT_SPEC v1.1 §17), ceremony state machine transitions across all three paths, commit-reveal commitment and verification, confidence scoring, tenure attestation, TSA timestamp anchoring, git ledger operations, visual hash door rendering, and the full-service convenience API.
 
 **Core API:**
 
@@ -498,7 +498,7 @@ const result = await verifyMarker(signed);  // result.valid === true
 
 **CLI:** `exit keygen`, `exit create`, `exit verify`, `exit inspect`.
 
-**Marker size.** Core markers (unsigned) measure ~335 bytes; signed markers measure ~596 bytes. With all six optional modules populated, markers measure 1,294 bytes.
+**Marker size.** Core markers (unsigned) measure ~335 bytes; signed markers measure ~660 bytes. With all six optional modules populated, markers measure 1,294 bytes.
 
 **Cryptographic performance** (Node.js v22.22.0, linux x64). Ed25519 signing: 0.46 ms (2,176 ops/sec). Verification: 0.004 ms raw (227,790 ops/sec), 1.9 ms full including schema validation (525 ops/sec). Ceremony timing: cooperative path 0.91 ms, unilateral path 0.91 ms, emergency path 1.0 ms. `quickExit()` end-to-end: 0.74 ms (1,355 ops/sec). Schema validation: 813,436 ops/sec. Merkle tree construction: 2.7 ms (10 markers) to 22.7 ms (1,000 markers).
 
@@ -584,7 +584,7 @@ EXIT provides the departure record: a self-contained marker that functions witho
 
 The protocol's trust mechanisms—commit-reveal, confidence scoring, tenure-weighted verification, RFC 3161 timestamp anchoring, checkpoint patterns—move beyond pure self-attestation toward graded trust evaluation. Its multi-lens validation by 15 professional personas confirmed the architectural soundness while identifying limitations that remain open: institutional enforcement, self-attestation information content, and privacy governance.
 
-The reference implementation—five npm packages, 356 passing tests, framework integrations for LangChain, Vercel AI SDK, and MCP—demonstrates that the protocol is implementable with sub-millisecond ceremony timing and compact markers. The alignment with W3C DIDs, Verifiable Credentials, FIPA agent lifecycle models, ISO/IEC 42001 AI management systems, NIST AI 100-1 risk management, and the emerging NIST AI Agent Standards Initiative positions the Passage Protocol within an established standards ecosystem rather than as an isolated effort.
+The reference implementation—five npm packages, 368 passing tests, framework integrations for LangChain, Vercel AI SDK, and MCP—demonstrates that the protocol is implementable with sub-millisecond ceremony timing and compact markers. The alignment with W3C DIDs, Verifiable Credentials, FIPA agent lifecycle models, ISO/IEC 42001 AI management systems, NIST AI 100-1 risk management, and the emerging NIST AI Agent Standards Initiative positions the Passage Protocol within an established standards ecosystem rather than as an isolated effort.
 
 The limitations are real: self-attested records approximate cheap talk, agents lack legal personhood, GDPR compliance is untested, and the protocol requires critical mass. These are open problems, not fatal flaws. No existing system addresses agent-initiated exit, verifiable arrival, hostile-origin tolerance, cross-platform portability, trusted timestamping, and graded trust verification in combination.
 

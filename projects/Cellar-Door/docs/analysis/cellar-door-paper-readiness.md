@@ -82,7 +82,7 @@ The existing `EXIT_PAPER_DRAFT.md` is ~5,500 words across 10 sections + referenc
 
 | # | Section | Target Words | Changes |
 |---|---------|:-:|---------|
-| — | Abstract | 250 | Tighten claims. Add "reference implementation" and "205 tests." Remove oversold game theory language. |
+| — | Abstract | 250 | Tighten claims. Add "reference implementation" and "291 tests." Remove oversold game theory language. |
 | 1 | Introduction | 800 | Add 2 concrete scenarios. Sharpen the "departure-shaped hole" argument. Add forward reference to evaluation. |
 | 2 | Background & Related Work | 1200 | Merge current §2 + new Related Work. Cut Peirce to 1 para. Add: Moloch DAO ragequit, enterprise agent identity (Entra, SailPoint), A2A/MCP/AP2 positioning, SSI-for-agents proposals (Gailums). |
 | 3 | The EXIT Protocol | 1500 | Keep as-is (it's good). Add state machine diagram. Add architecture diagram. Add design decisions table (top 5-6). |

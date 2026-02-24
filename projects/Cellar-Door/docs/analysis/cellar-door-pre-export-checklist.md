@@ -8,7 +8,7 @@
 
 ## Status Summary
 
-- **205 tests passing** across 11 test suites (including property-based tests)
+- **291 tests passing** across 11 test suites (including property-based tests)
 - **0 TODO/FIXME/HACK comments** in source code
 - **0 npm audit vulnerabilities**
 - **0 direct competitors** in the space
@@ -42,7 +42,7 @@
 - **LOE:** 3 hours to write benchmark suite
 - **Blocks export:** Blocks paper. Does not block npm publish.
 
-### 1e. 205 tests is solid ✅
+### 1e. 291 tests is solid ✅
 - Property-based tests with fast-check. Integration tests. Edge cases (1000-marker batch). Good coverage.
 
 ---

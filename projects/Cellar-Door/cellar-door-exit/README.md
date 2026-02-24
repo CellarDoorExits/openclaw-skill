@@ -217,7 +217,7 @@ The following mechanism design features from EXIT_SPEC v1.1 are **implemented** 
 | Guardrails module | ✅ Implemented | `src/guardrails.ts` |
 | Pre-rotation | ✅ Implemented | `src/pre-rotation.ts` |
 
-All 205 tests pass across 13 test files, covering all 9 specification test vectors.
+All 291 tests pass across 18 test files, covering all 11 specification test vectors.
 
 ## License
 

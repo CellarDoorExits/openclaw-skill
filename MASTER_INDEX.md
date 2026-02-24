@@ -1,8 +1,8 @@
 # MASTER INDEX — Hawthorn Knowledge Base
 
-**Updated:** 2026-02-24T08:30Z | **Author:** Hawthorn (auto-reindex) | **Status:** Living document
+**Updated:** 2026-02-24T09:11Z | **Author:** Hawthorn (auto-reindex) | **Status:** Living document
 
-**Total files:** 196 | **Text files (meaningful tokens):** ~530K tokens | **Binary/images:** ~9.5M tokens (excluded from context groupings)
+**Total files:** 199 | **Text files (meaningful tokens):** ~549K tokens | **Binary/images:** ~9.5M tokens (excluded from context groupings)
 
 > Token counts = `wc -c / 4`. Context-window groups target ~30K tokens of **text** content each.
 > Binary files (images, icons, lockfiles) listed but excluded from groupings.
@@ -18,7 +18,8 @@
 | `TODO_old.md` | **Historical** — earlier TODO version, can archive |
 | `projects/cellar-door-exit/` (orphan) | **Orphan path** — single file outside main Cellar-Door tree; consider moving |
 | `cellar-door-exit/specs/EXIT_SPEC_v1.md` | **Superseded** by EXIT_SPEC_v1.1.md |
-| `cellar-door-exit/docs/EXIT_PAPER_DRAFT.md` | **Superseded** by EXIT_PAPER_v3/v4 |
+| `cellar-door-exit/docs/EXIT_PAPER_DRAFT.md` | **Superseded** by EXIT_PAPER_v3/v4/v5 |
+| `projects/Cellar-Door/docs/papers/EXIT_PAPER_v4.md` | **Superseded** by EXIT_PAPER_v5 |
 | `projects/HOLOS/holos-investment-thesis.md` | **Superseded** by v2 → v3 |
 | `projects/LAND/LAND-analysis.md` | **Superseded** by LAND-analysis-v2 |
 | `projects/Lumen/lumen-solar-optical-analysis.md` | **Superseded** by v2 |
@@ -80,9 +81,10 @@
 |------|-------:|----------|-------------|
 | `docs/Hawthorn_Hollows_Hosting_Plan.txt` | 4,961 | `e08a12c` | Hawthorn Hollows hosting/business plan |
 | `docs/peace_through_commerce.txt` | 58,953 | `d07b7cf` | Long-form essay: peace through commerce |
+| `docs/coherence-check-process.md` | 538 | `1824c2b` | Meta-process documentation for coherence checks |
 | `docs/searches/godaddy_cellardoor_2026-02-22.txt` | 27,912 | `a19d7aa` | Domain search results for cellar-door |
 
-**Subtotal:** ~91,826 tokens
+**Subtotal:** ~92,364 tokens
 
 ---
 
@@ -239,9 +241,10 @@
 | `cellar-door-exit/src/tsa.ts` | 2,723 | `8105750` | Timestamping authority |
 | `cellar-door-exit/src/validate.ts` | 1,312 | `7b2fb35` | Validation logic |
 | `cellar-door-exit/src/vc.ts` | 714 | `bb1fcdb` | Verifiable credentials |
+| `cellar-door-exit/src/dispute.ts` | 1,495 | `1824c2b` | Dispute resolution module |
 | `cellar-door-exit/src/visual.ts` | 4,373 | `44b73ba` | Visual representation |
 
-**Subtotal:** ~52,899 tokens *(split into two groups if needed)*
+**Subtotal:** ~54,394 tokens *(split into two groups if needed)*
 
 ---
 
@@ -260,6 +263,7 @@
 | `cellar-door-exit/src/demo/scenario1-voluntary.ts` | 1,224 | `5f98c76` | Demo: voluntary exit |
 | `cellar-door-exit/src/demo/scenario2-emergency.ts` | 1,148 | `bdb30ff` | Demo: emergency exit |
 | `cellar-door-exit/src/demo/scenario3-successor.ts` | 1,728 | `a7fb6df` | Demo: successor exit |
+| `cellar-door-exit/src/__tests__/dispute.test.ts` | 1,443 | `1824c2b` | Dispute resolution tests (12 tests) |
 | `cellar-door-exit/src/__tests__/benchmarks.test.ts` | 1,165 | `0dbbdf6` | Benchmark tests |
 | `cellar-door-exit/src/__tests__/ceremony-edge-cases.test.ts` | 6,213 | `45a52de` | Ceremony edge case tests |
 | `cellar-door-exit/src/__tests__/devex.test.ts` | 1,834 | `29914ac` | Developer experience tests |
@@ -278,7 +282,7 @@
 | `cellar-door-exit/src/__tests__/vc.test.ts` | 498 | `5b7de82` | VC tests |
 | `cellar-door-exit/src/__tests__/visual.test.ts` | 2,021 | `9e459a4` | Visual tests |
 
-**Subtotal:** ~44,664 tokens
+**Subtotal:** ~46,107 tokens
 
 ---
 
@@ -349,7 +353,8 @@
 | File | Tokens | Git Hash | Description |
 |------|-------:|----------|-------------|
 | `projects/Cellar-Door/docs/papers/EXIT_PAPER_v3.md` | 11,664 | `38582cd` | EXIT paper v3 |
-| `projects/Cellar-Door/docs/papers/EXIT_PAPER_v4.md` | 11,684 | `83c4c42` | EXIT paper v4 (current) |
+| `projects/Cellar-Door/docs/papers/EXIT_PAPER_v4.md` | 11,684 | `83c4c42` | ⚑ Superseded by v5 |
+| `projects/Cellar-Door/docs/papers/EXIT_PAPER_v5.md` | 15,209 | `1824c2b` | EXIT paper v5 (current) |
 | `projects/Cellar-Door/docs/papers/NIST_RFI_v2.md` | 4,778 | — | NIST RFI response v2 |
 | `projects/Cellar-Door/docs/brand-guide.md` | 692 | `2043a4d` | Brand guide |
 | `projects/Cellar-Door/docs/ecosystem-map.md` | 4,383 | `4562746` | Ecosystem map |
@@ -363,7 +368,7 @@
 | `projects/Cellar-Door/docs/analysis/cellar-door-pre-export-checklist.md` | 3,234 | `002bfeb` | Pre-export checklist |
 | `projects/Cellar-Door/docs/analysis/cellar-door-slogan-workshop.md` | 3,628 | `6843846` | Slogan workshop |
 
-**Subtotal:** ~66,200 tokens *(could split)*
+**Subtotal:** ~81,409 tokens *(could split)*
 
 ---
 
@@ -496,19 +501,21 @@ All paths under `projects/Cellar-Door/integrations/`.
 | 6 | Assessments C (multi-lens/NIST) | 50K |
 | 7 | Assessments D (small/historical) | 27K |
 | 8 | cellar-door-entry source | 37K |
-| 9 | cellar-door-exit source | 53K |
-| 10 | cellar-door-exit modules & tests | 45K |
+| 9 | cellar-door-exit source | 54K |
+| 10 | cellar-door-exit modules & tests | 46K |
 | 11 | cellar-door-exit docs & config | 56K |
 | 12 | cellar-door-exit papers & pitches | 29K |
 | 13 | cellar-door-exit analysis docs | 78K |
-| 14 | CD project-level docs & papers | 66K |
+| 14 | CD project-level docs & papers | 81K |
 | 15 | Integrations (4 packages) | 98K |
 | 16 | Other Projects (HOLOS/LAND/Lumen/etc) | 74K |
 | 17 | Website / Site | 79K |
 | — | Binary/Images | ~10.7M |
 
-**Total text tokens:** ~907K | **Total with binaries:** ~11.6M
+**Total text tokens:** ~926K | **Total with binaries:** ~11.6M
 
 ---
 
-*Auto-generated 2026-02-24T01:40Z. Next reindex recommended after significant file additions.*
+**Test totals:** 291 (exit) + 77 (entry) = **368 tests**
+
+*Auto-generated 2026-02-24T09:11Z. Next reindex recommended after significant file additions.*

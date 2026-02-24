@@ -13,7 +13,7 @@ EXIT is not a product. EXIT is a credential.
 
 This distinction matters enormously for investment logic. A product generates revenue directly. A credential generates *legitimacy* that makes everything else investable. Consider what EXIT — published, NIST-submitted, npm-available, arXiv-preprinted — actually represents:
 
-**It proves you can ship protocol-grade software.** The reference implementation is 62 files, 205 tests, formal spec locked at v1, W3C Verifiable Credential wrapper, CLI tooling. This is not a whitepaper. This is not a "we plan to build." This is built, tested, documented infrastructure. In a market drowning in vaporware agent protocols, EXIT is concrete. Every subsequent HOLOS primitive inherits that credibility.
+**It proves you can ship protocol-grade software.** The reference implementation is 30 source files, 291 tests, formal spec locked at v1, W3C Verifiable Credential wrapper, CLI tooling. This is not a whitepaper. This is not a "we plan to build." This is built, tested, documented infrastructure. In a market drowning in vaporware agent protocols, EXIT is concrete. Every subsequent HOLOS primitive inherits that credibility.
 
 **It positions you inside the standards conversation.** NIST's CAISI initiative opened February 17, 2026. The RFI closes March 9. Submitting EXIT to NIST doesn't just get a protocol reviewed — it gets *Warren* reviewed. You become "the person who submitted the only open agent departure standard to NIST." That identity persists across everything you do next. When you later propose NAME, SEAL, or HOLLOW, you're not a stranger — you're the EXIT person. Standards bodies have long memories and short contributor lists.
 

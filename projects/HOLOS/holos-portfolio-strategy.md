@@ -16,7 +16,7 @@ HOLOS is a protocol ecosystem for sovereign economic cooperation. It has ~10 pro
 
 ### EXIT (Cellar Door)
 **What:** Portable cryptographic departure record for AI agents. A ~335-byte JSON proving an agent left a platform, when, why, and in what standing.  
-**Status:** Reference implementation complete (TypeScript, 62 files, 205 tests). Spec locked v1. No npm publish yet.  
+**Status:** Reference implementation complete (TypeScript, 30 source files, 291 tests). Spec locked v1. No npm publish yet.  
 **Revenue potential:** Low-medium direct (open source core + consulting + SaaS verification). High indirect (establishes HOLOS credibility, creates integration surface for everything else).  
 **Effort:** Low — it's built. Remaining work is publishing, website, NIST submission, integrations.  
 **Dependencies:** None. This is the foundation.  

@@ -11,7 +11,7 @@
 
 The EXIT Protocol is an open-source specification and reference implementation for creating verifiable, cryptographically signed records of AI agent departures from and arrivals into digital systems. It addresses a gap in the current AI agent ecosystem: no standardized mechanism exists for agents to portably prove where they have been, how they left, and under what standing — information critical to trust, safety, and interoperability in multi-agent environments.
 
-This response describes the EXIT Protocol's technical architecture, its companion ENTRY Protocol for arrival verification, the current implementation status across five npm packages with 356 passing tests, and specific recommendations for how NIST AI agent standards could incorporate or reference verifiable agent mobility primitives.
+This response describes the EXIT Protocol's technical architecture, its companion ENTRY Protocol for arrival verification, the current implementation status across five npm packages with 368 passing tests, and specific recommendations for how NIST AI agent standards could incorporate or reference verifiable agent mobility primitives.
 
 The protocol is Apache 2.0 licensed, developed in the open across six GitHub repositories, and designed to be non-custodial (no central registry required), interoperable (JSON-LD, W3C DID-compatible), and safe by default (anti-weaponization clauses, coercion detection, sunset policies).
 
@@ -144,9 +144,9 @@ The EXIT Protocol is implemented and tested, not merely specified.
 
 ### 6.2 Test Coverage
 
-- EXIT Protocol: 279 tests passing
+- EXIT Protocol: 291 tests passing
 - ENTRY Protocol: 77 tests passing
-- **Total: 356 tests** covering structural validation, cryptographic signing and verification, ceremony state transitions, module composition, trust mechanisms, ethics guardrails, admission policies, continuity verification, and edge cases.
+- **Total: 368 tests** covering structural validation, cryptographic signing and verification, ceremony state transitions, module composition, trust mechanisms, ethics guardrails, admission policies, continuity verification, and edge cases.
 
 ### 6.3 Repositories
 

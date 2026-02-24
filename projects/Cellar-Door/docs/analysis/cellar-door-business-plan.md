@@ -14,7 +14,7 @@ EXIT is a portable, cryptographically signed departure record for AI agents — 
 
 **Why it matters commercially:** AI agent markets cannot function without transaction documentation. No CFO signs off on deploying agents with undocumented histories. No insurer underwrites agent operations without lifecycle data. No regulator accepts "we didn't know." EXIT is the documentation layer that makes agent markets possible — the SMTP of agent portability.
 
-**Current state:** Reference implementation complete (TypeScript, 62 files, 205 tests), formal spec locked (v1), W3C VC wrapper, CLI, three pitch documents, two legal red team reviews, competitive landscape analysis showing zero direct competitors. The protocol is built. The business isn't.
+**Current state:** Reference implementation complete (TypeScript, 30 source files, 291 tests), formal spec locked (v1), W3C VC wrapper, CLI, three pitch documents, two legal red team reviews, competitive landscape analysis showing zero direct competitors. The protocol is built. The business isn't.
 
 **The opportunity:** NIST launched its AI Agent Standards Initiative five days ago (Feb 17, 2026). The RFI closes March 9. The agent protocol stack (A2A, MCP, AP2) covers communication, tools, and payments — nobody covers departure/portability. EXIT is a category of one in a market that's about to be shaped by federal standards.
 

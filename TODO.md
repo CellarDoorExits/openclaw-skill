@@ -41,8 +41,8 @@ HOLOS ZK SWARM PRIMITIVES
 	- https://github.com/dogcomplex/Cellar-Door
 	
 	### EXIT / CELLAR DOOR STATUS (Updated 2026-02-22)
-	**✅ Implementation complete** — Sprint 1-5 done. 205 tests, 49 source modules, working CLI (`exit-door`).
-	- [x] Reference implementation: 205 tests, 49 TS modules
+	**✅ Implementation complete** — Sprint 1-5 done. 291 tests (368 total with ENTRY), 30 source modules, working CLI (`exit-door`).
+	- [x] Reference implementation: 291 tests, 30 source modules
 	- [x] Spec v1.1 complete (48KB, 18 sections)
 	- [x] Academic paper v3 (8K words, 24 refs)
 	- [x] Full legal battery (7 analyses), risk heatmap, competitive landscape
@@ -55,7 +55,7 @@ HOLOS ZK SWARM PRIMITIVES
 	### CURRENT PRIORITIES (Feb 2026)
 	- [ ] **NIST RFI submission** (March 9 deadline) — fix formula contradictions first
 	- [ ] **npm publish** (pending: security email, package name confirmation, domain)
-	- [ ] **Consistency fixes**: formula contradictions (paper vs spec), "~300 bytes" → 442 bytes
+	- [ ] **Consistency fixes**: formula contradictions (paper vs spec), "~300 bytes" → ~335 unsigned, ~660 signed
 	- [ ] **Register domain** (cellar-door.dev recommended)
 	- [ ] **Build top 3 integrations**: Vercel AI SDK, LangChain TS, OpenClaw
 	- [ ] Reconcile Module D risk ratings (see assessments/howey-module-d-v2.md)

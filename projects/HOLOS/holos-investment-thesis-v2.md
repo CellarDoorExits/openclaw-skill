@@ -23,7 +23,7 @@ The v1 thesis positioned EXIT as the singular foundation from which all value fl
 
 ### 1.1 EXIT (Cellar Door) — Agent Departure Ceremonies
 
-**What it is:** A portable, cryptographically signed departure record for AI agents — a ~335-byte JSON proving an agent left a platform, when, why, and in what standing. The reference implementation is complete (TypeScript, 62 files, 205 tests). Open source, Apache 2.0.
+**What it is:** A portable, cryptographically signed departure record for AI agents — a ~335-byte JSON proving an agent left a platform, when, why, and in what standing. The reference implementation is complete (TypeScript, 30 source files, 291 tests). Open source, Apache 2.0.
 
 **Revenue/return potential:** $100K–$300K/year at maturity through consulting ($5K–$50K per integration), SaaS verification service ($1K–$10K/year), certification program ($1K–$5K/year per platform), and enterprise compliance tooling. Not a 100x play on its own. The amplified value comes from credibility and ecosystem effects — every integration installs plumbing for NAME, SEAL, and insurance products. Realistic 3-year cumulative: $50K–$200K.
 

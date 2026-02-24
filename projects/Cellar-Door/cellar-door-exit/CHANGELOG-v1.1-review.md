@@ -1,7 +1,7 @@
 # EXIT Protocol v1.1 Review Implementation Log
 
 **Date:** 2026-02-24
-**Status:** Complete — all 275 tests passing
+**Status:** Complete — all 291 tests passing
 
 ---
 

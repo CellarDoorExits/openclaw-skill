@@ -23,7 +23,7 @@ This v3 treats Warren's portfolio as what it actually is: a diversified investme
 
 ### 1. EXIT — Agent Departure Ceremonies
 
-**Plain language:** When an AI agent leaves a platform — gets shut down, migrates, or is replaced — EXIT creates a tiny, cryptographically signed receipt proving it happened. Think of it as a death certificate for AI agents: ~335 bytes of JSON recording who left, when, why, and in what standing. The reference implementation is complete: 62 TypeScript files, 205 passing tests, Apache 2.0 open source.
+**Plain language:** When an AI agent leaves a platform — gets shut down, migrates, or is replaced — EXIT creates a tiny, cryptographically signed receipt proving it happened. Think of it as a death certificate for AI agents: ~335 bytes of JSON recording who left, when, why, and in what standing. The reference implementation is complete: 30 TypeScript source files, 291 passing tests, Apache 2.0 open source.
 
 **Why it matters:** As AI agents start handling real money, real data, and real decisions, someone needs to track their lifecycle. EXIT is the plumbing. Every platform that integrates EXIT installs the foundation for identity (NAME), reputation (REPUTE), and insurance products downstream.
 

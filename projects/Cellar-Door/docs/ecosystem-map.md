@@ -567,7 +567,7 @@ The human use cases are arguably *more* commercially viable in the near term —
 - **Canonicalization mismatch:** Spec uses custom canonical JSON; paper references JCS/eddsa-jcs-2022. Affects SHROUD (ZK circuits need deterministic serialization) and SEAL integration. See [cross-group-assessment.md](../assessments/cross-group-assessment.md) X-7.
 - **Module D risk disagreement:** Howey analysis vs. RT1 vs. Heatmap give conflicting risk ratings. Affects PLEDGE pricing model. See X-6.
 - **"Signamancy" naming collision:** Three meanings in corpus (HOLOS primitive, Cellar Door REPUTE service, Erfworld reference). Resolved: use REPUTE for reputation portability, SIGNUM for boundary/interface, Signamancy for the rule engine project. See Cascade 3.
-- **Marker size:** Comms say ~300 bytes; actual is 442-586 bytes (core). Affects Registry/Archive storage estimates. See X-5.
+- **Marker size:** Core unsigned ~335 bytes, signed ~660 bytes. Affects Registry/Archive storage estimates. See X-5.
 - **Entity question unresolved:** Delaware LLC vs. BC sole prop vs. HoldCo+SPV. Blocks formal interfaces with all adjacent services. See X-3.
 - **SEAL ZK blocker:** Real ZK backends (Risc0, ezkl) blocked by library maturity. Until resolved, SHROUD and advanced SEAL features remain theoretical. This is the highest-priority adjacent dependency.
 - **SENSUS comparability:** No standard exists for cross-HOLLOW reputation comparison. Module B carries snapshots but doesn't define how to compare them. REPUTE needs this standard.

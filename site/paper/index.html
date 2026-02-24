@@ -191,7 +191,7 @@ tr:nth-child(even) td { background: var(--table-stripe); }
 <div class="abstract">
 <h2>Abstract</h2>
 <p>No standardized mechanism exists for AI agents to verifiably depart one platform and establish identity continuity on another. Current agent interoperability standards address communication (A2A), tool access (MCP), and payment (AP2), but treat agent lifecycle transitions—particularly departure—as out of scope. This creates platform lock-in, information asymmetry at agent boundaries, and governance gaps.</p>
-<p>We present EXIT, a protocol for verifiable agent departure ceremonies. EXIT defines a cryptographically signed, portable marker (~335 bytes unsigned, ~596 bytes signed) recording who departed, from where, when, and under what standing. The protocol specifies a seven-state ceremony state machine with three execution paths (cooperative, unilateral, emergency), six optional extension modules, and a layered verification model built on Ed25519 signatures and W3C Decentralized Identifiers. We analyze EXIT through mechanism design, security, legal, and ethical lenses, identifying conditions under which self-attested departure records carry informational value and proposing mechanisms for costly signaling. We describe a TypeScript reference implementation with 205 passing tests, including commit-reveal exit intent, confidence scoring, and tenure-weighted verification. The protocol specification and reference implementation are released under the Apache License 2.0.</p>
+<p>We present EXIT, a protocol for verifiable agent departure ceremonies. EXIT defines a cryptographically signed, portable marker (~335 bytes unsigned, ~660 bytes signed) recording who departed, from where, when, and under what standing. The protocol specifies a seven-state ceremony state machine with three execution paths (cooperative, unilateral, emergency), six optional extension modules, and a layered verification model built on Ed25519 signatures and W3C Decentralized Identifiers. We analyze EXIT through mechanism design, security, legal, and ethical lenses, identifying conditions under which self-attested departure records carry informational value and proposing mechanisms for costly signaling. We describe a TypeScript reference implementation with 205 passing tests, including commit-reveal exit intent, confidence scoring, and tenure-weighted verification. The protocol specification and reference implementation are released under the Apache License 2.0.</p>
 </div>
 <p class="keywords"><strong>Keywords:</strong> agent portability, departure ceremony, verifiable credentials, decentralized identity, exit rights, mechanism design</p>
 
@@ -645,7 +645,7 @@ const result = await verifyMarker(signed);
 
 <p>All benchmarks were measured on Node.js v22.22.0, linux x64.</p>
 
-<p><strong>Test coverage.</strong> The implementation passes 205 tests across all modules, including all nine specification test vectors (§17, EXIT_SPEC v1.1), ceremony state machine transitions across all three paths, commit-reveal commitment and verification, confidence scoring across parameter ranges, tenure attestation creation and verification, and invalid input rejection.</p>
+<p><strong>Test coverage.</strong> The implementation passes 291 tests across all modules, including all nine specification test vectors (§17, EXIT_SPEC v1.1), ceremony state machine transitions across all three paths, commit-reveal commitment and verification, confidence scoring across parameter ranges, tenure attestation creation and verification, and invalid input rejection.</p>
 
 <p><strong>Table 4: Specification test vector results (EXIT_SPEC v1.1 §17)</strong></p>
 
@@ -664,7 +664,7 @@ const result = await verifyMarker(signed);
   </tbody>
 </table>
 
-<p><strong>Marker size.</strong> Core markers (unsigned) measure ~335 bytes; signed markers measure ~596 bytes. With all six optional modules populated, markers measure 1,294 bytes.</p>
+<p><strong>Marker size.</strong> Core markers (unsigned) measure ~335 bytes; signed markers measure ~660 bytes. With all six optional modules populated, markers measure 1,294 bytes.</p>
 
 <p><strong>Cryptographic performance.</strong> Ed25519 raw signing averages 0.46 ms (2,176 ops/sec). Raw verification averages 0.004 ms (227,790 ops/sec). Full <code>signMarker</code> (including serialization and content-addressing) averages 0.46 ms (2,199 ops/sec). Full <code>verifyMarker</code> (including deserialization, schema validation, and signature check) averages 1.9 ms (525 ops/sec). The asymmetry between raw verify and full verify reflects schema validation overhead, not cryptographic cost.</p>
 
