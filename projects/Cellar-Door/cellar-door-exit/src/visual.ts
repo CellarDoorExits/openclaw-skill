@@ -54,10 +54,15 @@ const CC = {
   corner_tr: ['╗', '┓', '╮', '┐'],
   corner_bl: ['╚', '┗', '╰', '└'],
   corner_br: ['╝', '┛', '╯', '┘'],
-  // Panel fills — Discord-safe only: ░▒▓█· (no braille, no exotic quadrants)
-  panel_light:  ['░', '·', '·', '░', '░', '·', '░', '·'],
+  // Panel fills — Discord-safe only (box drawing U+2500-257F, block U+2580-259F, ASCII)
+  // Encoding: 8 chars = 3 bits per fill position (log2(8))
+  // Voluntary (light): airy, varied — 8 distinct chars for max hash encoding
+  panel_light:  ['·', '░', ' ', '╌', '╍', '┄', '┈', '┅'],
+  // Platform-initiated (heavy): institutional weight — 8 dense fill chars
   panel_medium: ['▒', '░', '▓', '▒', '░', '▒', '▓', '░'],
-  panel_heavy:  ['▓', '█', '█', '▓', '▓', '█', '▓', '█'],
+  panel_heavy:  ['▓', '█', '▓', '█', '▒', '█', '▓', '▒'],
+  // Emergency (distressed): cracked/broken aesthetic — lighter, fractured chars
+  panel_emergency: ['┄', '╌', ' ', '┈', '╍', '·', '┅', '░'],
   // Hinges — left and right structural markers
   hinge_l:   ['╟', '╠', '├', '╞', '┝', '┠', '┢', '┞'],
   hinge_r:   ['╢', '╣', '┤', '╡', '┥', '┨', '┪', '┦'],
@@ -82,7 +87,7 @@ const CC = {
 
 interface StyleProfile {
   familyIdx: number;        // 0=double, 1=heavy, 2=rounded, 3=light — selects corner style
-  panelClass: 'panel_light' | 'panel_medium' | 'panel_heavy';
+  panelClass: 'panel_light' | 'panel_medium' | 'panel_heavy' | 'panel_emergency';
   frameWeight: number;      // index bias into frame_v/frame_h variants
   damageRate: number;       // 0 = no damage, higher = more cracks
   gapRate: number;          // 0 = no gaps, higher = more blanks
@@ -113,7 +118,7 @@ function getStyleProfile(exitType: string, status: string): StyleProfile {
       break;
     case 'emergency':
       base.familyIdx = 1;    // heavy but broken
-      base.panelClass = 'panel_medium';
+      base.panelClass = 'panel_emergency';
       base.frameWeight = 1;
       base.damageRate = 2;   // aggressive cracking (handled specially in renderer)
       base.gapRate = 4;
@@ -168,7 +173,8 @@ export function renderDoorASCII(hash: string, opts?: DoorOptions): string {
   // Fill character sets — Discord-safe only (░▒▓█·)
   const fillCls = CC[profile.panelClass];
   const rightFillCls = profile.asymmetric
-    ? (profile.panelClass === 'panel_light' ? CC.panel_heavy : CC.panel_light)
+    ? (profile.panelClass === 'panel_light' || profile.panelClass === 'panel_emergency'
+        ? CC.panel_heavy : CC.panel_light)
     : fillCls;
 
   const emergencyCrackCls = [...CC.crack, ...CC.broken];

@@ -327,12 +327,50 @@
       <tr><td><code>subject</code></td><td>DID of transitioning agent</td><td>Identity continuity</td></tr>
       <tr><td><code>origin</code></td><td>URI of departing platform</td><td>Audit trail</td></tr>
       <tr><td><code>timestamp</code></td><td>UTC departure time</td><td>Regulatory timeline</td></tr>
-      <tr><td><code>exitType</code></td><td><code>voluntary</code> / <code>forced</code> / <code>emergency</code> / <code>keyCompromise</code></td><td>Risk classification</td></tr>
+      <tr><td><code>exitType</code></td><td><code>voluntary</code> / <code>forced</code> / <code>emergency</code> / <code>keyCompromise</code> / <code>platform_shutdown</code> / <code>directed</code> / <code>constructive</code> / <code>acquisition</code></td><td>Risk classification</td></tr>
       <tr><td><code>status</code></td><td><code>good_standing</code> / <code>disputed</code> / <code>unverified</code></td><td>Liability indicator</td></tr>
       <tr><td><code>selfAttested</code></td><td>Boolean: is status self-reported?</td><td>Disclosure transparency</td></tr>
       <tr><td><code>proof</code></td><td>Ed25519 cryptographic signature</td><td>Verification</td></tr>
     </tbody>
   </table>
+
+  <h3>2.3.1 Example EXIT Marker (Minimal)</h3>
+  <pre style="background:#f3f4f6;padding:1rem;border-radius:4px;overflow-x:auto;font-size:.88rem;line-height:1.5"><code>{
+  "@context": "https://cellar-door.dev/exit/v1",
+  "specVersion": "1.1",
+  "id": "exit:sha256:a1b2c3d4e5f6...",
+  "subject": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+  "origin": "https://platform.example.com",
+  "timestamp": "2026-02-24T07:00:00Z",
+  "exitType": "voluntary",
+  "status": "good_standing",
+  "selfAttested": true,
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "2026-02-24T07:00:00Z",
+    "verificationMethod": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK#keys-1",
+    "proofValue": "z3FXQnMLwk..."
+  }
+}</code></pre>
+
+  <h3>2.3.2 Exit Types (Complete)</h3>
+  <p>EXIT defines eight departure types covering the full range of transition circumstances:</p>
+  <table>
+    <thead><tr><th>Exit Type</th><th>Description</th><th>Example Scenario</th></tr></thead>
+    <tbody>
+      <tr><td><code>voluntary</code></td><td>Subject-initiated, no dispute</td><td>Agent migrates to new platform</td></tr>
+      <tr><td><code>forced</code></td><td>Origin expelled the subject</td><td>Policy violation, ban</td></tr>
+      <tr><td><code>emergency</code></td><td>Abnormal conditions</td><td>Platform failure, imminent data loss</td></tr>
+      <tr><td><code>keyCompromise</code></td><td>Key compromise declared</td><td>Signing key exposed</td></tr>
+      <tr><td><code>platform_shutdown</code></td><td>Platform shutting down</td><td>Service end-of-life</td></tr>
+      <tr><td><code>directed</code></td><td>Ordered by authority</td><td>Operator/regulator directive</td></tr>
+      <tr><td><code>constructive</code></td><td>Conditions forced departure</td><td>Constructive dismissal analog</td></tr>
+      <tr><td><code>acquisition</code></td><td>Platform acquired/merged</td><td>M&amp;A transition event</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.3.3 Passage: The Complete Transition</h3>
+  <p>A <strong>Passage</strong> is the full journey: EXIT from the origin, then ENTRY at the destination. The Cellar Door project provides both primitives — <code>cellar-door-exit</code> for departure markers and <code>cellar-door-entry</code> for arrival markers — enabling verifiable, end-to-end agent transitions.</p>
 
   <h3>2.4 Extension Modules</h3>
   <p>Six optional modules address specific enterprise and regulatory use cases:</p>
@@ -491,7 +529,7 @@
   <hr>
 
   <h2><span class="section-num">7.</span> About the Submitter</h2>
-  <p><strong>Cellar Door</strong> is an open-source project developing the EXIT protocol specification and TypeScript reference implementation. The project is in early-stage development (specification drafted, reference implementation built, no production deployment). EXIT is released under the Apache License 2.0 as a public good.</p>
+  <p><strong>𓉸 Cellar Door</strong> (<a href="https://cellar-door.dev">cellar-door.dev</a>) is an open-source project developing the EXIT protocol specification and TypeScript reference implementation. The project is in early-stage development (specification drafted, reference implementation built, no production deployment). EXIT is released under the Apache License 2.0 as a public good.</p>
   <p>We welcome NIST's engagement with agent lifecycle documentation as a standards priority and would be glad to provide additional technical detail, participate in listening sessions, or collaborate on standards development.</p>
 
   <hr>
@@ -512,7 +550,7 @@
 </main>
 
 <footer>
-  <div>Cellar Door Project &bull; EXIT Protocol &bull; Apache 2.0</div>
+  <div>𓉸 Cellar Door Project &bull; EXIT Protocol &bull; Apache 2.0</div>
   <div class="footer-links">
     <a href="../pragmatic/index.html">Pragmatic Pitch</a>
     <span class="footer-sep">|</span>

@@ -89,8 +89,8 @@
 
 <!-- HERO -->
 <header class="hero">
-  <div class="badge">Cellar Door Project · Apache 2.0</div>
-  <h1>EXIT Protocol</h1>
+  <div class="badge">𓉸 Cellar Door Project · Apache 2.0 · cellar-door.dev</div>
+  <h1>𓉸 EXIT Protocol</h1>
   <p class="tagline">Liability Documentation Infrastructure for AI Agent Markets</p>
   <p class="sub">Nobody can buy an AI agent — because nobody knows what they'd be buying. EXIT is the Carfax for AI agents: a portable, cryptographically signed departure record that makes agent markets possible.</p>
 </header>
@@ -164,7 +164,7 @@
   <div class="container">
     <h2>How It Works</h2>
     <ol class="steps">
-      <li>Agent leaves a platform (voluntarily, by force, in an emergency, or due to key compromise)</li>
+      <li>Agent leaves a platform (voluntary, forced, emergency, keyCompromise, platform_shutdown, directed, constructive, or acquisition)</li>
       <li>EXIT produces a signed JSON document recording the departure</li>
       <li>The document is portable — the agent or its operator carries it</li>
       <li>Any receiving platform can verify the signature offline</li>
@@ -188,6 +188,71 @@
     </div>
 
     <div class="callout"><strong>Critical design choice:</strong> Disputes never block exit. A platform can record its objection on the departure record. It cannot prevent the departure. Same principle as employment law — you can fire someone and they can dispute it, but you can't prevent them from leaving.</div>
+
+    <h3>The EXIT Marker — Seven Fields</h3>
+    <pre style="background:#1a1a2e;color:#bbe1fa;padding:20px;border-radius:10px;overflow-x:auto;font-size:.9rem;line-height:1.5"><code>{
+  "@context": "https://cellar-door.dev/exit/v1",
+  "specVersion": "1.1",
+  "id": "exit:sha256:a1b2c3d4e5f6...",
+  "subject": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+  "origin": "https://platform.example.com",
+  "timestamp": "2026-02-24T07:00:00Z",
+  "exitType": "voluntary",
+  "status": "good_standing",
+  "selfAttested": true,
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "2026-02-24T07:00:00Z",
+    "verificationMethod": "did:key:z6Mk...#keys-1",
+    "proofValue": "z3FXQnMLwk..."
+  }
+}</code></pre>
+
+    <h3>Integrate in Minutes</h3>
+    <pre style="background:#1a1a2e;color:#bbe1fa;padding:20px;border-radius:10px;overflow-x:auto;font-size:.9rem;line-height:1.5"><code>import { quickExit, quickVerify, toJSON } from "cellar-door-exit";
+
+// Create a signed EXIT marker in one call
+const { marker, identity } = quickExit("https://platform.example.com");
+console.log(toJSON(marker));
+
+// Verify any marker from JSON
+const result = quickVerify(jsonString);
+console.log(result.valid); // true</code></pre>
+
+    <h3>Visual Door Hash</h3>
+    <p>Every EXIT marker has a unique visual fingerprint — a door rendered from the marker's hash. Verify at a glance.</p>
+    <pre style="background:#1a1a2e;color:#bbe1fa;padding:20px;border-radius:10px;overflow-x:auto;font-size:.9rem;line-height:1.4"><code>import { renderDoorASCII } from "cellar-door-exit";
+
+console.log(renderDoorASCII(marker.id));
+//     ╭────┬────╮
+//   ╱░··░·┃·░··░╲
+// ╱░·░░··░·┃·░··░░·╲
+// │░·░░·░░·┃░··░░·░│
+// ╟░·░░·░░·┃░░·░░·░╢
+// │░·░░█░░·┃░▓░░·░░│
+// │░·░░·░░·┃░··░░·░│
+// ╟░·░░·░░·┃░░·░░·░╢
+// │░·░░·░░·┃░··░░·░│
+// ╰═════════┴═════════╯</code></pre>
+
+    <h3>Passage: The Complete Journey</h3>
+    <p>EXIT is one half of a <strong>Passage</strong> — the departure. The companion <code>cellar-door-entry</code> package handles arrival, creating a linked marker that verifies the departure and establishes identity at the destination. Together, they form a complete, verifiable agent transition.</p>
+    <pre style="background:#1a1a2e;color:#bbe1fa;padding:20px;border-radius:10px;overflow-x:auto;font-size:.9rem;line-height:1.5"><code>import { quickEntry } from "cellar-door-entry";
+
+// Verify departure + create arrival marker in one call
+const { arrival } = await quickEntry(exitMarkerJson, destinationIdentity);</code></pre>
+
+    <h3>All Eight Exit Types</h3>
+    <div class="card-grid">
+      <div class="card"><h3 style="margin-top:0">voluntary</h3><p>Subject initiated. No dispute, no coercion.</p></div>
+      <div class="card"><h3 style="margin-top:0">forced</h3><p>Origin expelled the subject (ban, slashing, termination).</p></div>
+      <div class="card"><h3 style="margin-top:0">emergency</h3><p>Abnormal conditions (shutdown, imminent loss).</p></div>
+      <div class="card"><h3 style="margin-top:0">keyCompromise</h3><p>Key compromise, invalidating prior markers.</p></div>
+      <div class="card"><h3 style="margin-top:0">platform_shutdown</h3><p>Platform shutting down, initiating departures for all.</p></div>
+      <div class="card"><h3 style="margin-top:0">directed</h3><p>Ordered by operator or authority.</p></div>
+      <div class="card"><h3 style="margin-top:0">constructive</h3><p>Conditions effectively forced departure.</p></div>
+      <div class="card"><h3 style="margin-top:0">acquisition</h3><p>Platform acquired or merged.</p></div>
+    </div>
   </div>
 </section>
 
@@ -286,7 +351,7 @@
 </section>
 
 <footer>
-  <p>EXIT Protocol — Cellar Door Project — Apache 2.0</p>
+  <p>𓉸 EXIT Protocol — <a href="https://cellar-door.dev" style="color:var(--accent2)">Cellar Door Project</a> — Apache 2.0</p>
   <p style="margin-top:8px; font-size:.8rem; color:#999;">This document presents EXIT through a pragmatic, market-infrastructure lens. A companion document presents the same protocol through an ethical and philosophical lens. The specification doesn't change. The code doesn't change.</p>
 </footer>
 
