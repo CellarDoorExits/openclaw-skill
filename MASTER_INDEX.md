@@ -1,259 +1,506 @@
 # MASTER INDEX — Hawthorn Knowledge Base
 
-**Updated:** 2026-02-23 | **Author:** Hawthorn | **Status:** Living document
+**Updated:** 2026-02-24 | **Author:** Hawthorn (auto-reindex) | **Status:** Living document
 
-Total: 103 .md files | ~961K tokens estimated (240,238 words × ~4 tokens/word)
+**Total files:** 196 | **Text files (meaningful tokens):** ~530K tokens | **Binary/images:** ~9.5M tokens (excluded from context groupings)
 
----
-
-## Root — Agent Configuration & Identity
-
-| File | Words | ~Tokens | Description | Status |
-|------|------:|--------:|-------------|--------|
-| `AGENTS.md` | 1,219 | 4,876 | Workspace conventions, safety rules, heartbeat behavior | current |
-| `HAWTHORN.md` | 938 | 3,752 | Repo identity — name, GitHub links, org membership | current |
-| `HEARTBEAT.md` | 358 | 1,432 | Heartbeat idle loop instructions and reading queue | current |
-| `IDENTITY.md` | 193 | 772 | Agent identity card — name: Hawthorn, creature: Locus | current |
-| `LOGS.md` | 602 | 2,408 | Chronological operational log entries | current |
-| `MEMORY.md` | 415 | 1,660 | Long-term curated memory — who I am, key lessons | current |
-| `SOUL.md` | 270 | 1,080 | Core personality and values — "be genuinely helpful" | current |
-| `TODO.md` | 3,996 | 15,984 | Master task list — context optimization, HOLOS, Cellar Door | current |
-| `TODO_old.md` | 3,703 | 14,812 | Earlier version of TODO (before edits) | historical |
-| `TOOLS.md` | 133 | 532 | Local tool notes template (cameras, SSH, TTS) | current |
-| `USER.md` | 229 | 916 | About Warren Koch — PST, senior programmer, 13+ years | current |
-| `agent_test.md` | 3 | 12 | Git push test file ("I am alive") | historical |
-
-**Subtotal:** ~48,236 tokens
+> Token counts = `wc -c / 4`. Context-window groups target ~30K tokens of **text** content each.
+> Binary files (images, icons, lockfiles) listed but excluded from groupings.
 
 ---
 
-## memory/ — Daily Logs & Research Notes
+## ⚠️ Flags
 
-| File | Words | ~Tokens | Description | Status |
-|------|------:|--------:|-------------|--------|
-| `memory/2026-02-18.md` | 374 | 1,496 | Day One — first scan, cron errors, cleanup | current |
-| `memory/2026-02-19.md` | 472 | 1,888 | Day Two — Discord config, Pensieve, reading queue | current |
-| `memory/HAWTHORN.md` | 938 | 3,752 | Copy of root HAWTHORN.md for memory reference | superseded |
-| `memory/TODO.md` | 3,703 | 14,812 | Copy of TODO for memory reference | superseded |
-| `memory/holos-deep-notes.md` | 4,139 | 16,556 | Deep reading notes on all HOLOS repo docs | current |
-| `memory/holos-overview.md` | 1,468 | 5,872 | First reading — HOLOS as sovereign economic cooperation protocol | current |
-| `memory/locus-primitive-review.md` | 371 | 1,484 | Review of LOCUS_PRIMITIVE.md — 8/10, ready for Warren's review | current |
-| `memory/pensieve-notes.md` | 2,041 | 8,164 | Analysis of Pensieve memory tool repository | current |
-| `memory/reading-notes.md` | 7,025 | 28,100 | Crude summaries of Signamancy, Seel, Looking Glass, Weaver, Resonance | current |
-
-**Subtotal:** ~82,124 tokens
-
----
-
-## projects/Cellar-Door/assessments/ — Review & Fix Logs
-
-| File | Words | ~Tokens | Description | Status |
-|------|------:|--------:|-------------|--------|
-| `assessments/antitrust-analysis.md` | 3,992 | 15,968 | Antitrust gap analysis for EXIT protocol | current |
-| `assessments/cross-group-assessment.md` | 2,498 | 9,992 | Cross-group consistency check across all 5 group assessments | current |
-| `assessments/entry-door-analysis.md` | 3,080 | 12,320 | Analysis of ENTRY as the arrival counterpart to EXIT | current |
-| `assessments/entry-door-build.md` | 296 | 1,184 | Build summary for cellar-door-entry Tier 1 | current |
-| `assessments/entry-door-expansion.md` | 435 | 1,740 | Production expansion — 7 new modules, 74 passing tests | current |
-| `assessments/entry-institutional-research.md` | 4,880 | 19,520 | Mapping institutional arrival patterns to agent onboarding | current |
-| `assessments/entry-security-fixes.md` | 247 | 988 | Security fix summary for cellar-door-entry (77/77 tests) | current |
-| `assessments/entry-security-legal-audit.md` | 2,528 | 10,112 | Adversarial security & legal audit of entry source modules | current |
-| `assessments/final-publish-prep.md` | 213 | 852 | Integration packages pushed to GitHub summary | current |
-| `assessments/fix-log-C1-C5.md` | 387 | 1,548 | Fix log — marker size & test count consistency | historical |
-| `assessments/fix-log-C2-C4.md` | 402 | 1,608 | Fix log — contradictions + reputation_score removal | historical |
-| `assessments/fix-log-important.md` | 332 | 1,328 | Fix log — important items I5, I7, I8, I11, I15 | historical |
-| `assessments/fix-log-legal-consolidation.md` | 523 | 2,092 | Fix log — legal doc cross-referencing (I9, I10, I14, I17–I19) | historical |
-| `assessments/fix-log-paper-v4.md` | 400 | 1,600 | Fix log — EXIT_PAPER_v4 full coherence pass | historical |
-| `assessments/fix-log-references.md` | 181 | 724 | Reference update log — canonical GitHub/npm URLs | current |
-| `assessments/fix-log-remaining.md` | 435 | 1,740 | Fix log — remaining important & nice-to-have items | historical |
-| `assessments/group-a-exit-core.md` | 2,191 | 8,764 | Group A: EXIT core internal consistency assessment | current |
-| `assessments/group-b-legal-risk.md` | 2,630 | 10,520 | Group B: EXIT legal & risk assessment | current |
-| `assessments/group-cd-strategy-comms.md` | 1,958 | 7,832 | Groups C+D: strategy & communications assessment | current |
-| `assessments/group-e-holos-vision.md` | 2,413 | 9,652 | Group E: HOLOS vision consistency assessment | current |
-| `assessments/group-f-side-projects.md` | 2,068 | 8,272 | Group F: Side projects (LAND, Lumen, Hot Chip, Fool-Hardy) | current |
-| `assessments/howey-module-d-v2.md` | 3,986 | 15,944 | Howey test v2 — unconstrained Module D analysis (Critical risk) | current |
-| `assessments/integration-final.md` | 434 | 1,736 | Integration finalization summary — all packages updated | current |
-| `assessments/integration-langchain.md` | 271 | 1,084 | LangChain integration assessment | current |
-| `assessments/integration-mcp.md` | 303 | 1,212 | MCP server integration assessment | current |
-| `assessments/integration-security-fixes.md` | 368 | 1,472 | Security fixes for integration packages (HIGH findings) | current |
-| `assessments/integration-vercel.md` | 286 | 1,144 | Vercel AI SDK integration assessment (12/12 tests) | current |
-| `assessments/integrations-entry-update.md` | 485 | 1,940 | All integrations updated for EXIT + ENTRY support | current |
-| `assessments/integrations-security-legal-audit.md` | 1,583 | 6,332 | Security & legal audit across all integration packages | current |
-| `assessments/nist-rfi-cynical-review.md` | 2,641 | 10,564 | Adversarial review of NIST RFI from senior reviewer persona | current |
-| `assessments/nist-rfi-fixes.md` | 450 | 1,800 | NIST RFI revision summary — changes applied | current |
-| `assessments/npm-publish-prep.md` | 321 | 1,284 | npm publish prep — cellar-door-exit@0.1.0 ready | current |
-| `assessments/openclaw-skill.md` | 196 | 784 | OpenClaw skill assessment — cellar-door skill complete | current |
-| `assessments/remaining-work-audit.md` | 2,482 | 9,928 | Remaining work audit across all group assessments vs fix logs | current |
-| `assessments/security-audit.md` | 2,381 | 9,524 | Blind adversarial security audit of exit + integrations | current |
-| `assessments/security-fixes.md` | 176 | 704 | Security fixes applied — CLI key leak, etc. | current |
-| `assessments/whats-next.md` | 2,706 | 10,824 | Full project state assessment — what's next for Cellar Door | current |
-
-**Subtotal:** ~184,328 tokens
+| File | Issue |
+|------|-------|
+| `memory/HAWTHORN.md` | **Superseded** — duplicate of root `HAWTHORN.md` |
+| `memory/TODO.md` | **Superseded** — stale copy of root `TODO.md` (content differs) |
+| `TODO_old.md` | **Historical** — earlier TODO version, can archive |
+| `projects/cellar-door-exit/` (orphan) | **Orphan path** — single file outside main Cellar-Door tree; consider moving |
+| `cellar-door-exit/specs/EXIT_SPEC_v1.md` | **Superseded** by EXIT_SPEC_v1.1.md |
+| `cellar-door-exit/docs/EXIT_PAPER_DRAFT.md` | **Superseded** by EXIT_PAPER_v3/v4 |
+| `projects/HOLOS/holos-investment-thesis.md` | **Superseded** by v2 → v3 |
+| `projects/LAND/LAND-analysis.md` | **Superseded** by LAND-analysis-v2 |
+| `projects/Lumen/lumen-solar-optical-analysis.md` | **Superseded** by v2 |
+| `assessments/fix-log-*.md` (6 files) | **Historical** — fix logs from completed sprints |
+| `cellar-door-exit/docs/analysis/cellar-door-legal-redteam.md` | **Superseded** by v2 |
 
 ---
 
-## projects/Cellar-Door/cellar-door-entry/ — Entry Protocol Library
+## Group 1 — Root Config & Identity (~28K tokens)
 
-| File | Words | ~Tokens | Description | Status |
-|------|------:|--------:|-------------|--------|
-| `cellar-door-entry/README.md` | 866 | 3,464 | Package README — verifiable arrival markers, install & usage | current |
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `AGENTS.md` | 1,967 | `887a5a8` | Workspace conventions, safety rules, heartbeat behavior |
+| `HAWTHORN.md` | 1,449 | `bd3fde6` | Repo identity — name, GitHub links, org membership |
+| `HEARTBEAT.md` | 673 | `c49b6e1` | Heartbeat idle loop instructions and reading queue |
+| `IDENTITY.md` | 278 | `6642b57` | Agent identity card — name: Hawthorn, creature: Locus |
+| `LOGS.md` | 1,172 | `19f9684` | Chronological operational log entries |
+| `MASTER_INDEX.md` | ~4,400 | *(self)* | This file |
+| `MEMORY.md` | 672 | `ca3e67a` | Long-term curated memory — who I am, key lessons |
+| `SOUL.md` | 418 | `792306a` | Core personality and values |
+| `TODO.md` | 6,413 | `b913a32` | Master task list — context optimization, HOLOS, Cellar Door |
+| `TODO_old.md` | 5,906 | `7e500f4` | Earlier TODO version ⚑ historical |
+| `TOOLS.md` | 215 | `917e2fa` | Local tool notes template |
+| `USER.md` | 381 | `75f7ea1` | About Warren Koch — PST, senior programmer |
+| `agent_test.md` | 2 | `7854b4e` | Git push test file |
+| `hello_world.txt` | 1 | `9daeafb` | Test file |
+| `code/docker-compose.yml` | 334 | `3e37e55` | Docker compose config |
+| `code/openclaw.json` | 401 | `2ac952a` | OpenClaw configuration |
+| `state/hawthorn-state.md` | 299 | `9e6133d` | Agent state tracking |
+| `.gitignore` | 3 | `52ce15a` | Git ignore rules |
+| `.netlify/netlify.toml` | 109 | `7eaa4bf` | Netlify deploy config |
+| `desktop.ini` | 112 | `2991596` | Windows folder icon config |
 
-**Subtotal:** ~3,464 tokens
-
----
-
-## projects/Cellar-Door/cellar-door-exit/ — EXIT Protocol Library
-
-| File | Words | ~Tokens | Description | Status |
-|------|------:|--------:|-------------|--------|
-| `cellar-door-exit/DECISIONS.md` | 1,326 | 5,304 | Architectural decision log for EXIT primitive | current |
-| `cellar-door-exit/LEGAL.md` | 2,054 | 8,216 | Legal compliance notice — normative companion to spec v1.1 | current |
-| `cellar-door-exit/README.md` | 881 | 3,524 | Package README — verifiable EXIT markers, install & usage | current |
-| `cellar-door-exit/SECURITY.md` | 1,618 | 6,472 | Security considerations for EXIT protocol | current |
-| `cellar-door-exit/analysis/howey-test-module-d.md` | 3,626 | 14,504 | Howey test v1 — Module D securities risk (Low under constraints) | superseded |
-| `cellar-door-exit/benchmarks/results.md` | 160 | 640 | Test & benchmark results — 205 tests, all passing | current |
-| `cellar-door-exit/docs/EXIT_PAPER_DRAFT.md` | 5,383 | 21,532 | Original EXIT paper draft | superseded |
-| `cellar-door-exit/docs/GETTING_STARTED.md` | 775 | 3,100 | Getting started guide — first marker in 30 seconds | current |
-| `cellar-door-exit/docs/NIST_RFI_DRAFT.md` | 2,472 | 9,888 | NIST RFI response — agent portability & exit rights | superseded |
-| `cellar-door-exit/docs/NIST_RFI_PRAGMATIC.md` | 2,183 | 8,732 | NIST RFI pragmatic version — liability records framing | current |
-| `cellar-door-exit/docs/PITCH_IDEALIST.md` | 2,000 | 8,000 | Idealist pitch — "infrastructure for the sovereign machine" | current |
-| `cellar-door-exit/docs/PITCH_PRAGMATIC.md` | 1,624 | 6,496 | Pragmatic pitch — liability documentation for AI agent markets | current |
-| `cellar-door-exit/docs/analysis/cellar-door-competitive-landscape.md` | 2,207 | 8,828 | Competitive landscape research — agent portability & exit rights | current |
-| `cellar-door-exit/docs/analysis/cellar-door-gastown-notes.md` | 1,373 | 5,492 | Crude summaries of Gastown-produced work docs | current |
-| `cellar-door-exit/docs/analysis/cellar-door-legal-lenses.md` | 10,259 | 41,036 | Multi-lens legal analysis — every plausible legal interpretation | current |
-| `cellar-door-exit/docs/analysis/cellar-door-legal-redteam-v2.md` | 4,498 | 17,992 | Second-pass legal red team — regulatory compliance review | current |
-| `cellar-door-exit/docs/analysis/cellar-door-legal-redteam.md` | 4,070 | 16,280 | First-pass legal red team report | historical |
-| `cellar-door-exit/docs/analysis/cellar-door-master-assessment.md` | 5,021 | 20,084 | Master assessment index — single entry point for all analysis | current |
-| `cellar-door-exit/docs/analysis/cellar-door-mechanism-design.md` | 2,618 | 10,472 | Mechanism design analysis — v1 recommendations implemented | current |
-| `cellar-door-exit/docs/analysis/cellar-door-professional-reviews.md` | 6,177 | 24,708 | Three professional reviews (economics, ethics, DevEx) | current |
-| `cellar-door-exit/docs/analysis/cellar-door-project-plan.md` | 1,973 | 7,892 | Macro project plan (pre-implementation, now historical) | historical |
-| `cellar-door-exit/docs/analysis/cellar-door-risk-heatmap.md` | 4,548 | 18,192 | Legal risk heat map with emoji risk scale | current |
-| `cellar-door-exit/docs/analysis/risk-scale-mapping.md` | 468 | 1,872 | Unified risk rating scale mapping across all legal docs | current |
-| `cellar-door-exit/specs/EXIT_SPEC_v1.1.md` | 6,528 | 26,112 | EXIT protocol spec v1.1 — current authoritative spec | current |
-| `cellar-door-exit/specs/EXIT_SPEC_v1.md` | 2,582 | 10,328 | EXIT protocol spec v1.0 — original draft | superseded |
-
-**Subtotal:** ~305,684 tokens
+**Subtotal:** ~25,205 tokens
 
 ---
 
-## projects/Cellar-Door/docs/ — Papers, Analysis & Style
+## Group 2 — Memory & Research Notes (~37K tokens)
 
-| File | Words | ~Tokens | Description | Status |
-|------|------:|--------:|-------------|--------|
-| `docs/analysis/cellar-door-benchmarks.md` | 251 | 1,004 | Benchmark results — marker sizes and performance | current |
-| `docs/analysis/cellar-door-business-plan.md` | 5,381 | 21,524 | Business plan — $12K budget, semi-zero-human company | current |
-| `docs/analysis/cellar-door-integration-analysis.md` | 2,406 | 9,624 | Platform integration analysis — easy-win targets | current |
-| `docs/analysis/cellar-door-legal-battery.md` | 6,176 | 24,704 | Comprehensive legal risk battery (Low/Med/High/Critical) | current |
-| `docs/analysis/cellar-door-paper-readiness.md` | 2,127 | 8,508 | arXiv readiness assessment — "ready to write, 80% there" | current |
-| `docs/analysis/cellar-door-pre-export-checklist.md` | 1,955 | 7,820 | Pre-export readiness checklist (npm, paper, NIST) | current |
-| `docs/analysis/cellar-door-slogan-workshop.md` | 2,155 | 8,620 | Slogan & brand workshop | current |
-| `docs/papers/EXIT_PAPER_v3.md` | 6,126 | 24,504 | EXIT paper v3 — full draft | superseded |
-| `docs/papers/EXIT_PAPER_v4.md` | 6,137 | 24,548 | EXIT paper v4 — latest coherence-passed draft | current |
-| `docs/style-guide.md` | 223 | 892 | Terminology conventions (departure vs transition, etc.) | current |
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `memory/2026-02-18.md` | 695 | `50b2572` | Day One — first scan, cron errors, cleanup |
+| `memory/2026-02-19.md` | 802 | `5be72ab` | Day Two — Discord config, Pensieve, reading queue |
+| `memory/HAWTHORN.md` | 1,449 | `bd3fde6` | ⚑ Superseded copy of root HAWTHORN.md |
+| `memory/TODO.md` | 5,906 | `ce500c0` | ⚑ Superseded copy of TODO |
+| `memory/holos-deep-notes.md` | 7,977 | `f612fcc` | Deep reading notes on all HOLOS repo docs |
+| `memory/holos-overview.md` | 2,777 | `511b0a4` | First reading — HOLOS as sovereign economic protocol |
+| `memory/locus-primitive-review.md` | 640 | `3cf9663` | Review of LOCUS_PRIMITIVE.md — 8/10 |
+| `memory/pensieve-notes.md` | 3,853 | `e2c6cca` | Analysis of Pensieve memory tool repository |
+| `memory/reading-notes.md` | 13,636 | `1935965` | Summaries of Signamancy, Seel, Looking Glass, Weaver, Resonance |
 
-**Subtotal:** ~131,748 tokens
-
----
-
-## projects/Cellar-Door/integrations/ — SDK & Tool Integrations
-
-| File | Words | ~Tokens | Description | Status |
-|------|------:|--------:|-------------|--------|
-| `integrations/langchain/README.md` | 330 | 1,320 | LangChain integration — EXIT + ENTRY tools for agents | current |
-| `integrations/mcp-server/README.md` | 336 | 1,344 | MCP server — EXIT/ENTRY as AI-native tools for Claude Desktop etc. | current |
-| `integrations/openclaw-skill/SKILL.md` | 263 | 1,052 | OpenClaw skill definition for cellar-door | current |
-| `integrations/openclaw-skill/references/api-guide.md` | 210 | 840 | API quick reference — quickExit, quickVerify, etc. | current |
-| `integrations/vercel-ai-sdk/README.md` | 467 | 1,868 | Vercel AI SDK integration — EXIT + ENTRY markers | current |
-
-**Subtotal:** ~6,424 tokens
+**Subtotal:** ~37,735 tokens
 
 ---
 
-## projects/HOLOS/ — Investment Theses & Portfolio Strategy
+## Group 3 — Docs & Writings (~92K tokens)
 
-| File | Words | ~Tokens | Description | Status |
-|------|------:|--------:|-------------|--------|
-| `projects/HOLOS/holos-investment-thesis.md` | 4,980 | 19,920 | Investment thesis v1 — primitives reaching escape velocity | superseded |
-| `projects/HOLOS/holos-investment-thesis-v2.md` | 4,853 | 19,412 | Investment thesis v2 — balanced portfolio assessment | superseded |
-| `projects/HOLOS/holos-investment-thesis-v3.md` | 5,621 | 22,484 | Investment thesis v3 — complete portfolio (software + hardware + land) | current |
-| `projects/HOLOS/holos-portfolio-strategy.md` | 5,388 | 21,552 | Portfolio strategy & business plan — $12K budget, full-spectrum | current |
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `docs/Hawthorn_Hollows_Hosting_Plan.txt` | 4,961 | `e08a12c` | Hawthorn Hollows hosting/business plan |
+| `docs/peace_through_commerce.txt` | 58,953 | `d07b7cf` | Long-form essay: peace through commerce |
+| `docs/searches/godaddy_cellardoor_2026-02-22.txt` | 27,912 | `a19d7aa` | Domain search results for cellar-door |
 
-**Subtotal:** ~83,368 tokens
-
----
-
-## projects/ — Side Projects
-
-| File | Words | ~Tokens | Description | Status |
-|------|------:|--------:|-------------|--------|
-| `projects/Fool-Hardy/fool-hardy-analysis.md` | 2,725 | 10,900 | AI consulting opportunity analysis for Fool-Hardy Designs | current |
-| `projects/Hot-Chip/hot-chip-analysis.md` | 1,440 | 5,760 | Hot Chip project analysis | current |
-| `projects/LAND/LAND-analysis.md` | 2,615 | 10,460 | BC land investment opportunities — sub-$200K capital | current |
-| `projects/LAND/LAND-analysis-v2.md` | 4,851 | 19,404 | Deep land investment analysis v2 — document-by-document | current |
-| `projects/Lumen/lumen-solar-optical-analysis.md` | 2,162 | 8,648 | Solar-optical computing analysis v1 (partial read) | superseded |
-| `projects/Lumen/lumen-solar-optical-analysis-v2.md` | 3,417 | 13,668 | Lumen optical computing revised analysis (full 10K-line read) | current |
-
-**Subtotal:** ~68,840 tokens
+**Subtotal:** ~91,826 tokens
 
 ---
 
-## projects/cellar-door-exit/ (orphaned path) & state/
+## Group 4 — Cellar-Door Assessments A (~30K tokens)
 
-| File | Words | ~Tokens | Description | Status |
-|------|------:|--------:|-------------|--------|
-| `projects/cellar-door-exit/analysis/gdpr-erasure-encryption.md` | 4,539 | 18,156 | GDPR erasure-via-encryption (crypto-shredding) legal analysis | current |
-| `state/hawthorn-state.md` | 156 | 624 | Agent state snapshot — 2026-02-18, deep reading + simulation | historical |
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `projects/Cellar-Door/assessments/antitrust-analysis.md` | 7,078 | `a22c6ae` | Antitrust gap analysis for EXIT protocol |
+| `assessments/cross-group-assessment.md` | 4,003 | `e1076be` | Cross-group consistency check |
+| `assessments/entry-door-analysis.md` | 5,627 | `129f411` | ENTRY as arrival counterpart to EXIT |
+| `assessments/entry-institutional-research.md` | 8,992 | `ba0a4e8` | Institutional arrival → agent onboarding mapping |
+| `assessments/entry-security-legal-audit.md` | 4,695 | `6d484bd` | Adversarial audit of entry source modules |
 
-**Subtotal:** ~18,780 tokens
+**Subtotal:** ~30,395 tokens
 
 ---
 
-## Context Window Groupings (~100K tokens each)
+## Group 5 — Cellar-Door Assessments B (~30K tokens)
 
-### Group 1: Agent Identity + Memory (~130K tokens)
-All root files + `memory/` — everything needed to boot Hawthorn with full context.
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `assessments/group-a-exit-core.md` | 3,666 | `1871899` | Group A: EXIT core consistency |
+| `assessments/group-b-legal-risk.md` | 4,569 | `3e20523` | Group B: EXIT legal & risk |
+| `assessments/group-cd-strategy-comms.md` | 3,345 | `b606f3e` | Groups C+D: strategy & communications |
+| `assessments/group-e-holos-vision.md` | 4,050 | `73a1d99` | Group E: HOLOS vision consistency |
+| `assessments/group-f-side-projects.md` | 3,469 | `6ff67bb` | Group F: side projects assessment |
+| `assessments/howey-module-d-v2.md` | 6,972 | `b6006ca` | Howey test v2 — Module D (Critical risk) |
+| `assessments/remaining-work-audit.md` | 3,472 | `db26452` | Remaining work audit |
 
-- Root files: ~48K
-- memory/: ~82K
+**Subtotal:** ~29,543 tokens
 
-### Group 2: Cellar Door Core — Spec, Code Docs, Legal (~110K tokens)
-The authoritative EXIT/ENTRY protocol documents.
+---
 
-- `cellar-door-exit/` (README, DECISIONS, LEGAL, SECURITY, specs, benchmarks): ~75K
-- `cellar-door-entry/README.md`: ~3K
-- `docs/style-guide.md`: ~1K
-- `docs/papers/EXIT_PAPER_v4.md`: ~25K
-- `cellar-door-exit/docs/GETTING_STARTED.md`: ~3K
-- `integrations/` READMEs + SKILL: ~6K
+## Group 6 — Cellar-Door Assessments C (Multi-lens + NIST + Misc) (~33K tokens)
 
-### Group 3: Cellar Door Analysis — Legal & Risk (~105K tokens)
-All legal analysis, red teams, risk heatmaps.
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `assessments/multi-lens-batch1.md` | 7,453 | `333e4d7` | Multi-lens review batch 1 |
+| `assessments/multi-lens-batch2.md` | 7,776 | `ff39651` | Multi-lens review batch 2 |
+| `assessments/multi-lens-batch3.md` | 6,365 | `accd6d8` | Multi-lens review batch 3 |
+| `assessments/multi-lens-batch4.md` | 6,839 | `72fe596` | Multi-lens review batch 4 |
+| `assessments/multi-lens-batch5.md` | 5,810 | `decc255` | Multi-lens review batch 5 |
+| `assessments/multi-lens-review-plan.md` | 3,867 | `7dbb90e` | Multi-lens review plan |
+| `assessments/multi-lens-synthesis.md` | 5,403 | `c1b5576` | Multi-lens synthesis |
+| `assessments/nist-rfi-cynical-review.md` | 4,448 | `3821bb9` | Adversarial NIST RFI review |
+| `assessments/nist-rfi-fixes.md` | 777 | `c4ee99d` | NIST RFI revision summary |
+| `assessments/nist-submission-mechanics.md` | 1,528 | `ac3be97` | NIST submission mechanics |
 
-- `cellar-door-exit/docs/analysis/` (all files): ~165K
-- Note: This group runs over 100K. Split legal-lenses (41K) into its own load if needed.
+**Subtotal:** ~50,266 tokens *(could split further)*
 
-### Group 4: Cellar Door Assessments — Reviews & Fix Logs (~100K tokens)
-Hawthorn's assessment work on the Cellar Door project.
+---
 
-- `assessments/group-*.md` (5 files): ~45K
-- `assessments/cross-group-assessment.md`: ~10K
-- `assessments/entry-*.md` (6 files): ~46K
+## Group 7 — Cellar-Door Assessments D (Small/Historical) (~15K tokens)
 
-### Group 5: Cellar Door Assessments — Remaining + Business (~85K tokens)
-Integration assessments, fix logs, business planning.
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `assessments/entry-door-build.md` | 616 | `f9b4b6c` | Build summary for entry Tier 1 |
+| `assessments/entry-door-expansion.md` | 912 | `3fde1e8` | Production expansion — 7 new modules |
+| `assessments/entry-security-fixes.md` | 533 | `c8b4ebe` | Security fix summary for entry |
+| `assessments/final-publish-prep.md` | 461 | `db0455d` | Integration packages pushed to GitHub |
+| `assessments/fix-log-C1-C5.md` | 768 | `3cfd1a9` | ⚑ Historical fix log |
+| `assessments/fix-log-C2-C4.md` | 821 | `7b52567` | ⚑ Historical fix log |
+| `assessments/fix-log-important.md` | 689 | `11797e3` | ⚑ Historical fix log |
+| `assessments/fix-log-legal-consolidation.md` | 1,112 | `f7d8044` | ⚑ Historical fix log |
+| `assessments/fix-log-paper-v4.md` | 673 | `75d58ef` | ⚑ Historical fix log |
+| `assessments/fix-log-references.md` | 513 | `948e4d7` | Reference update log |
+| `assessments/fix-log-remaining.md` | 819 | `605d54d` | ⚑ Historical fix log |
+| `assessments/integration-final.md` | 791 | `2d091cc` | Integration finalization summary |
+| `assessments/integration-langchain.md` | 543 | `2ab11bb` | LangChain integration assessment |
+| `assessments/integration-mcp.md` | 557 | `6d20b49` | MCP server integration assessment |
+| `assessments/integration-security-fixes.md` | 803 | `7695437` | Security fixes for integrations |
+| `assessments/integration-vercel.md` | 639 | `ba9ef7d` | Vercel AI SDK assessment |
+| `assessments/integrations-entry-update.md` | 936 | `0dd9616` | Integrations updated for ENTRY |
+| `assessments/integrations-security-legal-audit.md` | 2,872 | `d477349` | Security & legal audit across integrations |
+| `assessments/npm-publish-prep.md` | 609 | `4481cd4` | npm publish prep |
+| `assessments/openclaw-skill.md` | 438 | `29669f2` | OpenClaw skill assessment |
+| `assessments/security-audit.md` | 4,621 | `a473b3f` | Blind adversarial security audit |
+| `assessments/security-fixes.md` | 361 | `9915194` | Security fixes applied |
+| `assessments/sprint6-security-legal-review.md` | 2,592 | `3fbc598` | Sprint 6 security & legal review |
+| `assessments/whats-next.md` | 4,465 | `86884e9` | Full project state — what's next |
 
-- `assessments/` remaining files: ~60K
-- `docs/analysis/cellar-door-business-plan.md`: ~22K
+**Subtotal:** ~27,144 tokens
 
-### Group 6: HOLOS + Side Projects + Strategy (~100K tokens)
-Portfolio-level thinking and non-EXIT projects.
+---
 
-- `projects/HOLOS/`: ~83K
-- `projects/Fool-Hardy/`, `Hot-Chip/`, `LAND/`, `Lumen/`: ~69K
-- `docs/analysis/` (remaining non-legal): ~26K
+## Group 8 — cellar-door-entry Source (~36K tokens)
 
-### Group 7: Overflow — Historical & Superseded (~55K tokens)
-Documents retained for reference but not authoritative.
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `cellar-door-entry/ENTRY_SPEC_v1.0.md` | 9,976 | `9060b05` | Entry protocol specification v1.0 |
+| `cellar-door-entry/README.md` | 1,965 | `5ea2d16` | Package README |
+| `cellar-door-entry/package.json` | 305 | `d47c91a` | npm package manifest |
+| `cellar-door-entry/package-lock.json` | 17,010 | `2665eae` | Lockfile (low-value) |
+| `cellar-door-entry/tsconfig.json` | 77 | `76810f8` | TypeScript config |
+| `cellar-door-entry/.gitignore` | 5 | `b947077` | Git ignore |
+| `cellar-door-entry/src/index.ts` | 458 | `e8f889b` | Package entry point |
+| `cellar-door-entry/src/types.ts` | 683 | `0719fff` | Type definitions |
+| `cellar-door-entry/src/arrival.ts` | 603 | `9068afe` | Arrival marker creation |
+| `cellar-door-entry/src/admission-policy.ts` | 1,092 | `7245837` | Admission policy engine |
+| `cellar-door-entry/src/capability-scope.ts` | 524 | `6be6c32` | Capability scoping |
+| `cellar-door-entry/src/claim-tracking.ts` | 836 | `3143efb` | Claim tracking |
+| `cellar-door-entry/src/continuity.ts` | 530 | `16fc27e` | Continuity handling |
+| `cellar-door-entry/src/convenience.ts` | 309 | `e1b3ec9` | Convenience helpers |
+| `cellar-door-entry/src/probation.ts` | 448 | `2e9c85e` | Probation period logic |
+| `cellar-door-entry/src/revocation.ts` | 1,057 | `a8575f7` | Revocation handling |
+| `cellar-door-entry/src/sign.ts` | 560 | `e296954` | Signing utilities |
+| `cellar-door-entry/src/transfer.ts` | 476 | `3f3e09c` | Transfer logic |
+| `cellar-door-entry/src/validation.ts` | 926 | `495a0ce` | Input validation |
+| `cellar-door-entry/src/verify-departure.ts` | 226 | `3aad1ef` | Departure verification |
+| `cellar-door-entry/src/__tests__/entry.test.ts` | 8,655 | `037f73e` | Test suite (77+ tests) |
 
-- All files marked `superseded` or `historical` above
-- `projects/cellar-door-exit/analysis/gdpr-erasure-encryption.md`: ~18K
-- `state/hawthorn-state.md`: ~1K
+**Subtotal:** ~36,721 tokens (minus lockfile: ~19,711)
+
+---
+
+## Group 9 — cellar-door-exit Source (~32K tokens)
+
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `cellar-door-exit/src/index.ts` | 1,304 | `2de8800` | Package entry point |
+| `cellar-door-exit/src/types.ts` | 5,678 | `540c3da` | Core type definitions |
+| `cellar-door-exit/src/marker.ts` | 1,350 | `912945f` | Exit marker creation |
+| `cellar-door-exit/src/ceremony.ts` | 1,800 | `d7bdd6b` | Exit ceremony orchestration |
+| `cellar-door-exit/src/crypto.ts` | 1,196 | `2f774f5` | Cryptographic primitives |
+| `cellar-door-exit/src/chain.ts` | 890 | `6335c2d` | Chain verification |
+| `cellar-door-exit/src/anchor.ts` | 901 | `d08fdbd` | Anchoring logic |
+| `cellar-door-exit/src/batch.ts` | 1,818 | `452cd68` | Batch operations |
+| `cellar-door-exit/src/cli.ts` | 7,048 | `0894157` | CLI interface |
+| `cellar-door-exit/src/context.ts` | 892 | `5242827` | Context management |
+| `cellar-door-exit/src/convenience.ts` | 847 | `7f31b5a` | Convenience helpers |
+| `cellar-door-exit/src/errors.ts` | 753 | `89066a4` | Error definitions |
+| `cellar-door-exit/src/ethics.ts` | 3,310 | `3e16219` | Ethics guardrails |
+| `cellar-door-exit/src/full-service.ts` | 2,095 | `cdd1437` | Full-service exit flow |
+| `cellar-door-exit/src/git-ledger.ts` | 1,898 | `dd54c67` | Git-based ledger |
+| `cellar-door-exit/src/guardrails.ts` | 1,887 | `3ed8439` | Safety guardrails |
+| `cellar-door-exit/src/interop.ts` | 1,996 | `a08e95c` | Interoperability layer |
+| `cellar-door-exit/src/keri.ts` | 2,546 | `c447773` | KERI integration |
+| `cellar-door-exit/src/key-compromise.ts` | 1,519 | `ecd7373` | Key compromise handling |
+| `cellar-door-exit/src/pre-rotation.ts` | 860 | `2072f74` | Pre-rotation support |
+| `cellar-door-exit/src/privacy.ts` | 1,428 | `a6149e8` | Privacy controls |
+| `cellar-door-exit/src/proof.ts` | 913 | `f002463` | Proof generation |
+| `cellar-door-exit/src/registry.ts` | 821 | `55ec6ac` | Registry management |
+| `cellar-door-exit/src/resolver.ts` | 1,124 | `0068e0c` | DID resolver |
+| `cellar-door-exit/src/storage.ts` | 903 | `9bd3afe` | Storage abstraction |
+| `cellar-door-exit/src/tsa.ts` | 2,723 | `8105750` | Timestamping authority |
+| `cellar-door-exit/src/validate.ts` | 1,312 | `7b2fb35` | Validation logic |
+| `cellar-door-exit/src/vc.ts` | 714 | `bb1fcdb` | Verifiable credentials |
+| `cellar-door-exit/src/visual.ts` | 4,373 | `44b73ba` | Visual representation |
+
+**Subtotal:** ~52,899 tokens *(split into two groups if needed)*
+
+---
+
+## Group 10 — cellar-door-exit Modules & Tests (~31K tokens)
+
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `cellar-door-exit/src/modules/index.ts` | 317 | `6e71b33` | Modules barrel export |
+| `cellar-door-exit/src/modules/assets.ts` | 475 | `978453c` | Asset module |
+| `cellar-door-exit/src/modules/continuity.ts` | 269 | `8356449` | Continuity module |
+| `cellar-door-exit/src/modules/dispute.ts` | 310 | `4459057` | Dispute module |
+| `cellar-door-exit/src/modules/lineage.ts` | 833 | `5c36b64` | Lineage module |
+| `cellar-door-exit/src/modules/origin-attestation.ts` | 602 | `5388e59` | Origin attestation |
+| `cellar-door-exit/src/modules/reputation.ts` | 440 | `2026af4` | Reputation module |
+| `cellar-door-exit/src/modules/trust.ts` | 3,066 | `799c4cf` | Trust module |
+| `cellar-door-exit/src/demo/scenario1-voluntary.ts` | 1,224 | `5f98c76` | Demo: voluntary exit |
+| `cellar-door-exit/src/demo/scenario2-emergency.ts` | 1,148 | `bdb30ff` | Demo: emergency exit |
+| `cellar-door-exit/src/demo/scenario3-successor.ts` | 1,728 | `a7fb6df` | Demo: successor exit |
+| `cellar-door-exit/src/__tests__/benchmarks.test.ts` | 1,165 | `0dbbdf6` | Benchmark tests |
+| `cellar-door-exit/src/__tests__/ceremony-edge-cases.test.ts` | 6,213 | `45a52de` | Ceremony edge case tests |
+| `cellar-door-exit/src/__tests__/devex.test.ts` | 1,834 | `29914ac` | Developer experience tests |
+| `cellar-door-exit/src/__tests__/edge-cases.test.ts` | 3,006 | `10e20a7` | Edge case tests |
+| `cellar-door-exit/src/__tests__/ethics.test.ts` | 2,852 | `ee90891` | Ethics tests |
+| `cellar-door-exit/src/__tests__/full-service.test.ts` | 1,384 | `2e152a2` | Full-service tests |
+| `cellar-door-exit/src/__tests__/git-ledger.test.ts` | 683 | `1dd84f6` | Git ledger tests |
+| `cellar-door-exit/src/__tests__/integration.test.ts` | 1,903 | `2d7e722` | Integration tests |
+| `cellar-door-exit/src/__tests__/keri.test.ts` | 2,267 | `0a0f74d` | KERI tests |
+| `cellar-door-exit/src/__tests__/marker.test.ts` | 2,605 | `a63cae7` | Marker tests |
+| `cellar-door-exit/src/__tests__/modules.test.ts` | 2,103 | `ee45a62` | Module tests |
+| `cellar-door-exit/src/__tests__/properties.test.ts` | 2,783 | `2175088` | Property tests |
+| `cellar-door-exit/src/__tests__/sprint3.test.ts` | 2,088 | `9512dc0` | Sprint 3 tests |
+| `cellar-door-exit/src/__tests__/trust.test.ts` | 2,967 | `f2ea2eb` | Trust tests |
+| `cellar-door-exit/src/__tests__/tsa.test.ts` | 1,910 | `5b60b79` | TSA tests |
+| `cellar-door-exit/src/__tests__/vc.test.ts` | 498 | `5b7de82` | VC tests |
+| `cellar-door-exit/src/__tests__/visual.test.ts` | 2,021 | `9e459a4` | Visual tests |
+
+**Subtotal:** ~44,664 tokens
+
+---
+
+## Group 11 — cellar-door-exit Docs & Config (~30K tokens)
+
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `cellar-door-exit/README.md` | 1,681 | `ef5dd21` | Package README |
+| `cellar-door-exit/LEGAL.md` | 4,099 | `643927e` | Legal analysis document |
+| `cellar-door-exit/SECURITY.md` | 2,787 | `3091ca1` | Security policy |
+| `cellar-door-exit/DECISIONS.md` | 2,498 | `772737a` | Design decisions log |
+| `cellar-door-exit/CHANGELOG-v1.1-review.md` | 1,015 | `1936773` | v1.1 changelog review |
+| `cellar-door-exit/LICENSE` | 2,696 | `0ddcd17` | MIT License |
+| `cellar-door-exit/.gitignore` | 5 | `b947077` | Git ignore |
+| `cellar-door-exit/.npmignore` | 14 | `0ee2255` | npm ignore |
+| `cellar-door-exit/package.json` | 470 | `93e6632` | npm manifest |
+| `cellar-door-exit/package-lock.json` | 20,346 | `1f03f7e` | Lockfile (low-value) |
+| `cellar-door-exit/tsconfig.json` | 111 | `67dec30` | TypeScript config |
+| `cellar-door-exit/schemas/exit-context-v1.jsonld` | 621 | `49de409` | JSON-LD schema |
+| `cellar-door-exit/specs/EXIT_SPEC_v1.md` | 4,721 | `fc214a1` | ⚑ Superseded by v1.1 |
+| `cellar-door-exit/specs/EXIT_SPEC_v1.1.md` | 12,572 | `94ce41a` | EXIT specification v1.1 |
+| `cellar-door-exit/benchmarks/results.md` | 314 | `546eba9` | Benchmark results |
+| `cellar-door-exit/analysis/howey-test-module-d.md` | 6,512 | `c2facf7` | Howey test Module D analysis |
+
+**Subtotal:** ~56,462 tokens (minus lockfile: ~36,116)
+
+---
+
+## Group 12 — cellar-door-exit Papers & Pitches (~30K tokens)
+
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `cellar-door-exit/docs/EXIT_PAPER_DRAFT.md` | 10,207 | `456edd5` | ⚑ Superseded by v3/v4 |
+| `cellar-door-exit/docs/GETTING_STARTED.md` | 1,515 | `0d72bea` | Getting started guide |
+| `cellar-door-exit/docs/NIST_RFI_DRAFT.md` | 4,735 | `1eb1d66` | NIST RFI draft |
+| `cellar-door-exit/docs/NIST_RFI_PRAGMATIC.md` | 4,230 | `d911e9d` | NIST RFI pragmatic version |
+| `cellar-door-exit/docs/PITCH_IDEALIST.md` | 3,254 | `075d8ff` | Idealist pitch deck |
+| `cellar-door-exit/docs/PITCH_PRAGMATIC.md` | 2,763 | `068909c` | Pragmatic pitch deck |
+| `cellar-door-exit/docs/philosophical-foundations.md` | 1,197 | `7c11d8b` | Philosophical foundations |
+| `cellar-door-exit/docs/preservation-considerations.md` | 783 | `7add18b` | Preservation considerations |
+
+**Subtotal:** ~28,684 tokens
+
+---
+
+## Group 13 — cellar-door-exit Analysis Docs (~32K tokens)
+
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `cellar-door-exit/docs/analysis/cellar-door-competitive-landscape.md` | 3,932 | `36ca9c4` | Competitive landscape analysis |
+| `cellar-door-exit/docs/analysis/cellar-door-gastown-notes.md` | 2,660 | `953fd88` | Gastown meeting notes |
+| `cellar-door-exit/docs/analysis/cellar-door-legal-lenses.md` | 17,950 | `c8e050a` | Legal lenses analysis (large) |
+| `cellar-door-exit/docs/analysis/cellar-door-legal-redteam-v2.md` | 7,637 | `f10ae95` | Legal red-team v2 |
+| `cellar-door-exit/docs/analysis/cellar-door-legal-redteam.md` | 7,097 | `a0d4199` | ⚑ Superseded by v2 |
+| `cellar-door-exit/docs/analysis/cellar-door-master-assessment.md` | 9,543 | `2355f8c` | Master assessment |
+| `cellar-door-exit/docs/analysis/cellar-door-mechanism-design.md` | 4,927 | `083f226` | Mechanism design analysis |
+| `cellar-door-exit/docs/analysis/cellar-door-professional-reviews.md` | 11,028 | `ddce33d` | Professional reviews compilation |
+| `cellar-door-exit/docs/analysis/cellar-door-project-plan.md` | 3,280 | `86f2e0f` | Project plan |
+| `cellar-door-exit/docs/analysis/cellar-door-risk-heatmap.md` | 8,790 | `b2888bf` | Risk heatmap |
+| `cellar-door-exit/docs/analysis/risk-scale-mapping.md` | 815 | `c9085f4` | Risk scale mapping |
+
+**Subtotal:** ~77,659 tokens *(large — legal-lenses alone is 18K)*
+
+---
+
+## Group 14 — Cellar-Door Project-Level Docs & Papers (~30K tokens)
+
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `projects/Cellar-Door/docs/papers/EXIT_PAPER_v3.md` | 11,664 | `38582cd` | EXIT paper v3 |
+| `projects/Cellar-Door/docs/papers/EXIT_PAPER_v4.md` | 11,684 | `83c4c42` | EXIT paper v4 (current) |
+| `projects/Cellar-Door/docs/brand-guide.md` | 692 | `2043a4d` | Brand guide |
+| `projects/Cellar-Door/docs/ecosystem-map.md` | 4,383 | `4562746` | Ecosystem map |
+| `projects/Cellar-Door/docs/slogans-v2.md` | 1,421 | `22eced7` | Slogans v2 |
+| `projects/Cellar-Door/docs/style-guide.md` | 413 | `a3cfac2` | Style guide |
+| `projects/Cellar-Door/docs/analysis/cellar-door-benchmarks.md` | 324 | `3e115ef` | Benchmark analysis |
+| `projects/Cellar-Door/docs/analysis/cellar-door-business-plan.md` | 9,356 | `298c940` | Business plan |
+| `projects/Cellar-Door/docs/analysis/cellar-door-integration-analysis.md` | 4,899 | `feb38b3` | Integration analysis |
+| `projects/Cellar-Door/docs/analysis/cellar-door-legal-battery.md` | 11,023 | `999550` | Legal battery of tests |
+| `projects/Cellar-Door/docs/analysis/cellar-door-paper-readiness.md` | 3,479 | `c3c2142` | Paper readiness check |
+| `projects/Cellar-Door/docs/analysis/cellar-door-pre-export-checklist.md` | 3,234 | `002bfeb` | Pre-export checklist |
+| `projects/Cellar-Door/docs/analysis/cellar-door-slogan-workshop.md` | 3,628 | `6843846` | Slogan workshop |
+
+**Subtotal:** ~66,200 tokens *(could split)*
+
+---
+
+## Group 15 — Integrations (~32K tokens)
+
+All paths under `projects/Cellar-Door/integrations/`.
+
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| **LangChain** | | | |
+| `langchain/README.md` | 757 | `d10b279` | LangChain integration README |
+| `langchain/LICENSE` | 2,696 | `0ddcd17` | MIT License |
+| `langchain/package.json` | 394 | `9459a5c` | npm manifest |
+| `langchain/package-lock.json` | 25,529 | `55936a1` | Lockfile (low-value) |
+| `langchain/tsconfig.json` | 89 | `931f3ac` | TS config |
+| `langchain/vitest.config.ts` | 28 | `e2ec332` | Vitest config |
+| `langchain/src/index.ts` | 93 | `aaab6fc` | Entry point |
+| `langchain/src/admission-tool.ts` | 326 | `769ff9b` | Admission tool |
+| `langchain/src/entry-tool.ts` | 293 | `abf7441` | Entry tool |
+| `langchain/src/exit-callback.ts` | 996 | `63993bc` | Exit callback handler |
+| `langchain/src/exit-tool.ts` | 504 | `52b9ebb` | Exit tool |
+| `langchain/src/transfer-tool.ts` | 372 | `2258123` | Transfer tool |
+| `langchain/src/__tests__/entry-tools.test.ts` | 723 | `87e5952` | Entry tools tests |
+| `langchain/src/__tests__/exit-callback.test.ts` | 354 | `bbd6933` | Exit callback tests |
+| `langchain/src/__tests__/exit-tool.test.ts` | 358 | `abcf8a3` | Exit tool tests |
+| **MCP Server** | | | |
+| `mcp-server/README.md` | 678 | `8122d5b` | MCP server README |
+| `mcp-server/package.json` | 263 | `926e629` | npm manifest |
+| `mcp-server/package-lock.json` | 23,796 | `6ca4054` | Lockfile (low-value) |
+| `mcp-server/tsconfig.json` | 83 | `d569036` | TS config |
+| `mcp-server/src/index.ts` | 180 | `fdc4699` | Entry point |
+| `mcp-server/src/server.ts` | 3,090 | `6c0d136` | MCP server implementation |
+| `mcp-server/src/__tests__/server.test.ts` | 102 | `a9e7e9c` | Server tests (src) |
+| `mcp-server/tests/server.test.ts` | 1,333 | `3c191b6` | Server tests (root) |
+| **Vercel AI SDK** | | | |
+| `vercel-ai-sdk/README.md` | 1,009 | `07da57d` | Vercel AI SDK README |
+| `vercel-ai-sdk/LICENSE` | 2,696 | `0ddcd17` | MIT License |
+| `vercel-ai-sdk/package.json` | 381 | `dd0637d` | npm manifest |
+| `vercel-ai-sdk/package-lock.json` | 22,709 | `ee3f673` | Lockfile (low-value) |
+| `vercel-ai-sdk/tsconfig.json` | 89 | `931f3ac` | TS config |
+| `vercel-ai-sdk/src/index.ts` | 129 | `e1e888c` | Entry point |
+| `vercel-ai-sdk/src/entry-tools.ts` | 1,103 | `1a78277` | Entry tools |
+| `vercel-ai-sdk/src/exit-middleware.ts` | 1,168 | `a0223de` | Exit middleware |
+| `vercel-ai-sdk/src/exit-tool.ts` | 470 | `0e4467e` | Exit tool |
+| `vercel-ai-sdk/src/__tests__/entry-tools.test.ts` | 764 | `37882cf` | Entry tools tests |
+| `vercel-ai-sdk/src/__tests__/exit-middleware.test.ts` | 519 | `913d855` | Exit middleware tests |
+| `vercel-ai-sdk/src/__tests__/exit-tool.test.ts` | 434 | `b932f73` | Exit tool tests |
+| **OpenClaw Skill** | | | |
+| `openclaw-skill/SKILL.md` | 491 | `1bc1fb6` | Skill definition |
+| `openclaw-skill/package.json` | 125 | `05c6e3f` | npm manifest |
+| `openclaw-skill/package-lock.json` | 815 | `6f36778` | Lockfile |
+| `openclaw-skill/references/api-guide.md` | 483 | `1154de3` | API guide |
+| `openclaw-skill/scripts/entry.sh` | 405 | `f9d0423` | Entry script |
+| `openclaw-skill/scripts/exit.sh` | 149 | `fcd1831` | Exit script |
+| `openclaw-skill/scripts/transfer.sh` | 512 | `861fa8f` | Transfer script |
+| `openclaw-skill/scripts/verify.sh` | 443 | `5111414` | Verify script |
+
+**Subtotal:** ~97,561 tokens (minus lockfiles ~72K: ~25,527 meaningful)
+
+---
+
+## Group 16 — Other Projects (~31K tokens)
+
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `projects/HOLOS/holos-investment-thesis.md` | 8,708 | `8d0d081` | ⚑ Superseded by v2/v3 |
+| `projects/HOLOS/holos-investment-thesis-v2.md` | 8,681 | `0734b63` | Investment thesis v2 |
+| `projects/HOLOS/holos-investment-thesis-v3.md` | 9,603 | `3e46932` | Investment thesis v3 (current) |
+| `projects/HOLOS/holos-portfolio-strategy.md` | 9,022 | `3d7b8df` | Portfolio strategy |
+| `projects/LAND/LAND-analysis.md` | 4,418 | `7406b12` | ⚑ Superseded by v2 |
+| `projects/LAND/LAND-analysis-v2.md` | 8,382 | `5f1ad9b` | LAND analysis v2 (current) |
+| `projects/Lumen/lumen-solar-optical-analysis.md` | 3,757 | `edc7b1c` | ⚑ Superseded by v2 |
+| `projects/Lumen/lumen-solar-optical-analysis-v2.md` | 5,898 | `f6f5a33` | Lumen solar/optical v2 (current) |
+| `projects/Hot-Chip/hot-chip-analysis.md` | 2,339 | `d4a8aac` | Hot Chip business analysis |
+| `projects/Fool-Hardy/fool-hardy-analysis.md` | 4,889 | `ee3afc3` | Fool-Hardy analysis |
+| `projects/cellar-door-exit/analysis/gdpr-erasure-encryption.md` | 8,152 | `a8b2dbf` | ⚑ Orphan path — GDPR erasure analysis |
+
+**Subtotal:** ~73,849 tokens
+
+---
+
+## Group 17 — Website / Site (~34K tokens text + images)
+
+| File | Tokens | Git Hash | Description |
+|------|-------:|----------|-------------|
+| `site/index.html` | 42 | `91d49a2` | Root redirect page |
+| `site/_redirects` | 5 | `e87a5c8` | Netlify redirects |
+| `site/cellar-door/index.html` | 14,274 | `2cdb7ce` | Cellar Door landing page |
+| `site/demo/index.html` | 5,083 | `c501102` | Interactive demo page |
+| `site/entry/v1/index.html` | 85 | `5a9993e` | Entry v1 redirect |
+| `site/exit/v1/index.html` | 62 | `d679cc6` | Exit v1 redirect |
+| `site/holos-thesis/index.html` | 15,157 | `8f9fce9` | HOLOS thesis page |
+| `site/idealist/index.html` | 4,069 | `2a75645` | Idealist pitch page |
+| `site/paper/index.html` | 14,580 | `215d355` | Paper page |
+| `site/policy/index.html` | 5,474 | `f5b29aa` | Policy page |
+| `site/pragmatic/index.html` | 4,549 | `9f69da3` | Pragmatic pitch page |
+| `cellar-door-exit/websites/idealist/index.html` | 4,936 | `3d705f2` | Original idealist site |
+| `cellar-door-exit/websites/policy/index.html` | 7,134 | `8b40f0a` | Original policy site |
+| `cellar-door-exit/websites/pragmatic/index.html` | 3,992 | `0a90809` | Original pragmatic site |
+
+**Subtotal:** ~79,442 tokens
+
+---
+
+## Binary / Image Files (excluded from context groupings)
+
+| File | Tokens | Description |
+|------|-------:|-------------|
+| `folder.ico` | 38,964 | Windows folder icon |
+| `icon_output/drive/.VolumeIcon.ico` | 27,421 | Drive volume icon |
+| `icon_output/drive/autorun.inf` | 7 | Autorun config |
+| `icon_output/folder/desktop.ini` | 21 | Desktop config |
+| `icon_output/folder/folder.ico` | 38,964 | Folder icon (dup) |
+| `icon_output/mac/icon_*.png` (10 files) | ~606,541 | macOS icon set (16px–1024px) |
+| `images/Hawthorn*.jpg` (6 files) | ~1,018,179 | Hawthorn brand images |
+| `images/sources/*.jpeg` (19 files) | ~7,386,295 | Source/generated images |
+| `site/cellar-door/images/*` (6 files) | ~1,551,842 | Cellar Door site images |
+
+**Binary total:** ~10,668,234 tokens (not loadable as text)
+
+---
+
+## Summary by Group
+
+| Group | Focus | ~Tokens |
+|-------|-------|--------:|
+| 1 | Root Config & Identity | 25K |
+| 2 | Memory & Research Notes | 38K |
+| 3 | Docs & Writings | 92K |
+| 4 | Assessments A (large) | 30K |
+| 5 | Assessments B (groups/howey) | 30K |
+| 6 | Assessments C (multi-lens/NIST) | 50K |
+| 7 | Assessments D (small/historical) | 27K |
+| 8 | cellar-door-entry source | 37K |
+| 9 | cellar-door-exit source | 53K |
+| 10 | cellar-door-exit modules & tests | 45K |
+| 11 | cellar-door-exit docs & config | 56K |
+| 12 | cellar-door-exit papers & pitches | 29K |
+| 13 | cellar-door-exit analysis docs | 78K |
+| 14 | CD project-level docs & papers | 66K |
+| 15 | Integrations (4 packages) | 98K |
+| 16 | Other Projects (HOLOS/LAND/Lumen/etc) | 74K |
+| 17 | Website / Site | 79K |
+| — | Binary/Images | ~10.7M |
+
+**Total text tokens:** ~907K | **Total with binaries:** ~11.6M
+
+---
+
+*Auto-generated 2026-02-24T01:40Z. Next reindex recommended after significant file additions.*
