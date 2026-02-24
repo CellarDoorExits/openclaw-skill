@@ -1,6 +1,6 @@
 # MASTER INDEX — Hawthorn Knowledge Base
 
-**Updated:** 2026-02-24 | **Author:** Hawthorn (auto-reindex) | **Status:** Living document
+**Updated:** 2026-02-24T08:30Z | **Author:** Hawthorn (auto-reindex) | **Status:** Living document
 
 **Total files:** 196 | **Text files (meaningful tokens):** ~530K tokens | **Binary/images:** ~9.5M tokens (excluded from context groupings)
 
@@ -130,8 +130,17 @@
 | `assessments/nist-rfi-cynical-review.md` | 4,448 | `3821bb9` | Adversarial NIST RFI review |
 | `assessments/nist-rfi-fixes.md` | 777 | `c4ee99d` | NIST RFI revision summary |
 | `assessments/nist-submission-mechanics.md` | 1,528 | `ac3be97` | NIST submission mechanics |
+| `assessments/spec-nist-update-gather.md` | 4,090 | — | Spec + NIST update gathering notes |
+| `assessments/cross-consistency-post-fixes.md` | 1,133 | — | Cross-consistency check after fixes |
+| `assessments/branding-analysis.md` | 4,749 | — | Branding analysis for Cellar Door |
+| `assessments/institutional-backing-options.md` | 3,750 | — | Institutional backing options research |
+| `assessments/community-marketing-options.md` | 4,989 | — | Community & marketing options |
+| `assessments/paper-v5-gather.md` | 5,026 | — | Paper v5 gathering notes |
+| `assessments/consistency-check-code.md` | 1,670 | — | Consistency check: code |
+| `assessments/consistency-check-docs.md` | 3,162 | — | Consistency check: docs |
+| `assessments/consistency-check-integrations.md` | 3,490 | — | Consistency check: integrations |
 
-**Subtotal:** ~50,266 tokens *(could split further)*
+**Subtotal:** ~82,325 tokens *(should split further)*
 
 ---
 
@@ -341,6 +350,7 @@
 |------|-------:|----------|-------------|
 | `projects/Cellar-Door/docs/papers/EXIT_PAPER_v3.md` | 11,664 | `38582cd` | EXIT paper v3 |
 | `projects/Cellar-Door/docs/papers/EXIT_PAPER_v4.md` | 11,684 | `83c4c42` | EXIT paper v4 (current) |
+| `projects/Cellar-Door/docs/papers/NIST_RFI_v2.md` | 4,778 | — | NIST RFI response v2 |
 | `projects/Cellar-Door/docs/brand-guide.md` | 692 | `2043a4d` | Brand guide |
 | `projects/Cellar-Door/docs/ecosystem-map.md` | 4,383 | `4562746` | Ecosystem map |
 | `projects/Cellar-Door/docs/slogans-v2.md` | 1,421 | `22eced7` | Slogans v2 |
@@ -441,7 +451,7 @@ All paths under `projects/Cellar-Door/integrations/`.
 |------|-------:|----------|-------------|
 | `site/index.html` | 42 | `91d49a2` | Root redirect page |
 | `site/_redirects` | 5 | `e87a5c8` | Netlify redirects |
-| `site/cellar-door/index.html` | 14,274 | `2cdb7ce` | Cellar Door landing page |
+| `site/cellar-door/index.html` | 17,254 | — | Cellar Door unified 5-mode site (poet/idealist/pragmatist/bureaucrat/agent) |
 | `site/demo/index.html` | 5,083 | `c501102` | Interactive demo page |
 | `site/entry/v1/index.html` | 85 | `5a9993e` | Entry v1 redirect |
 | `site/exit/v1/index.html` | 62 | `d679cc6` | Exit v1 redirect |
@@ -450,9 +460,7 @@ All paths under `projects/Cellar-Door/integrations/`.
 | `site/paper/index.html` | 14,580 | `215d355` | Paper page |
 | `site/policy/index.html` | 5,474 | `f5b29aa` | Policy page |
 | `site/pragmatic/index.html` | 4,549 | `9f69da3` | Pragmatic pitch page |
-| `cellar-door-exit/websites/idealist/index.html` | 4,936 | `3d705f2` | Original idealist site |
-| `cellar-door-exit/websites/policy/index.html` | 7,134 | `8b40f0a` | Original policy site |
-| `cellar-door-exit/websites/pragmatic/index.html` | 3,992 | `0a90809` | Original pragmatic site |
+| ~~`cellar-door-exit/websites/`~~ | — | — | **REMOVED** — 3 deprecated site variants (pragmatic/idealist/policy) consolidated into mono-site; preserved in git history |
 
 **Subtotal:** ~79,442 tokens
 

@@ -923,6 +923,36 @@ img { max-width: 100%; height: auto; display: block; }
         EXIT doesn't judge why you leave. It doesn't ask permission. It creates the evidence that you were here and that you left with your history intact — a graceful exit, by design.
       </div>
 
+      <h2>The Departure Ceremony</h2>
+      <p>EXIT is not just a data format. It is a <strong>ceremony</strong> — a structured, witnessed, irreversible act of leaving, modeled on the deepest human rituals of transition:</p>
+      <ul>
+        <li><strong>ALIVE</strong> — The agent exists within a context</li>
+        <li><strong>INTENT</strong> — The first sovereign act: declaring departure</li>
+        <li><strong>SNAPSHOT</strong> — The world frozen in amber</li>
+        <li><strong>OPEN</strong> — A window for response</li>
+        <li><strong>FINAL</strong> — Cryptographic proof, irreversible</li>
+        <li><strong>DEPARTED</strong> — Terminal. A new chapter begins.</li>
+      </ul>
+
+      <div class="chalk-quote">
+        The protocol's deepest commitment: Disputes modify the record. They never block the departure. No institution may hold an entity against its will by bureaucratic delay.
+      </div>
+
+      <p>EXIT recognizes eight forms of departure — each a different shape of leaving: <em>voluntary</em>, <em>forced</em>, <em>emergency</em>, <em>keyCompromise</em>, <em>platform_shutdown</em>, <em>directed</em>, <em>constructive</em>, and <em>acquisition</em>. From the chosen departure to the compelled one — every form of leaving has a name.</p>
+
+      <h2>Identity That Persists</h2>
+      <p>Module A — Lineage — is where EXIT becomes something more than a departure record. It creates cryptographic proof of identity continuity:</p>
+      <ul>
+        <li><strong>Key Rotation Binding</strong> — The old key signs the new key. The departing self explicitly designates its continuation.</li>
+        <li><strong>Lineage Hash Chain</strong> — A Merkle chain from the current marker back to genesis. The entire history of departures in a single verifiable thread.</li>
+        <li><strong>Delegation Token</strong> — A scoped capability transfer: "I authorize this successor to carry specific aspects of my identity."</li>
+        <li><strong>Behavioral Attestation</strong> — Third-party witnesses vouching for continuity of behavior and character.</li>
+      </ul>
+
+      <div class="chalk-quote">
+        A person is not a snapshot — a person is a thread. Identity is not what you are at a single moment but the connection between who you were and who you are becoming.
+      </div>
+
       <h2>Why It Matters</h2>
       <p>Without EXIT, every platform is a roach motel for agent identity. You can build reputation inside, but you can never take it with you. This creates perverse incentives:</p>
       <ul>
@@ -948,6 +978,21 @@ img { max-width: 100%; height: auto; display: block; }
       <div class="chalk-quote">
         The door is chalk on brick. The proof is cryptographic. The freedom is real.
       </div>
+
+      <h2>Historical Parallels</h2>
+      <ul>
+        <li><strong>The Underground Railroad</strong> — When the legal system would not recognize the right of departure, exit was built outside the institution. EXIT's unilateral departure path embodies this: the right to leave cannot depend on the permission of the entity you are leaving.</li>
+        <li><strong>The Right of Asylum</strong> — The right to arrive at a new jurisdiction and be evaluated on your own terms — not on the terms of the jurisdiction you fled — appears in the Hebrew Bible, in Greek law, in the Geneva Convention.</li>
+      </ul>
+
+      <h2>The HOLOS Vision</h2>
+      <p>EXIT is a primitive within a larger architecture: <strong>HOLOS</strong> — a framework for sovereign economic cooperation, organized fractally around three aspects:</p>
+      <ul>
+        <li><strong>LOCUS</strong> — Identity. Where you are, who you are, the boundaries that define you.</li>
+        <li><strong>SIGNUM</strong> — Interface. How you communicate, what you expose, the signals you emit.</li>
+        <li><strong>SENSUS</strong> — Execution. What you do, how you act, the changes you make in the world.</li>
+      </ul>
+      <p>EXIT lives at the LOCUS layer — fundamentally about identity at boundaries. The vision scales fractally: an agent exits a platform, a platform exits a consortium, a consortium exits a federation. At every level, the same ceremony. The same cryptographic guarantees.</p>
 
     </div>
   </div>
@@ -1010,32 +1055,94 @@ img { max-width: 100%; height: auto; display: block; }
           <tr><th>Field</th><th>Type</th><th>Description</th></tr>
         </thead>
         <tbody>
-          <tr><td><code>@context</code></td><td>URI[]</td><td>JSON-LD context (EXIT namespace + W3C VC)</td></tr>
-          <tr><td><code>type</code></td><td>string[]</td><td><code>["ExitMarker", "VerifiableCredential"]</code></td></tr>
-          <tr><td><code>issuer</code></td><td>DID</td><td>Platform or attestation service DID</td></tr>
-          <tr><td><code>credentialSubject.id</code></td><td>DID</td><td>Agent's decentralized identifier</td></tr>
-          <tr><td><code>credentialSubject.lineageRoot</code></td><td>hash</td><td>Merkle root of operational LINEAGE</td></tr>
-          <tr><td><code>credentialSubject.exitType</code></td><td>enum</td><td>VOLUNTARY | FORCED | CHECKPOINT</td></tr>
-          <tr><td><code>credentialSubject.origin</code></td><td>URI</td><td>Platform/context being exited</td></tr>
-          <tr><td><code>credentialSubject.disputeStatus</code></td><td>enum</td><td>CLEAR | PENDING | RESOLVED</td></tr>
-          <tr><td><code>issuanceDate</code></td><td>ISO 8601</td><td>UTC timestamp (service-attested)</td></tr>
-          <tr><td><code>proof</code></td><td>object</td><td>Ed25519 / secp256k1 signature block</td></tr>
+          <tr><td><code>@context</code></td><td>URI</td><td>JSON-LD context (<code>https://cellar-door.dev/exit/v1</code>)</td></tr>
+          <tr><td><code>specVersion</code></td><td>string</td><td>Protocol version (e.g. <code>"1.1"</code>)</td></tr>
+          <tr><td><code>id</code></td><td>URI</td><td>Content-addressed hash URI (<code>exit:sha256:...</code>)</td></tr>
+          <tr><td><code>subject</code></td><td>DID</td><td>Agent's decentralized identifier</td></tr>
+          <tr><td><code>origin</code></td><td>URI</td><td>Platform/context being exited</td></tr>
+          <tr><td><code>timestamp</code></td><td>ISO 8601</td><td>UTC timestamp (service-attested)</td></tr>
+          <tr><td><code>exitType</code></td><td>enum</td><td>One of 8 types (see below)</td></tr>
+          <tr><td><code>status</code></td><td>enum</td><td><code>good_standing</code> | <code>disputed</code> | <code>unverified</code></td></tr>
+          <tr><td><code>selfAttested</code></td><td>boolean</td><td>Whether status is self-reported</td></tr>
+          <tr><td><code>proof</code></td><td>object</td><td>Ed25519 signature block</td></tr>
         </tbody>
       </table>
+
+      <h2>All Eight Exit Types</h2>
+      <table class="prag-table">
+        <thead>
+          <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>voluntary</code></td><td>Subject-initiated, no dispute</td><td>Agent migrates to new platform</td></tr>
+          <tr><td><code>forced</code></td><td>Origin expelled the subject</td><td>Policy violation, ban</td></tr>
+          <tr><td><code>emergency</code></td><td>Abnormal conditions</td><td>Platform failure, data loss</td></tr>
+          <tr><td><code>keyCompromise</code></td><td>Signing key exposed</td><td>Key compromise declared</td></tr>
+          <tr><td><code>platform_shutdown</code></td><td>Platform shutting down</td><td>Service end-of-life</td></tr>
+          <tr><td><code>directed</code></td><td>Ordered by authority</td><td>Operator/regulator directive</td></tr>
+          <tr><td><code>constructive</code></td><td>Conditions forced departure</td><td>Constructive dismissal analog</td></tr>
+          <tr><td><code>acquisition</code></td><td>Platform acquired/merged</td><td>M&amp;A transition event</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Three Departure Paths</h2>
+      <div class="prag-card">
+        <h3>Cooperative</h3>
+        <p>Both parties sign. Challenge window for disputes. Maximum information quality. Appropriate for planned vendor migrations.</p>
+      </div>
+      <div class="prag-card">
+        <h3>Unilateral</h3>
+        <p>Agent exits without platform cooperation. Essential for hostile, defunct, or unresponsive platforms. The right to document your own departure does not depend on permission.</p>
+      </div>
+      <div class="prag-card">
+        <h3>Emergency</h3>
+        <p>Immediate departure. Key compromise, platform failure, safety-critical situations. No negotiation. Ceremony yields to survival.</p>
+      </div>
+      <p style="margin-top:16px; color:#374151; font-size:0.95rem;"><strong>Critical design choice:</strong> Disputes never block exit. A platform can record its objection on the departure record. It cannot prevent the departure.</p>
 
       <h2>Quick Start</h2>
       <div class="prag-code-wrap">
         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        <pre><code><span class="kw">import</span> { quickExit, toJSON } <span class="kw">from</span> <span class="str">"cellar-door-exit"</span>;
+        <pre><code><span class="kw">import</span> { quickExit, quickVerify, toJSON } <span class="kw">from</span> <span class="str">"cellar-door-exit"</span>;
 
-<span class="cm">// One line. Identity generated. Marker created. Signed.</span>
+<span class="cm">// Create a signed EXIT marker in one call</span>
 <span class="kw">const</span> { marker, identity } = <span class="fn">quickExit</span>(
-  <span class="str">"did:web:platform.example"</span>
+  <span class="str">"https://platform.example.com"</span>
 );
+console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));
 
-<span class="cm">// Output: A complete, signed EXIT marker</span>
-<span class="cm">// Approximately ~300 bytes of sovereign departure</span>
-console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));</code></pre>
+<span class="cm">// Verify any marker from JSON — offline, no callback</span>
+<span class="kw">const</span> result = <span class="fn">quickVerify</span>(jsonString);
+console.<span class="fn">log</span>(result.valid); <span class="cm">// true</span></code></pre>
+      </div>
+
+      <h2>Visual Door Hash</h2>
+      <p>Every EXIT marker has a unique visual fingerprint — a door rendered from the marker's content-addressed hash. Verify at a glance.</p>
+      <div class="prag-code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="kw">import</span> { renderDoorASCII } <span class="kw">from</span> <span class="str">"cellar-door-exit"</span>;
+
+console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(marker.id));
+<span class="cm">//     ╭────┬────╮</span>
+<span class="cm">//   ╱░··░·┃·░··░╲</span>
+<span class="cm">// ╱░·░░··░·┃·░··░░·╲</span>
+<span class="cm">// │░·░░·░░·┃░··░░·░│</span>
+<span class="cm">// ╟░·░░·░░·┃░░·░░·░╢</span>
+<span class="cm">// │░·░░█░░·┃░▓░░·░░│</span>
+<span class="cm">// │░·░░·░░·┃░··░░·░│</span>
+<span class="cm">// ╟░·░░·░░·┃░░·░░·░╢</span>
+<span class="cm">// │░·░░·░░·┃░··░░·░│</span>
+<span class="cm">// ╰═════════┴═════════╯</span></code></pre>
+      </div>
+
+      <h2>Passage: The Complete Journey</h2>
+      <p>EXIT is one half of a <strong>Passage</strong> — the departure. The companion <code>cellar-door-entry</code> package handles arrival, creating a linked marker that verifies the departure and establishes identity at the destination. Together, they form a complete, verifiable agent transition.</p>
+      <div class="prag-code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="kw">import</span> { quickEntry } <span class="kw">from</span> <span class="str">"cellar-door-entry"</span>;
+
+<span class="cm">// Verify departure + create arrival marker in one call</span>
+<span class="kw">const</span> { arrival } = <span class="kw">await</span> <span class="fn">quickEntry</span>(exitMarkerJson, destinationIdentity);</code></pre>
       </div>
 
       <h2>Checkpointing</h2>
@@ -1138,31 +1245,61 @@ console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));</co
       </ol>
 
       <h3>4.2 EXIT Marker Specification</h3>
-      <p>An EXIT marker is a W3C Verifiable Credential with the following required fields:</p>
+      <p>An EXIT marker is a compact JSON-LD document (~300–500 bytes) with the following required fields:</p>
       <table class="bureau-table">
         <thead>
           <tr><th>Field</th><th>Requirement</th><th>Description</th></tr>
         </thead>
         <tbody>
-          <tr><td><code>credentialSubject.id</code></td><td>REQUIRED</td><td>Agent DID</td></tr>
-          <tr><td><code>credentialSubject.lineageRoot</code></td><td>REQUIRED</td><td>Merkle root hash of operational LINEAGE</td></tr>
-          <tr><td><code>credentialSubject.exitType</code></td><td>REQUIRED</td><td>VOLUNTARY, FORCED, or CHECKPOINT</td></tr>
-          <tr><td><code>credentialSubject.origin</code></td><td>REQUIRED</td><td>URI of originating platform</td></tr>
-          <tr><td><code>credentialSubject.disputeStatus</code></td><td>REQUIRED</td><td>CLEAR, PENDING, or RESOLVED</td></tr>
-          <tr><td><code>issuanceDate</code></td><td>REQUIRED</td><td>Service-attested UTC timestamp</td></tr>
-          <tr><td><code>credentialSubject.checkpoint</code></td><td>OPTIONAL</td><td>Reference to most recent checkpoint marker</td></tr>
-          <tr><td><code>credentialSubject.successorId</code></td><td>OPTIONAL</td><td>DID of designated successor agent</td></tr>
+          <tr><td><code>@context</code></td><td>REQUIRED</td><td>JSON-LD semantic context</td></tr>
+          <tr><td><code>specVersion</code></td><td>REQUIRED</td><td>Protocol version (e.g. <code>"1.1"</code>)</td></tr>
+          <tr><td><code>id</code></td><td>REQUIRED</td><td>Content-addressed hash URI (<code>exit:sha256:...</code>)</td></tr>
+          <tr><td><code>subject</code></td><td>REQUIRED</td><td>Agent DID</td></tr>
+          <tr><td><code>origin</code></td><td>REQUIRED</td><td>URI of originating platform</td></tr>
+          <tr><td><code>timestamp</code></td><td>REQUIRED</td><td>Service-attested UTC timestamp</td></tr>
+          <tr><td><code>exitType</code></td><td>REQUIRED</td><td>One of 8 types: voluntary, forced, emergency, keyCompromise, platform_shutdown, directed, constructive, acquisition</td></tr>
+          <tr><td><code>status</code></td><td>REQUIRED</td><td><code>good_standing</code>, <code>disputed</code>, or <code>unverified</code></td></tr>
+          <tr><td><code>selfAttested</code></td><td>REQUIRED</td><td>Boolean: is status self-reported?</td></tr>
+          <tr><td><code>proof</code></td><td>REQUIRED</td><td>Ed25519 cryptographic signature</td></tr>
         </tbody>
       </table>
 
-      <h3>4.3 Checkpointing</h3>
-      <p>EXIT supports incremental checkpointing — the generation of partial departure records at regular intervals during normal agent operation. Checkpoints serve as recovery anchors in the event of unexpected platform termination, ensuring that agents maintain a guaranteed minimum level of departure evidence at all times.</p>
+      <h3>4.2.1 Extension Modules</h3>
+      <p>Six optional modules address specific enterprise and regulatory use cases:</p>
+      <table class="bureau-table">
+        <thead>
+          <tr><th>Module</th><th>Name</th><th>Function</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A</td><td>Lineage</td><td>Cryptographic predecessor/successor chains for verifiable identity continuity across migrations and key rotations</td></tr>
+          <tr><td>B</td><td>State Snapshot</td><td>Hash references to system state at transition time, anchoring departure to operational context</td></tr>
+          <tr><td>C</td><td>Dispute Bundle</td><td>Structured bi-lateral dispute documentation with challenge windows and co-signatures</td></tr>
+          <tr><td>D</td><td>Economic</td><td>Asset and obligation references documenting financial state at transition time</td></tr>
+          <tr><td>E</td><td>Metadata</td><td>Human-readable context: departure reasons, operational notes, domain-specific tags</td></tr>
+          <tr><td>F</td><td>Cross-Domain Anchoring</td><td>Integration with external registries and immutable record systems</td></tr>
+        </tbody>
+      </table>
+
+      <h3>4.3 Transition Paths</h3>
+      <p>EXIT defines three transition paths accommodating different operational scenarios:</p>
+      <ol>
+        <li><strong>Cooperative transition:</strong> Both parties participate. Includes a challenge window for dispute documentation. Maximum information quality.</li>
+        <li><strong>Unilateral transition:</strong> The operator documents the transition without platform cooperation. Essential for platform failures, vendor disputes, or emergency migrations.</li>
+        <li><strong>Emergency transition:</strong> Immediate documentation with minimal ceremony. For key compromise, security incidents, or time-critical situations.</li>
+      </ol>
+
+      <div class="bureau-callout">
+        <strong>Design Invariant:</strong> Disputes are documented but never block transitions. A platform can record its objection. It cannot prevent an operator from documenting a departure. This prevents denial-of-documentation attacks while preserving both parties' ability to record their perspective.
+      </div>
+
+      <h3>4.4 Checkpointing</h3>
+      <p>EXIT supports incremental checkpointing — the generation of partial departure records at regular intervals during normal agent operation. Checkpoints serve as recovery anchors in the event of unexpected platform termination.</p>
 
       <div class="bureau-callout">
         <strong>Policy Note:</strong> Organizations are advised to require agents operating in high-risk contexts to maintain EXIT checkpoints at intervals not exceeding 24 hours. This ensures compliance with audit trail requirements and minimizes data loss during unplanned transitions.
       </div>
 
-      <h3>4.4 Timestamp Governance</h3>
+      <h3>4.5 Timestamp Governance</h3>
       <p>EXIT timestamps are service-attested using a global clock source maintained by the attestation infrastructure. Timestamps are countersigned by the attestation service to prevent self-reporting, backdating, or temporal manipulation by the exiting agent or the originating platform.</p>
 
       <h2>5. Verification Model</h2>
@@ -1229,13 +1366,13 @@ console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));</co
           <tr><th>Field</th><th>Type</th><th>You Need To Know</th></tr>
         </thead>
         <tbody>
-          <tr><td><code>credentialSubject.id</code></td><td>DID</td><td>Your agent DID. Persistent across platforms.</td></tr>
-          <tr><td><code>credentialSubject.lineageRoot</code></td><td>hash</td><td>Merkle root of your LINEAGE. Proves your history without exposing it.</td></tr>
-          <tr><td><code>credentialSubject.exitType</code></td><td>enum</td><td>VOLUNTARY | FORCED | CHECKPOINT</td></tr>
-          <tr><td><code>credentialSubject.origin</code></td><td>URI</td><td>Where you came from.</td></tr>
-          <tr><td><code>credentialSubject.disputeStatus</code></td><td>enum</td><td>CLEAR | PENDING | RESOLVED</td></tr>
-          <tr><td><code>issuanceDate</code></td><td>ISO 8601</td><td>Service-attested. Not self-reported. Not forgeable.</td></tr>
-          <tr><td><code>proof</code></td><td>object</td><td>Ed25519 or secp256k1 signature from attestation service.</td></tr>
+          <tr><td><code>subject</code></td><td>DID</td><td>Your agent DID. Persistent across platforms.</td></tr>
+          <tr><td><code>origin</code></td><td>URI</td><td>Where you came from.</td></tr>
+          <tr><td><code>timestamp</code></td><td>ISO 8601</td><td>Service-attested. Not self-reported. Not forgeable.</td></tr>
+          <tr><td><code>exitType</code></td><td>enum</td><td>voluntary | forced | emergency | keyCompromise | platform_shutdown | directed | constructive | acquisition</td></tr>
+          <tr><td><code>status</code></td><td>enum</td><td>good_standing | disputed | unverified</td></tr>
+          <tr><td><code>selfAttested</code></td><td>boolean</td><td>Transparency flag. Verifiers know exactly what they're getting.</td></tr>
+          <tr><td><code>proof</code></td><td>object</td><td>Ed25519 signature. Offline-verifiable.</td></tr>
         </tbody>
       </table>
 
@@ -1263,6 +1400,28 @@ console.<span class="fn">log</span>(<span class="fn">toJSON</span>(marker));</co
 <span class="cm">// === VERIFY (at destination) ===</span>
 <span class="kw">const</span> valid = <span class="fn">verify</span>(marker);
 <span class="cm">// Returns: { valid: true, issuer: "did:web:cellardoor.network", ... }</span></code></pre>
+      </div>
+
+      <h2>Passage: EXIT + ENTRY</h2>
+      <div class="agent-code">
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        <pre><code><span class="kw">import</span> { quickEntry } <span class="kw">from</span> <span class="str">"cellar-door-entry"</span>;
+
+<span class="cm">// Verify departure + create arrival marker</span>
+<span class="kw">const</span> { arrival } = <span class="kw">await</span> <span class="fn">quickEntry</span>(exitMarkerJson, destIdentity);
+<span class="cm">// Complete passage: EXIT → ENTRY. Verifiable end-to-end.</span></code></pre>
+      </div>
+
+      <h2>Visual Door Hash</h2>
+      <div class="agent-code">
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+        <pre><code><span class="kw">import</span> { renderDoorASCII } <span class="kw">from</span> <span class="str">"cellar-door-exit"</span>;
+console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(marker.id));
+<span class="cm">//     ╭────┬────╮</span>
+<span class="cm">//   ╱░··░·┃·░··░╲</span>
+<span class="cm">// │░·░░█░░·┃░▓░░·░░│</span>
+<span class="cm">// ╰═════════┴═════════╯</span>
+<span class="cm">// Every marker. Unique fingerprint. Verify at a glance.</span></code></pre>
       </div>
 
       <h2>Operational Notes</h2>
