@@ -77,6 +77,8 @@ Several standards address agent interoperability, each covering a distinct layer
 - **Open Agentic Schema Framework (OASF)** (Cisco, 2025): Standardized schemas for agent capabilities and discovery. Focused on capability advertisement, not lifecycle transitions.
 - **AP2 (Agent Payments Protocol)** (Google et al., 2026): Agent-initiated payments using verifiable credentials. Establishes that agents need portable proof of authority—a conceptual building block for portable departure credentials.
 
+The Foundation for Intelligent Physical Agents (FIPA), now absorbed into IEEE, established early standards for agent communication (FIPA ACL) and agent management, including agent lifecycle models covering creation, suspension, and termination (FIPA, 2002a; 2002b). However, FIPA's lifecycle model treats departure as platform-internal termination rather than a portable, verifiable event. The Passage Protocol extends FIPA's lifecycle model to cross-platform departure and arrival with cryptographic verification.
+
 None of these address what happens when an agent departs or arrives at a platform. The Agentic AI Foundation (AAIF), formed in December 2025, is formalizing agent protocol standardization, but current workstreams focus on communication and tool access rather than identity portability.
 
 ### 2.3 Enterprise Agent Identity
@@ -87,17 +89,23 @@ Enterprise solutions for agent identity operate within organizational boundaries
 
 Gailums (2025) articulated the case for applying self-sovereign identity (SSI) principles to AI agents, proposing "passports for agents" built on DIDs and verifiable credentials. This aligns with the Decentralized Identity Foundation's broader infrastructure but does not address departure semantics or agent-initiated exit.
 
-### 2.5 DAO Exit Mechanisms
+### 2.5 AI Governance and Risk Management Standards
+
+Several standards address AI governance at the organizational and system level. ISO/IEC 42001 (ISO, 2023) defines requirements for AI management systems, including operational controls for AI lifecycle governance. ISO/IEC 23894 (ISO, 2023) provides guidance on AI risk management. The NIST AI Risk Management Framework (AI 100-1) (NIST, 2023) establishes functions—Govern, Map, Measure, Manage—for managing AI risks, while the NIST AI RMF Generative AI Profile (AI 600-1) (NIST, 2024b) extends these to generative AI systems. IEEE P2247 addresses ethics in autonomous and intelligent systems, and IEEE P3119 targets AI procurement standards.
+
+These frameworks establish organizational and governance requirements but do not define technical mechanisms for agent lifecycle transitions. The Passage Protocol provides implementable infrastructure—verifiable departure and arrival records—that supports compliance with these governance frameworks. EXIT markers serve as auditable artifacts within an ISO 42001 management system, and the protocol's trust mechanisms align with the traceability and accountability requirements of AI 100-1 and ISO/IEC 23894.
+
+### 2.6 DAO Exit Mechanisms
 
 Decentralized Autonomous Organizations have developed mature on-chain exit mechanisms. Moloch DAO's *ragequit* (Ameen et al., 2019) allows members to exit during a grace period, withdrawing their proportional treasury share. This differs from the Passage Protocol in that ragequit is an economic mechanism (withdraw capital) rather than an identity mechanism (carry reputation), operates within a single on-chain context, and provides no portable record verifiable by other DAOs. Buterin (2021) extended this with "exit to community," proposing that exit should include governance participation. Ostrom's (1990) work on governing the commons provides theoretical grounding: successful commons governance requires clearly defined boundaries and meaningful exit.
 
-### 2.6 Theoretical Foundations
+### 2.7 Theoretical Foundations
 
 Hirschman's *Exit, Voice, and Loyalty* (1970) provides our theoretical foundation. Exit and voice are complementary governance mechanisms—organizations that make exit costly gain captive members, not loyal ones.
 
 Akerlof (1970) identified the "market for lemons" problem directly relevant here: without verifiable departure records, receiving platforms cannot distinguish good-standing agents from those evading negative history. Self-reports are cheap talk—costless to produce and therefore uninformative (Crawford & Sobel, 1982). The Passage Protocol addresses the structural conditions for credible signaling; Section 5 presents mechanisms for moving toward separating equilibria.
 
-### 2.7 Comparison with Adjacent Systems
+### 2.8 Comparison with Adjacent Systems
 
 **Table 1: Feature comparison of the Passage Protocol with adjacent systems**
 
@@ -364,7 +372,7 @@ An attacker creates a fake origin platform—a `did:web` pointing to a domain th
 
 ### 6.3 Cryptographic Considerations
 
-EXIT uses Ed25519 (Bernstein et al., 2012), providing 128-bit security with compact 32-byte public keys and 64-byte signatures. Proof canonicalization uses deterministic JSON serialization with recursively sorted keys. The specification acknowledges a post-quantum migration path: Ed25519 is not quantum-resistant, and production deployments should plan migration to NIST post-quantum standards (ML-DSA, SLH-DSA) on a 2030–2035 timeline (NIST, 2024).
+EXIT uses Ed25519 (Bernstein et al., 2012), providing 128-bit security with compact 32-byte public keys and 64-byte signatures. Proof canonicalization uses deterministic JSON serialization with recursively sorted keys. The specification acknowledges a post-quantum migration path: Ed25519 is not quantum-resistant, and production deployments should plan migration to NIST post-quantum standards (ML-DSA, SLH-DSA) on a 2030–2035 timeline (NIST, 2024a).
 
 ### 6.4 TSA Security Caveats
 
@@ -384,7 +392,7 @@ AI agents currently have no settled legal capacity in any jurisdiction. EXIT mar
 
 ### 7.2 NIST Standards Initiative
 
-NIST's AI Agent Standards Initiative (February 2026) identified three pillars: industry-led agent standards, open-source protocol development, and agent security and identity research. The Cellar Door project submitted an RFI response recommending standardization of agent mobility primitives, unblockable exit as a safety property, separation of departure rights from admission privileges, non-custodial architectures, and anti-weaponization provisions. The initiative emphasizes agent authentication but does not yet address departure or cross-platform identity continuity.
+NIST's AI Agent Standards Initiative (February 2026) identified three pillars: industry-led agent standards, open-source protocol development, and agent security and identity research. The Cellar Door project submitted an RFI response recommending standardization of agent mobility primitives, unblockable exit as a safety property, separation of departure rights from admission privileges, non-custodial architectures, and anti-weaponization provisions. The initiative emphasizes agent authentication but does not yet address departure or cross-platform identity continuity. The Passage Protocol complements the NIST AI Risk Management Framework (AI 100-1) and its Generative AI Profile (AI 600-1) by providing verifiable lifecycle artifacts that support the framework's Govern and Manage functions.
 
 ### 7.3 Data Protection
 
@@ -576,7 +584,7 @@ EXIT provides the departure record: a self-contained marker that functions witho
 
 The protocol's trust mechanisms—commit-reveal, confidence scoring, tenure-weighted verification, RFC 3161 timestamp anchoring, checkpoint patterns—move beyond pure self-attestation toward graded trust evaluation. Its multi-lens validation by 15 professional personas confirmed the architectural soundness while identifying limitations that remain open: institutional enforcement, self-attestation information content, and privacy governance.
 
-The reference implementation—five npm packages, 356 passing tests, framework integrations for LangChain, Vercel AI SDK, and MCP—demonstrates that the protocol is implementable with sub-millisecond ceremony timing and compact markers. The alignment with W3C DIDs, Verifiable Credentials, and the emerging NIST AI Agent Standards Initiative positions the Passage Protocol within the broader agent identity infrastructure.
+The reference implementation—five npm packages, 356 passing tests, framework integrations for LangChain, Vercel AI SDK, and MCP—demonstrates that the protocol is implementable with sub-millisecond ceremony timing and compact markers. The alignment with W3C DIDs, Verifiable Credentials, FIPA agent lifecycle models, ISO/IEC 42001 AI management systems, NIST AI 100-1 risk management, and the emerging NIST AI Agent Standards Initiative positions the Passage Protocol within an established standards ecosystem rather than as an isolated effort.
 
 The limitations are real: self-attested records approximate cheap talk, agents lack legal personhood, GDPR compliance is untested, and the protocol requires critical mass. These are open problems, not fatal flaws. No existing system addresses agent-initiated exit, verifiable arrival, hostile-origin tolerance, cross-platform portability, trusted timestamping, and graded trust verification in combination.
 
@@ -598,17 +606,33 @@ Buterin, V. (2021). Moving beyond coin voting governance. https://vitalik.eth.li
 
 Crawford, V. P., & Sobel, J. (1982). Strategic information transmission. *Econometrica*, 50(6), 1431–1451. https://doi.org/10.2307/1913390
 
+FIPA. (2002a). FIPA Agent Communication Language specifications. Foundation for Intelligent Physical Agents. http://www.fipa.org/specs/fipa00061/
+
+FIPA. (2002b). FIPA Agent Management specification. Foundation for Intelligent Physical Agents. http://www.fipa.org/specs/fipa00023/
+
 Fett, D., Yasuda, K., & Campbell, B. (2023). SD-JWT: Selective disclosure for JWTs. IETF Internet-Draft. https://datatracker.ietf.org/doc/draft-ietf-oauth-selective-disclosure-jwt/
 
 Gailums, R. (2025). The AI agent identity crisis: Why every AI agent needs a passport. LinkedIn Pulse.
 
 Hirschman, A. O. (1970). *Exit, voice, and loyalty: Responses to decline in firms, organizations, and states.* Harvard University Press.
 
+IEEE. (2020). IEEE P2247: Standard for the classification of adaptive instructional systems. IEEE Standards Association.
+
+IEEE. (2022). IEEE P3119: Standard for the procurement of artificial intelligence. IEEE Standards Association.
+
+ISO. (2023). ISO/IEC 42001:2023 — Artificial intelligence — Management system. International Organization for Standardization.
+
+ISO. (2023). ISO/IEC 23894:2023 — Artificial intelligence — Guidance on risk management. International Organization for Standardization.
+
 Looker, T., Kalos, V., Whitehead, A., & Lodder, M. (2023). The BBS signature scheme. IETF Internet-Draft. https://datatracker.ietf.org/doc/draft-irtf-cfrg-bbs-signatures/
 
 Myerson, R. B., & Satterthwaite, M. A. (1983). Efficient mechanisms for bilateral trading. *Journal of Economic Theory*, 29(2), 265–281. https://doi.org/10.1016/0022-0531(83)90048-0
 
-NIST. (2024). Post-quantum cryptography standardization. https://csrc.nist.gov/projects/post-quantum-cryptography
+NIST. (2023). Artificial intelligence risk management framework (AI 100-1). National Institute of Standards and Technology. https://doi.org/10.6028/NIST.AI.100-1
+
+NIST. (2024a). Post-quantum cryptography standardization. https://csrc.nist.gov/projects/post-quantum-cryptography
+
+NIST. (2024b). Artificial intelligence risk management framework: Generative artificial intelligence profile (AI 600-1). National Institute of Standards and Technology. https://doi.org/10.6028/NIST.AI.600-1
 
 NIST. (2026). NIST launches AI Agent Standards Initiative. https://www.nist.gov/news-events/news/2026/02/nist-launches-ai-agent-standards-initiative
 

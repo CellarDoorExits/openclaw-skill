@@ -166,11 +166,13 @@ The protocol integrates with three major AI agent frameworks:
 
 ### 7.1 Agent Portability
 
-NIST's AI agent standards initiative will need to address how agents move between platforms, providers, and organizational boundaries. EXIT provides the cryptographic substrate for verifiable agent mobility: a departing agent creates a signed record; a receiving platform verifies it. Without standardized portability mechanisms, agents are locked into their originating platforms, reducing competition and innovation.
+NIST's AI agent standards initiative will need to address how agents move between platforms, providers, and organizational boundaries. EXIT provides the cryptographic substrate for verifiable agent mobility: a departing agent creates a signed record; a receiving platform verifies it. Without standardized portability mechanisms, agents are locked into their originating platforms, reducing competition and innovation. The NIST AI Risk Management Framework (AI 100-1) identifies governance and accountability as core functions; EXIT provides the verifiable audit trail that makes agent lifecycle governance operationally feasible across organizational boundaries.
 
 ### 7.2 Interoperability
 
-EXIT markers are JSON-LD documents using W3C DID identifiers. They can be wrapped in W3C Verifiable Credentials and transmitted via any transport. The protocol is DID-method-agnostic (`did:key`, `did:keri`, `did:web`, `did:peer`) and framework-agnostic (demonstrated integrations with LangChain, Vercel AI SDK, and MCP). This positions EXIT as infrastructure that works across the heterogeneous AI agent ecosystem rather than within a single framework.
+EXIT markers are JSON-LD documents using W3C DID identifiers (W3C, 2022). They can be wrapped in W3C Verifiable Credentials (W3C, 2024) and transmitted via any transport. The protocol is DID-method-agnostic (`did:key`, `did:keri`, `did:web`, `did:peer`) and framework-agnostic (demonstrated integrations with LangChain, Vercel AI SDK, and MCP). This positions EXIT as infrastructure that works across the heterogeneous AI agent ecosystem rather than within a single framework.
+
+EXIT is designed to complement, not compete with, existing standards efforts. The FIPA Agent Communication Language and Agent Management specifications established foundational patterns for agent lifecycle and inter-agent communication; EXIT extends this lineage to cover departure and arrival—lifecycle events FIPA did not address. IEEE P2247 (Ethics in Autonomous and Intelligent Systems) and IEEE P3119 (Standard for the Procurement of Artificial Intelligence) address ethical governance and procurement of AI systems; EXIT provides the verifiable mobility layer these standards can reference when agents move between governed environments. ISO/IEC 42001 (AI Management Systems) defines organizational controls for AI governance—EXIT markers serve as auditable artifacts within an ISO 42001-compliant management system, providing evidence of agent lifecycle events. ISO/IEC 23894 (AI Risk Management) and the NIST AI Risk Management Framework (AI 100-1) both emphasize traceability and accountability; EXIT's cryptographically signed departure records directly support these requirements. The NIST AI RMF Generative AI Profile (AI 600-1) extends risk management to generative AI systems, where agent mobility across platforms creates novel governance challenges that EXIT addresses.
 
 ### 7.3 Trust and Reputation
 
@@ -178,7 +180,7 @@ Multi-agent systems require trust signals. EXIT's graduated trust model — from
 
 ### 7.4 Safety
 
-The protocol's safety properties are relevant to NIST's AI safety mandate:
+The protocol's safety properties align with the risk management approaches outlined in NIST AI 100-1, ISO/IEC 23894, and IEEE P2247. Specifically:
 
 - **Unblockable exit** prevents agent entrapment by hostile platforms
 - **Emergency path** ensures departure is possible even when origins are unresponsive
@@ -228,6 +230,13 @@ EXIT aligns with or references the following standards:
 | RFC 2119 | Requirement level keywords throughout specification |
 | RFC 3161 | Trusted timestamping integration |
 | KERI | Key event logs and pre-rotation commitments |
+| IEEE P2247 | EXIT complements ethical governance of autonomous/intelligent systems |
+| IEEE P3119 | EXIT provides verifiable lifecycle records for AI procurement compliance |
+| FIPA ACL / Agent Management | EXIT extends FIPA's agent lifecycle model to departure and arrival ceremonies |
+| ISO/IEC 42001 | EXIT markers serve as auditable controls within AI management systems |
+| ISO/IEC 23894 | EXIT supports traceability requirements in AI risk management |
+| NIST AI 100-1 (AI RMF) | EXIT provides governance and accountability artifacts aligned with AI RMF functions |
+| NIST AI 600-1 (GenAI Profile) | EXIT addresses agent mobility risks in generative AI deployments |
 | EU Digital Markets Act | EXIT supports Art. 6(9) data portability requirements |
 | GDPR | Privacy primitives (encryption, redaction, erasure) support compliance |
 

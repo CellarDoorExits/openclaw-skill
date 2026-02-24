@@ -273,6 +273,18 @@ export {
   type PlatformCompromiseDeclaration,
 } from "./key-compromise.js";
 
+// Dispute Resolution
+export {
+  createDispute,
+  resolveDispute,
+  verifyDisputeResolution,
+  isDisputed,
+  getDisputeStatus,
+  type DisputeRecord,
+  type DisputeResolution,
+  type DisputeState,
+} from "./dispute.js";
+
 // Visual — Door Hash visualization
 export {
   renderDoorASCII,
