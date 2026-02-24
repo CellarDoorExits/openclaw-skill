@@ -7,16 +7,20 @@ const HASH_C = "ffffffffffffffffffffffffffffffff";
 const HASH_D = "0xDEADBEEFCAFE1234567890abcdef0123";
 
 describe("visual — shortHash", () => {
-  it("formats with door emoji and dashes", () => {
-    expect(shortHash(HASH_A)).toBe("𓉸 a1b2-c3d4-e5f6");
+  it("formats EXIT with ➜𓉸 prefix", () => {
+    expect(shortHash(HASH_A)).toBe("➜𓉸 a1b2-c3d4-e5f6");
+  });
+
+  it("formats ENTRY with 𓉸➜ prefix", () => {
+    expect(shortHash(HASH_A, true)).toBe("𓉸➜ a1b2-c3d4-e5f6");
   });
 
   it("strips 0x prefix", () => {
-    expect(shortHash(HASH_D)).toBe("𓉸 dead-beef-cafe");
+    expect(shortHash(HASH_D)).toBe("➜𓉸 dead-beef-cafe");
   });
 
   it("pads short hashes", () => {
-    expect(shortHash("ab")).toBe("𓉸 ab00-0000-0000");
+    expect(shortHash("ab")).toBe("➜𓉸 ab00-0000-0000");
   });
 });
 
@@ -47,16 +51,16 @@ describe("visual — hashToColors", () => {
 });
 
 describe("visual — renderDoorASCII", () => {
-  it("renders ~15 lines (13-17 acceptable)", () => {
+  it("renders ~10 lines (9-11 acceptable)", () => {
     const door = renderDoorASCII(HASH_A);
     const lines = door.split("\n");
-    expect(lines.length).toBeGreaterThanOrEqual(13);
-    expect(lines.length).toBeLessThanOrEqual(17);
+    expect(lines.length).toBeGreaterThanOrEqual(9);
+    expect(lines.length).toBeLessThanOrEqual(11);
   });
 
-  it("default is exactly 15 lines", () => {
+  it("default is exactly 10 lines", () => {
     const door = renderDoorASCII(HASH_A);
-    expect(door.split("\n")).toHaveLength(15);
+    expect(door.split("\n")).toHaveLength(10);
   });
 
   it("contains no English words — purely visual encoding", () => {
@@ -66,11 +70,11 @@ describe("visual — renderDoorASCII", () => {
     expect(door).not.toMatch(/always/i);
   });
 
-  it("is compact — max ~30 chars wide", () => {
+  it("is compact — max ~22 chars wide", () => {
     const door = renderDoorASCII(HASH_A);
     const lines = door.split("\n");
     for (const line of lines) {
-      expect([...line].length).toBeLessThanOrEqual(30);
+      expect([...line].length).toBeLessThanOrEqual(22);
     }
   });
 
@@ -86,17 +90,19 @@ describe("visual — renderDoorASCII", () => {
     expect(a).not.toBe(b);
   });
 
-  it("contains mixed Unicode character sets (not just braille)", () => {
+  it("contains mixed Unicode character sets (box drawing + block elements)", () => {
     const door = renderDoorASCII(HASH_A);
-    // Should contain braille
-    expect(door).toMatch(/[\u2800-\u28FF]/);
-    // Should contain box drawing or block elements
-    expect(door).toMatch(/[\u2500-\u257F\u2580-\u259F\u2550-\u256C]/);
+    // Should contain box drawing characters
+    expect(door).toMatch(/[\u2500-\u257F]/);
+    // Should contain block elements (░▒▓█ etc.)
+    expect(door).toMatch(/[\u2580-\u259F]/);
+    // Should NOT contain braille (Discord-unsafe)
+    expect(door).not.toMatch(/[\u2800-\u28FF]/);
   });
 
   it("backward compatible — no opts works", () => {
     const door = renderDoorASCII(HASH_A);
-    expect(door.split("\n")).toHaveLength(15);
+    expect(door.split("\n")).toHaveLength(10);
     expect(door.length).toBeGreaterThan(50);
   });
 
@@ -109,8 +115,8 @@ describe("visual — renderDoorASCII", () => {
 
   it("pending status introduces gaps/transparency", () => {
     const pending = renderDoorASCII(HASH_A, { status: 'pending' });
-    // Pending doors should have dots or blanks where complete ones have fills
-    expect(pending).toMatch(/[·\u2800]/);
+    // Pending doors should have dots or spaces where complete ones have fills
+    expect(pending).toMatch(/·/);
   });
 
   it("platform_initiated has crack characters", () => {
@@ -130,11 +136,47 @@ describe("visual — renderDoorASCII", () => {
     expect(a).not.toBe(b);
   });
 
-  it("all exitType/status combos render 15 lines", () => {
+  it("all exitType/status combos render 10 lines", () => {
     for (const exitType of ['voluntary', 'platform_initiated', 'emergency'] as const) {
       for (const status of ['complete', 'pending', 'disputed'] as const) {
         const door = renderDoorASCII(HASH_A, { exitType, status });
-        expect(door.split("\n")).toHaveLength(15);
+        expect(door.split("\n")).toHaveLength(10);
+      }
+    }
+  });
+
+  it("all lines have equal JS string length (width consistency)", () => {
+    const hashes = [HASH_A, HASH_B, HASH_C, HASH_D];
+    const combos: Array<{ exitType: 'voluntary' | 'platform_initiated' | 'emergency'; status: 'complete' | 'pending' | 'disputed' }> = [];
+    for (const exitType of ['voluntary', 'platform_initiated', 'emergency'] as const) {
+      for (const status of ['complete', 'pending', 'disputed'] as const) {
+        combos.push({ exitType, status });
+      }
+    }
+    for (const hash of hashes) {
+      for (const combo of combos) {
+        const door = renderDoorASCII(hash, combo);
+        const lines = door.split("\n");
+        const lengths = lines.map(l => [...l].length);
+        // All lines should have the same width
+        const maxWidth = Math.max(...lengths);
+        for (let i = 0; i < lines.length; i++) {
+          expect(lengths[i]).toBe(maxWidth);
+        }
+      }
+    }
+  });
+
+  it("uses only width-safe Unicode characters in door grid", () => {
+    const door = renderDoorASCII(HASH_A);
+    // Every character should be in a safe range:
+    // ASCII (U+0020-U+007E), Box Drawing (U+2500-U+257F),
+    // Block Elements (U+2580-U+259F), Braille (U+2800-U+28FF),
+    // Middle dot U+00B7, entry markers › ‹
+    const safePattern = /^[\u0020-\u007E\u00B7\u2500-\u257F\u2580-\u259F\u203A\u2039]*$/;
+    for (const line of door.split("\n")) {
+      for (const ch of [...line]) {
+        expect(ch).toMatch(safePattern);
       }
     }
   });

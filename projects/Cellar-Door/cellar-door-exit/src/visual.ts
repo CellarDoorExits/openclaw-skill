@@ -25,13 +25,7 @@ function hexAt(hash: string, index: number): number {
   return parseInt(h[index % h.length], 16) || 0;
 }
 
-// ─── Braille Helpers ────────────────────────────────────────────────
-
-const BRAILLE_BASE = 0x2800;
-
-function byteToBraille(b: number): string {
-  return String.fromCodePoint(BRAILLE_BASE + (b & 0xff));
-}
+// ─── Hash Byte Helper ───────────────────────────────────────────────
 
 function hashByte(h: string, byteIndex: number): number {
   const i = (byteIndex * 2) % h.length;
@@ -40,12 +34,19 @@ function hashByte(h: string, byteIndex: number): number {
   return (hi << 4) | lo;
 }
 
-const BR_BLANK = '\u2800';
-
 // ─── Character Classes (Layer 3: hash encoding within visual roles) ─
+//
+// WIDTH-SAFE UNICODE RANGES — Discord "safe mode" (no braille):
+//   • ASCII (U+0020-U+007E): all safe
+//   • Box Drawing (U+2500-U+257F): │┃║─━═╭╮╰╯┌┐└┘├┤┬┴┼╔╗╚╝╠╣╦╩╬ etc.
+//   • Block Elements (U+2580-U+259F): ░▒▓█ and basic quadrants
+//   • Select Latin symbols: · (U+00B7)
+//
+// AVOID: Braille (U+2800-U+28FF) — inconsistent width in Discord code blocks
+// AVOID: East Asian Ambiguous chars, geometric shapes, math operators
 
 const CC = {
-  // Frame characters — all read as "vertical line" but encode different bits
+  // Frame characters — box drawing vertical lines
   frame_v:   ['│', '┃', '║', '╎', '╏', '┆', '┇', '┊'],
   frame_h:   ['─', '━', '═', '╌', '╍', '┄', '┅', '┈'],
   // Corners — grouped by style family (index 0=double, 1=heavy, 2=rounded, 3=light)
@@ -53,27 +54,28 @@ const CC = {
   corner_tr: ['╗', '┓', '╮', '┐'],
   corner_bl: ['╚', '┗', '╰', '└'],
   corner_br: ['╝', '┛', '╯', '┘'],
-  // Arch fill — decorative mass for the arch area
-  arch_fill: ['▓', '▒', '░', '█', '▚', '▞', '▛', '▜'],
-  // Panel fills by weight
-  panel_light:  ['░', '·', '∙', '◌', '⠂', '⠄', '⠈', '⠐'],
-  panel_medium: ['▒', '▚', '▞', '◇', '◈', '⠊', '⠑', '⠔'],
-  panel_heavy:  ['▓', '█', '▛', '▜', '▙', '▟', '⠛', '⠿'],
-  // Center seam — all read as "vertical divider"
-  seam:      ['┆', '┊', '╎', '┋', '│', '║', '¦', '⁞'],
+  // Panel fills — Discord-safe only: ░▒▓█· (no braille, no exotic quadrants)
+  panel_light:  ['░', '·', '·', '░', '░', '·', '░', '·'],
+  panel_medium: ['▒', '░', '▓', '▒', '░', '▒', '▓', '░'],
+  panel_heavy:  ['▓', '█', '█', '▓', '▓', '█', '▓', '█'],
   // Hinges — left and right structural markers
   hinge_l:   ['╟', '╠', '├', '╞', '┝', '┠', '┢', '┞'],
   hinge_r:   ['╢', '╣', '┤', '╡', '┥', '┨', '┪', '┦'],
-  // Handles
-  handle:    ['◉', '◎', '⊚', '⊛', '⊙', '◍', '●', '○'],
-  // Threshold
-  threshold: ['═', '━', '─', '▀', '▔', '▁', '▂', '⏤'],
+  // Handles — symmetric pairs, Discord-safe (█▓ contrast, no ▖▗▘▝▐▌)
+  handle_l:  ['█', '▓', '█', '▓', '█', '▓', '█', '▓'],
+  handle_r:  ['▓', '█', '▓', '█', '▓', '█', '▓', '█'],
+  // Arch diagonal characters — hash-varied
+  arch_diag_l: ['╱', '/', '╱', '/', '╱', '/', '╱', '/'],
+  arch_diag_r: ['╲', '\\', '╲', '\\', '╲', '\\', '╲', '\\'],
+  // Broken seam characters for emergency exits
+  seam_broken: ['╏', '┆', '┊', '╎', '│', '┇', '┆', '╏'],
+  // Threshold — box drawing
+  threshold: ['═', '━', '─', '━', '═', '─', '━', '═'],
   // Seam junctions
-  seam_top:  ['╦', '┳', '┬', '╤'],
   seam_btm:  ['╧', '┻', '┴', '╨'],
-  // Crack/damage characters (for emergency/disputed)
-  crack:     ['╱', '╲', '╳', '⁄', '∕', '≀', '⌇', '⌁'],
-  broken:    ['⸗', '⁞', '⁝', '⁖', '⁘', '⁙', '┄', '┆'],
+  // Crack/damage characters — box drawing only
+  crack:     ['╱', '╲', '╳', '╌', '╍', '┄', '┅', '┈'],
+  broken:    ['┄', '┆', '┊', '╌', '╍', '┅', '┈', '┇'],
 };
 
 // ─── Style Profiles (Layer 2: status/exitType signaling) ────────────
@@ -113,8 +115,8 @@ function getStyleProfile(exitType: string, status: string): StyleProfile {
       base.familyIdx = 1;    // heavy but broken
       base.panelClass = 'panel_medium';
       base.frameWeight = 1;
-      base.damageRate = 4;   // ~1 in 4 panel cells cracked
-      base.gapRate = 3;      // ~1 in 3 damaged cells become gaps
+      base.damageRate = 2;   // aggressive cracking (handled specially in renderer)
+      base.gapRate = 4;
       break;
   }
 
@@ -135,12 +137,15 @@ function getStyleProfile(exitType: string, status: string): StyleProfile {
 // ─── ASCII Door Renderer ────────────────────────────────────────────
 
 /**
- * Render a 15-line ASCII-art door using three-layer hierarchy:
+ * Render a 10-line ASCII-art door — Discord-safe (no braille).
+ *
+ * Three-layer hierarchy:
  *   Layer 1: Visual structure (arch, frame, panels, seam, hinges, handle)
  *   Layer 2: Status signaling (exitType/status select overall style)
  *   Layer 3: Hash encoding (within each character class, hash selects variant)
  *
- * Left and right panels share structural symmetry but differ in fill variants.
+ * Structure uses box drawing (U+2500-257F) + block shading (░▒▓█·).
+ * Center seam ┃ runs through ALL rows including arch top.
  */
 export function renderDoorASCII(hash: string, opts?: DoorOptions): string {
   const h = normalizeHash(hash);
@@ -149,46 +154,57 @@ export function renderDoorASCII(hash: string, opts?: DoorOptions): string {
   const origin = opts?.origin;
   const isEntry = opts?.isEntry ?? false;
 
-  // Origin shifts hash interpretation for style variety
   const originShift = origin
     ? [...origin].reduce((a, c) => a + c.charCodeAt(0), 0) % 4
     : 0;
 
   const profile = getStyleProfile(exitType, status);
-  const fi = (profile.familyIdx + originShift) % 4; // corner family index
+  const fi = (profile.familyIdx + originShift) % 4;
 
   let byteIdx = 0;
   function nextByte(): number { return hashByte(h, byteIdx++); }
-
-  // Pick variant from a character class using a hash byte
   function pick(cls: string[], b: number): string { return cls[b % cls.length]; }
 
-  // Structural characters (determined by style family + hash for minor variation)
-  const cornerTL = CC.corner_tl[fi];
-  const cornerTR = CC.corner_tr[fi];
-  const cornerBL = CC.corner_bl[fi];
-  const cornerBR = CC.corner_br[fi];
+  // Fill character sets — Discord-safe only (░▒▓█·)
+  const fillCls = CC[profile.panelClass];
+  const rightFillCls = profile.asymmetric
+    ? (profile.panelClass === 'panel_light' ? CC.panel_heavy : CC.panel_light)
+    : fillCls;
+
+  const emergencyCrackCls = [...CC.crack, ...CC.broken];
+
+  // Structural characters
   const frameV   = pick(CC.frame_v, profile.frameWeight * 2 + (hexAt(h, 0) % 2));
-  const frameH   = pick(CC.frame_h, profile.frameWeight * 2 + (hexAt(h, 1) % 2));
-  const seamCh   = pick(CC.seam, hexAt(h, 2));
-  const seamTop  = CC.seam_top[fi];
+  const seamCh   = '┃';
+  // For emergency exits, the seam is cracked/broken per row
+  const archDiagL = pick(CC.arch_diag_l, hexAt(h, 7));
+  const archDiagR = pick(CC.arch_diag_r, hexAt(h, 7));
+  function seamAt(row: number): string {
+    if (exitType === 'emergency') {
+      const v = hashByte(h, row + 20);
+      return pick(CC.seam_broken, v);
+    }
+    return seamCh;
+  }
   const seamBtm  = CC.seam_btm[fi];
   const threshCh = pick(CC.threshold, hexAt(h, 3));
-  const handleL  = pick(CC.handle, hexAt(h, 4));
-  const handleR  = pick(CC.handle, hexAt(h, 5));
+  const handleL  = pick(CC.handle_l, hexAt(h, 4));
+  const handleR  = pick(CC.handle_r, hexAt(h, 5));
   const hingeL   = pick(CC.hinge_l, hexAt(h, 6));
   const hingeR   = pick(CC.hinge_r, hexAt(h, 6));
+  const cornerBL = CC.corner_bl[fi];
+  const cornerBR = CC.corner_br[fi];
 
-  // Panel fill classes: left and right use same class but different variant selection
-  const panelCls = CC[profile.panelClass];
-  // For disputed: right panel uses a DIFFERENT weight class (visible asymmetry)
-  const rightPanelCls = profile.asymmetric
-    ? (profile.panelClass === 'panel_light' ? CC.panel_heavy : CC.panel_light)
-    : panelCls;
+  // Fill function with damage/pending overlays
+  function fill(row: number, col: number, isRight: boolean): string {
+    const b = nextByte();
+    const cls = isRight ? rightFillCls : fillCls;
+    let ch = pick(cls, b);
 
-  // Damage overlay: replace fill char with crack/gap based on profile
-  function maybeDamage(ch: string, row: number, col: number): string {
-    if (profile.damageRate > 0) {
+    if (exitType === 'emergency') {
+      const v = (row * 7 + col * 11 + hexAt(h, (row + col) % h.length)) % 3;
+      if (v === 0) return pick(emergencyCrackCls, nextByte());
+    } else if (profile.damageRate > 0) {
       const v = (row * 7 + col * 11 + hexAt(h, (row + col) % h.length)) % (profile.damageRate + 8);
       if (v < 1) {
         if (profile.gapRate > 0 && (row + col) % profile.gapRate === 0) return ' ';
@@ -197,163 +213,108 @@ export function renderDoorASCII(hash: string, opts?: DoorOptions): string {
     }
     if (status === 'pending') {
       const v = (row * 7 + col * 13) % 10;
-      if (v < 2) return BR_BLANK;
+      if (v < 2) return ' ';
       if (v < 3) return '·';
     }
     return ch;
   }
 
-  // Generate a fill character for a panel cell
-  function panelFill(row: number, col: number, isRight: boolean): string {
-    const b = nextByte();
-    const cls = isRight ? rightPanelCls : panelCls;
-    // Occasionally use braille for texture variety (1 in 6)
-    if (b % 6 === 0) {
-      return maybeDamage(byteToBraille(nextByte()), row, col);
-    }
-    return maybeDamage(pick(cls, b), row, col);
-  }
+  // ─── Layout: 10 rows, body width 21 codepoints ───
+  // Arch rows (0-2): space-padded, NO vertical frame bars at edges.
+  //   Row 0:      ╭────┬────╮       crown (11 chars, 5 spaces each side)
+  //   Row 1:    ╱······┃······╲     arch mid (15 chars, 3 spaces each side)
+  //   Row 2:  ╱·········┃·········╲ arch wide (19 chars, 1 space each side)
+  // Rows 3-8: │█████████┃█████████│  body (21 chars)
+  // Row 9:    ╰═════════┴═════════╯  threshold (21 chars)
 
-  // Arch fill character (denser than panel)
-  function archFill(row: number, col: number): string {
-    const b = nextByte();
-    if (b % 8 === 0) return maybeDamage(byteToBraille(nextByte()), row, col);
-    return maybeDamage(pick(CC.arch_fill, b), row, col);
-  }
-
-  // ─── Layout Constants ───
-  // Total width = 24 chars
-  // Arch widens: row0=12, row1=18, row2=22 (full body width)
-  // Body: frame at col 1 and col 22, seam at col 11
-  // Inner panels: left = cols 2-10 (9 cells), right = cols 12-21 (10... let me recalc)
-  //
-  // W=24, body: space + frame + 9 fill + seam + 9 fill + frame + space
-  // col 0=space, 1=frame, 2-10=left panel(9), 11=seam, 12-20=right panel(9), 21=frame, 22-23=space... that's 24 but let me be explicit
-  //
-  // Actually: 24 chars = col 0..23
-  //   col 0: space
-  //   col 1: left frame
-  //   col 2..10: left panel (9 chars)
-  //   col 11: seam
-  //   col 12..20: right panel (9 chars)
-  //   col 21: right frame
-  //   col 22..23: space (2 trailing... let's trim to 22)
-  //
-  // Simpler: W=22. col 0=frame, col 1-9=left(9), col 10=seam, col 11-19=right(9), col 20=frame... that's 21.
-  // W=22: col 0=space, 1=frame, 2-10=left(9), 11=seam, 12-20=right(9), 21=frame. Done. Pad arch rows with spaces.
-
-  const W = 22; // total display width
-  const FL = 1;  // left frame column
-  const FR = 21; // right frame column (W-1)
-  const SEAM = 11;
-  const HINGE_ROWS = [5, 9, 13]; // rows with hinge markers
-  const HANDLE_ROW = 8;
-  const ROWS = 15;
-
-  // Arch widths (characters including corners) for rows 0-2
-  const archWidths = [12, 18, 22];
+  const W = 21;
+  const PW = 9;       // panel width (each side, excluding seam)
+  const HINGE_ROWS = [4, 7];
+  const HANDLE_ROW = 5;
 
   const lines: string[] = [];
 
-  for (let r = 0; r < ROWS; r++) {
-    let line = '';
+  // ─── Arch rows (0-2): space-padded, tapered width ───
+  // Row 0: crown with horizontal lines, innerHalf=4 (─ chars)
+  // Row 1: arch with hash fills, innerHalf=6
+  // Row 2: arch with hash fills, innerHalf=8
+  const archDefs: { leftEdge: string; rightEdge: string; innerHalf: number; isCrown: boolean }[] = [
+    { leftEdge: '╭', rightEdge: '╮', innerHalf: 4, isCrown: true },
+    { leftEdge: archDiagL, rightEdge: archDiagR, innerHalf: 6, isCrown: false },
+    { leftEdge: archDiagL, rightEdge: archDiagR, innerHalf: 8, isCrown: false },
+  ];
 
-    if (r <= 2) {
-      // ─── Arch rows: filled decorative mass, widening ───
-      const aw = archWidths[r]; // arch width in chars
-      const pad = Math.floor((W - aw) / 2);
-      const innerW = aw - 2; // minus two corners/edges
-      const half = Math.floor(innerW / 2);
+  for (let r = 0; r < archDefs.length; r++) {
+    const { leftEdge, rightEdge, innerHalf, isCrown } = archDefs[r];
+    // Content width = 1(left) + innerHalf + 1(seam) + innerHalf + 1(right)
+    const contentW = 2 + innerHalf * 2 + 1;
+    const pad = Math.floor((W - contentW) / 2);
 
-      line += ' '.repeat(pad);
+    let row = ' '.repeat(pad) + leftEdge;
 
-      if (r === 2) {
-        // Row 2 merges into body frame — use corner chars
-        line += cornerTL;
-        // Left half fill
-        for (let i = 0; i < half; i++) line += archFill(r, i);
-        // Seam junction at top
-        if (innerW % 2 === 1) {
-          line += seamTop;
-          for (let i = 0; i < half; i++) line += archFill(r, half + 1 + i);
-        } else {
-          for (let i = 0; i < half; i++) line += archFill(r, half + i);
-        }
-        line += cornerTR;
-      } else {
-        // Rows 0-1: arch curves with fill
-        line += pick(CC.corner_tl, fi + r); // slightly different curve per row
-        for (let i = 0; i < half; i++) line += archFill(r, i);
-        // Center keystone
-        if (innerW % 2 === 1) {
-          line += pick(CC.arch_fill, hexAt(h, 8 + r));
-          for (let i = 0; i < half; i++) line += archFill(r, half + 1 + i);
-        } else {
-          for (let i = 0; i < half; i++) line += archFill(r, half + i);
-        }
-        line += pick(CC.corner_tr, fi + r);
-      }
-
-      line += ' '.repeat(W - pad - aw);
-    } else if (r === ROWS - 1) {
-      // ─── Threshold row ───
-      line += ' ';
-      line += cornerBL;
-      for (let c = 0; c < 9; c++) line += threshCh;
-      line += seamBtm;
-      for (let c = 0; c < 9; c++) line += threshCh;
-      line += cornerBR;
+    if (isCrown) {
+      // Crown: horizontal line fills + ┬ seam
+      const hCh = pick(CC.frame_h, hexAt(h, 1));
+      row += hCh.repeat(innerHalf) + '┬' + hCh.repeat(innerHalf);
     } else {
-      // ─── Body rows (3-13) ───
-      line += ' '; // left margin
-
-      // Left frame or hinge
-      if (HINGE_ROWS.includes(r)) {
-        line += hingeL;
-      } else {
-        line += frameV;
+      // Arch: hash-encoded fills + ┃ seam
+      for (let c = 0; c < innerHalf; c++) {
+        row += fill(r, c, false);
       }
-
-      // Left panel (9 chars)
-      for (let c = 0; c < 9; c++) {
-        if (r === HANDLE_ROW && c === 7) {
-          line += handleL;
-        } else {
-          line += panelFill(r, c, false);
-        }
-      }
-
-      // Center seam
-      line += seamCh;
-
-      // Right panel (9 chars) — mirrors structure, different fill variants
-      for (let c = 0; c < 9; c++) {
-        if (r === HANDLE_ROW && c === 1) {
-          line += handleR;
-        } else {
-          line += panelFill(r, c, true);
-        }
-      }
-
-      // Right frame or hinge
-      if (HINGE_ROWS.includes(r)) {
-        line += hingeR;
-      } else {
-        line += frameV;
+      row += seamAt(r);
+      for (let c = 0; c < innerHalf; c++) {
+        row += fill(r, c, true);
       }
     }
 
-    // Entry markers on first two rows
-    if (isEntry && (r === 0 || r === 1)) {
-      const arr = [...line];
+    row += rightEdge;
+    // Pad right to full width
+    row += ' '.repeat(Math.max(0, W - row.length));
+
+    lines.push(row);
+  }
+
+  // ─── Body rows (3-8): full fill between frames ───
+  for (let r = 3; r <= 8; r++) {
+    let line = '';
+    const isHinge = HINGE_ROWS.includes(r);
+    line += isHinge ? hingeL : frameV;
+
+    for (let c = 0; c < PW; c++) {
+      if (r === HANDLE_ROW && c === PW - 2) {
+        line += handleL;
+      } else {
+        line += fill(r, c, false);
+      }
+    }
+
+    line += seamAt(r);
+
+    for (let c = 0; c < PW; c++) {
+      if (r === HANDLE_ROW && c === 1) {
+        line += handleR;
+      } else {
+        line += fill(r, c, true);
+      }
+    }
+
+    line += isHinge ? hingeR : frameV;
+    lines.push(line);
+  }
+
+  // ─── Threshold row ───
+  lines.push(cornerBL + threshCh.repeat(PW) + seamBtm + threshCh.repeat(PW) + cornerBR);
+
+  // Entry markers — replace body frame chars on rows 3-5 with entry arrows
+  if (isEntry) {
+    for (let i = 3; i < 6 && i < lines.length; i++) {
+      const arr = [...lines[i]];
       if (arr.length > 1) {
         arr[0] = '›';
         arr[arr.length - 1] = '‹';
       }
-      line = arr.join('');
+      lines[i] = arr.join('');
     }
-
-    lines.push(line);
   }
 
   return lines.join('\n');
@@ -461,8 +422,9 @@ export function renderDoorSVG(
 
 // ─── Short Hash ─────────────────────────────────────────────────────
 
-export function shortHash(hash: string): string {
+export function shortHash(hash: string, isEntry?: boolean): string {
   const h = normalizeHash(hash);
   const seg = h.slice(0, 12).padEnd(12, '0');
-  return `𓉸 ${seg.slice(0, 4)}-${seg.slice(4, 8)}-${seg.slice(8, 12)}`;
+  const prefix = isEntry ? '𓉸➜' : '➜𓉸';
+  return `${prefix} ${seg.slice(0, 4)}-${seg.slice(4, 8)}-${seg.slice(8, 12)}`;
 }
