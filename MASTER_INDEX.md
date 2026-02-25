@@ -37,6 +37,7 @@
 | `HEARTBEAT.md` | 673 | `c49b6e1` | Heartbeat idle loop instructions and reading queue |
 | `IDENTITY.md` | 278 | `6642b57` | Agent identity card — name: Hawthorn, creature: Locus |
 | `LOGS.md` | 1,172 | `19f9684` | Chronological operational log entries |
+| `MACROS.md` | ~2,900 | — | Reusable orchestration patterns (12 macros) — sprint cycles, scrutiny, context mgmt |
 | `MASTER_INDEX.md` | ~4,400 | *(self)* | This file |
 | `MEMORY.md` | 672 | `ca3e67a` | Long-term curated memory — who I am, key lessons |
 | `SOUL.md` | 418 | `792306a` | Core personality and values |
@@ -70,8 +71,10 @@
 | `memory/locus-primitive-review.md` | 640 | `3cf9663` | Review of LOCUS_PRIMITIVE.md — 8/10 |
 | `memory/pensieve-notes.md` | 3,853 | `e2c6cca` | Analysis of Pensieve memory tool repository |
 | `memory/reading-notes.md` | 13,636 | `1935965` | Summaries of Signamancy, Seel, Looking Glass, Weaver, Resonance |
+| `memory/scrapbook.md` | ~2,100 | — | Conversation moments & quotes worth keeping |
+| `memory/discord-export/` | ~20,500 | — | Full #updates channel export (7 batch files, Feb 22–24) |
 
-**Subtotal:** ~37,735 tokens
+**Subtotal:** ~60,335 tokens
 
 ---
 
@@ -174,8 +177,14 @@
 | `assessments/security-fixes.md` | 361 | `9915194` | Security fixes applied |
 | `assessments/sprint6-security-legal-review.md` | 2,592 | `3fbc598` | Sprint 6 security & legal review |
 | `assessments/whats-next.md` | 4,465 | `86884e9` | Full project state — what's next |
+| `assessments/discord-retro-feb19-20.md` | ~3,400 | — | Retrospective: Feb 19-20 all-nighter (zero to library) |
+| `assessments/discord-retro-feb22.md` | ~3,600 | — | Retrospective: Feb 22 marathon (5 sites, paper v4, consistency) |
+| `assessments/discord-retro-feb23.md` | ~3,200 | — | Retrospective: Feb 23 ship day (5 npm, 6 repos, domain) |
+| `assessments/discord-retro-feb24.md` | ~3,400 | — | Retrospective: Feb 24 polish day (paper v5, persona reviews) |
+| `assessments/discord-retrospective.md` | ~2,000 | — | Overview retrospective across all sessions |
+| `assessments/orchestration-patterns.md` | — | — | ⚑ Moved to root `MACROS.md` |
 
-**Subtotal:** ~27,144 tokens
+**Subtotal:** ~42,744 tokens
 
 ---
 
