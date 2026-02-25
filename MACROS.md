@@ -99,6 +99,13 @@ Run these as named macros. Refine as we go.
 
 **For slogans/brand:** Generate 30+ candidates, filter ruthlessly. Warren picks from surfaces, doesn't iterate from single options.
 
+**Warren's naming rules:**
+> Names matter quite a lot and should basically always be thematically tied appropriately to the wider HOLOS set of projects. If a name is coming close to one of them already, it's a good indication we need to think if those projects are actually aspects of the same thing, and possibly combine. Names are like meta-identities which traverse back up the project hierarchy to the global namespace.
+>
+> Reserve ALLCAPS for protocol primitives, which we will be very sparing on. Non-primitives can be slightly more throwaway, as single-projects/companies/brands. Primitives need to be essential distilled concepts from all other possibilities, and may have a few good options.
+>
+> We also quite like layered meanings, or words that sound the same (or are spelled similarly like Holos/hollows/hallows or sign/signum/signator) from different contexts that can all be the same thing if you squint a little. It's a very AI-era style. Bosonic / Photonic / Platonic.
+
 ---
 
 ## M-06: Escalating Scrutiny
