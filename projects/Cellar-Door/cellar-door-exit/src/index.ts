@@ -47,6 +47,12 @@ export {
   type KeyEvent,
   type CompromiseLink,
 
+  // Trust enhancer types (conduit-only)
+  type TrustEnhancers,
+  type TimestampAttachment,
+  type WitnessAttachment,
+  type IdentityClaimAttachment,
+
   // Ethics & guardrail types
   CoercionLabel,
   type RightOfReply,

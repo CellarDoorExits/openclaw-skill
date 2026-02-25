@@ -181,6 +181,94 @@ export interface ExitMarker {
   // ─── Checkpoint & Dead-Man Fields ────────────────────────────────────────
   /** Monotonically increasing checkpoint sequence number. When present, only the highest-sequence marker for a given subject+origin pair is authoritative. */
   sequenceNumber?: number;
+
+  // ─── Trust Enhancers (Conduit-Only) ──────────────────────────────────────
+  /**
+   * Optional trust-enhancing attachments. Cellar Door acts as a CONDUIT only:
+   * it validates well-formedness of these fields but has ZERO opinion on their
+   * truth, authenticity, or legal significance. Consuming applications decide
+   * what weight (if any) to give these fields.
+   *
+   * Including any of these increases the perceived legitimacy of a marker
+   * but a marker with none is still fully valid (near-zero-trust EXIT).
+   */
+  trustEnhancers?: TrustEnhancers;
+}
+
+// ─── Trust Enhancer Types (Conduit-Only) ───────────────────────────────────
+
+/**
+ * Optional trust-enhancing attachments for EXIT markers.
+ *
+ * These are opaque conduit fields — Cellar Door validates structure,
+ * not truth. No field here creates liability for the protocol.
+ */
+export interface TrustEnhancers {
+  /** RFC 3161 TSA timestamp receipts — third-party proof of time. */
+  timestamps?: TimestampAttachment[];
+  /** External witness countersignatures — third parties attesting "I saw this." */
+  witnesses?: WitnessAttachment[];
+  /** Identity claims — opaque assertions linking the subject to external identities. */
+  identityClaims?: IdentityClaimAttachment[];
+}
+
+/**
+ * An RFC 3161 timestamp attachment.
+ * The TSA is the authority, not Cellar Door. We just carry the receipt.
+ */
+export interface TimestampAttachment {
+  /** TSA endpoint that issued the timestamp. */
+  tsaUrl: string;
+  /** Hex-encoded SHA-256 hash that was timestamped. */
+  hash: string;
+  /** ISO 8601 timestamp extracted from TSR. */
+  timestamp: string;
+  /** Base64-encoded raw Timestamp Response (TSR). */
+  receipt: string;
+  /** Hex-encoded nonce (if any). */
+  nonce?: string;
+}
+
+/**
+ * A witness countersignature — a third party attesting they observed the exit.
+ *
+ * ⚠️ Cellar Door does NOT provide witness services. This field accepts
+ * signatures from EXTERNAL witnesses. Their attestation, their liability.
+ */
+export interface WitnessAttachment {
+  /** DID or key URI of the witness. */
+  witnessDid: string;
+  /** What the witness is attesting to (e.g., "observed departure ceremony"). */
+  attestation: string;
+  /** ISO 8601 timestamp of the witness signature. */
+  timestamp: string;
+  /** Base64-encoded signature over (attestation + marker.id + timestamp). */
+  signature: string;
+  /** Signature algorithm used by the witness. */
+  signatureType: string;
+}
+
+/**
+ * An identity claim attachment — opaque link to an external identity.
+ *
+ * ⚠️ Cellar Door does NOT verify, resolve, or store these claims.
+ * They are accepted as opaque blobs. Verification is the consuming
+ * application's responsibility. This avoids FCRA, GDPR, and credit-
+ * reporting liability.
+ */
+export interface IdentityClaimAttachment {
+  /** Type of identity system (e.g., "did:web", "did:ion", "x509", "oauth2", "opaque"). */
+  scheme: string;
+  /** The identity value (DID, certificate fingerprint, opaque token, etc.). */
+  value: string;
+  /** ISO 8601 timestamp of when the claim was made. */
+  issuedAt: string;
+  /** Optional expiry (ISO 8601). After this, the claim should be considered stale. */
+  expiresAt?: string;
+  /** Optional issuer DID or URI. */
+  issuer?: string;
+  /** Optional base64-encoded proof/signature from the issuer. */
+  proof?: string;
 }
 
 // ─── Module A: Lineage (Agent Continuity) ────────────────────────────────────

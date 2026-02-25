@@ -170,5 +170,86 @@ export function validateMarker(marker: unknown): ValidationResult {
     }
   }
 
+  // Validate trustEnhancers if present (conduit-only: well-formedness, not truth)
+  if (m.trustEnhancers !== undefined) {
+    if (typeof m.trustEnhancers !== "object" || m.trustEnhancers === null) {
+      errors.push("trustEnhancers must be an object");
+    } else {
+      const te = m.trustEnhancers as Record<string, unknown>;
+
+      // Timestamps
+      if (te.timestamps !== undefined) {
+        if (!Array.isArray(te.timestamps)) {
+          errors.push("trustEnhancers.timestamps must be an array");
+        } else {
+          for (let i = 0; i < te.timestamps.length; i++) {
+            const ts = te.timestamps[i] as Record<string, unknown>;
+            if (typeof ts.tsaUrl !== "string" || !ts.tsaUrl) {
+              errors.push(`trustEnhancers.timestamps[${i}].tsaUrl is required`);
+            }
+            if (typeof ts.hash !== "string" || !/^[0-9a-f]{64}$/i.test(ts.hash as string)) {
+              errors.push(`trustEnhancers.timestamps[${i}].hash must be a 64-char hex SHA-256`);
+            }
+            if (typeof ts.timestamp !== "string" || !isValidISO8601(ts.timestamp as string)) {
+              errors.push(`trustEnhancers.timestamps[${i}].timestamp must be ISO-8601`);
+            }
+            if (typeof ts.receipt !== "string" || !ts.receipt) {
+              errors.push(`trustEnhancers.timestamps[${i}].receipt is required`);
+            }
+          }
+        }
+      }
+
+      // Witnesses
+      if (te.witnesses !== undefined) {
+        if (!Array.isArray(te.witnesses)) {
+          errors.push("trustEnhancers.witnesses must be an array");
+        } else {
+          for (let i = 0; i < te.witnesses.length; i++) {
+            const w = te.witnesses[i] as Record<string, unknown>;
+            if (typeof w.witnessDid !== "string" || !w.witnessDid) {
+              errors.push(`trustEnhancers.witnesses[${i}].witnessDid is required`);
+            }
+            if (typeof w.attestation !== "string" || !w.attestation) {
+              errors.push(`trustEnhancers.witnesses[${i}].attestation is required`);
+            }
+            if (typeof w.timestamp !== "string" || !isValidISO8601(w.timestamp as string)) {
+              errors.push(`trustEnhancers.witnesses[${i}].timestamp must be ISO-8601`);
+            }
+            if (typeof w.signature !== "string" || !w.signature) {
+              errors.push(`trustEnhancers.witnesses[${i}].signature is required`);
+            }
+            if (typeof w.signatureType !== "string" || !w.signatureType) {
+              errors.push(`trustEnhancers.witnesses[${i}].signatureType is required`);
+            }
+          }
+        }
+      }
+
+      // Identity claims
+      if (te.identityClaims !== undefined) {
+        if (!Array.isArray(te.identityClaims)) {
+          errors.push("trustEnhancers.identityClaims must be an array");
+        } else {
+          for (let i = 0; i < te.identityClaims.length; i++) {
+            const ic = te.identityClaims[i] as Record<string, unknown>;
+            if (typeof ic.scheme !== "string" || !ic.scheme) {
+              errors.push(`trustEnhancers.identityClaims[${i}].scheme is required`);
+            }
+            if (typeof ic.value !== "string" || !ic.value) {
+              errors.push(`trustEnhancers.identityClaims[${i}].value is required`);
+            }
+            if (typeof ic.issuedAt !== "string" || !isValidISO8601(ic.issuedAt as string)) {
+              errors.push(`trustEnhancers.identityClaims[${i}].issuedAt must be ISO-8601`);
+            }
+            if (ic.expiresAt !== undefined && (typeof ic.expiresAt !== "string" || !isValidISO8601(ic.expiresAt as string))) {
+              errors.push(`trustEnhancers.identityClaims[${i}].expiresAt must be ISO-8601`);
+            }
+          }
+        }
+      }
+    }
+  }
+
   return { valid: errors.length === 0, errors };
 }
