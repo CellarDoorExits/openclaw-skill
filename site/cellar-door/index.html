@@ -10,6 +10,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════
+   MOBILE FIX NOTES — DO NOT REMOVE
+   ═══════════════════════════════════════════
+   1. All images (.idealist-hero img, .logo-section img) MUST have width:100%
+      to prevent horizontal overflow on mobile.
+   2. All <table> elements MUST be wrapped in <div class="table-scroll">
+      so they scroll internally instead of widening the page.
+   3. The .table-scroll class provides overflow-x:auto.
+   4. Tables have min-width:500px to ensure they scroll rather than squish.
+   ═══════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════
    CSS CUSTOM PROPERTIES & RESET
    ═══════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
