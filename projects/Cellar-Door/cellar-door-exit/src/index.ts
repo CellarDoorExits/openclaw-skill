@@ -102,6 +102,7 @@ export {
   addModule,
 } from "./marker.js";
 
+/** @deprecated Use `signDepartureMarker` from passage API instead */
 export { signMarker, verifyMarker, signMarkerWithSigner, verifyMarkerMultiAlg, type VerificationResult } from "./proof.js";
 
 export { validateMarker, type ValidationResult } from "./validate.js";
@@ -358,6 +359,8 @@ export {
   withSpanAsync,
   instrumentedSignMarker,
   instrumentedVerifyMarker,
+  instrumentedSignDepartureMarker,
+  instrumentedVerifyDeparture,
   startCeremonySpan,
   type Tracer,
   type Span,

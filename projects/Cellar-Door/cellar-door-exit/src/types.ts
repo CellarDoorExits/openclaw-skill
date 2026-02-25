@@ -70,7 +70,7 @@ export enum CeremonyState {
 
 /** Cryptographic signature authenticating the EXIT marker. */
 export interface DataIntegrityProof {
-  /** Signature algorithm, e.g. "Ed25519Signature2020", "EcdsaSecp256k1Signature2019" */
+  /** Signature algorithm, e.g. "Ed25519Signature2020", "EcdsaP256Signature2019" */
   type: string;
   /** When the proof was created (ISO 8601 UTC). */
   created: string;

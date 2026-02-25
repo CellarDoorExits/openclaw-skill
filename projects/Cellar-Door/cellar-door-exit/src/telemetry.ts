@@ -28,6 +28,9 @@ export interface Tracer {
   startSpan(name: string, options?: SpanOptions): Span;
 }
 
+/** Package version — keep in sync with package.json */
+const PACKAGE_VERSION = "0.2.0";
+
 export interface SpanOptions {
   attributes?: Record<string, string | number | boolean>;
 }
@@ -80,7 +83,7 @@ export function initTelemetry(config?: TelemetryConfig): void {
     try {
       // Dynamic import to avoid hard dependency
       const otelApi = require("@opentelemetry/api");
-      _tracer = otelApi.trace.getTracer("cellar-door-exit", "0.1.0");
+      _tracer = otelApi.trace.getTracer("cellar-door-exit", PACKAGE_VERSION);
     } catch {
       _tracer = noopTracer;
     }
@@ -110,7 +113,7 @@ export function startExitSpan(
 ): Span {
   return _tracer.startSpan(`cellar-door.${name}`, {
     attributes: {
-      "cellar_door.version": "0.1.0",
+      "cellar_door.version": PACKAGE_VERSION,
       ...attrs,
     },
   });
@@ -175,7 +178,7 @@ export function instrumentedSignMarker(
   const attrs: Record<string, string | number | boolean> = {
     "cellar_door.operation": "sign",
     "cellar_door.exit_type": marker.exitType,
-    "cellar_door.algorithm": "Ed25519",
+    "cellar_door.algorithm": marker.proof?.type ?? "Ed25519Signature2020",
   };
   if (_config.includeMarkerIds && marker.id) attrs["cellar_door.marker_id"] = marker.id;
   if (_config.includeSubjects && marker.subject) attrs["cellar_door.subject"] = marker.subject;
@@ -224,3 +227,11 @@ export function startCeremonySpan(
 
   return startExitSpan("ceremony", attrs);
 }
+
+// ─── Passage API Aliases (v0.2.0) ────────────────────────────────────────────
+
+/** Passage-named alias for instrumentedSignMarker */
+export const instrumentedSignDepartureMarker = instrumentedSignMarker;
+
+/** Passage-named alias for instrumentedVerifyMarker */
+export const instrumentedVerifyDeparture = instrumentedVerifyMarker;

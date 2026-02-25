@@ -14,18 +14,11 @@
  * ```
  */
 
-import {
-  createMarker,
-  signMarker,
-  verifyMarker,
-  generateKeyPair,
-  didFromPublicKey,
-  quickExit,
-  quickVerify,
-  generateIdentity,
-  departAndAnchor,
-  departAndVerify,
-} from "./index.js";
+import { createMarker } from "./marker.js";
+import { signMarker, verifyMarker } from "./proof.js";
+import { generateKeyPair, didFromPublicKey } from "./crypto.js";
+import { quickExit, quickVerify, generateIdentity } from "./convenience.js";
+import { departAndAnchor, departAndVerify } from "./anchor.js";
 import type {
   ExitMarker,
   DataIntegrityProof,

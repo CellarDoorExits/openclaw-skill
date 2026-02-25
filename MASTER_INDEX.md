@@ -301,7 +301,6 @@
 | `cellar-door-exit/src/__tests__/passage.test.ts` | ~900 | — | Passage API rename tests (11 tests) |
 | `cellar-door-exit/docs/NON_BLOCKING_ENFORCEMENT.md` | ~1,100 | — | App-layer enforcement guide |
 | `cellar-door-exit/docs/HSM_INTEGRATION.md` | ~2,400 | — | HSM integration guide (AWS/Azure/GCP/YubiKey) |
-| `cellar-door-exit/SECURITY.md` | ~300 | — | FIPS notice + vulnerability reporting |
 | `cellar-door-exit/CONTRIBUTING.md` | ~300 | — | Contributing guide |
 | `cellar-door-exit/CODE_OF_CONDUCT.md` | ~150 | — | Code of conduct (Contributor Covenant v2.1) |
 | `cellar-door-exit/GOVERNANCE.md` | ~260 | — | Project governance |

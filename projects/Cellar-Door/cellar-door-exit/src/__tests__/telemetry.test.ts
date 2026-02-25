@@ -113,7 +113,7 @@ describe("Telemetry", () => {
       expect(spans).toHaveLength(1);
       expect(spans[0].name).toBe("cellar-door.test.op");
       expect(spans[0].attributes.custom).toBe("value");
-      expect(spans[0].attributes["cellar_door.version"]).toBe("0.1.0");
+      expect(spans[0].attributes["cellar_door.version"]).toBe("0.2.0");
       expect(spans[0].ended).toBe(true);
     });
 
@@ -170,7 +170,7 @@ describe("Telemetry", () => {
       const signSpan = spans.find(s => s.name === "cellar-door.sign");
       expect(signSpan).toBeDefined();
       expect(signSpan!.attributes["cellar_door.operation"]).toBe("sign");
-      expect(signSpan!.attributes["cellar_door.algorithm"]).toBe("Ed25519");
+      expect(signSpan!.attributes["cellar_door.algorithm"]).toBe("Ed25519Signature2020");
       expect(signSpan!.ended).toBe(true);
     });
 
