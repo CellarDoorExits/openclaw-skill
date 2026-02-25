@@ -319,6 +319,23 @@ export {
   shortHash,
 } from "./visual.js";
 
+// Passage API (v0.2.0 renamed surface)
+export {
+  createDepartureMarker,
+  signDepartureMarker,
+  signDepartureWithSigner,
+  verifyDeparture,
+  verifyDepartureMultiAlg,
+  quickDeparture,
+  quickPassageVerify,
+  generatePassageIdentity,
+  createPassage,
+  verifyPassage,
+  type DepartureMarker,
+  type PassageProof,
+  type PassageVerificationResult,
+} from "./passage.js";
+
 // Claim Store
 export {
   MemoryClaimStore,
