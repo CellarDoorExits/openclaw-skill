@@ -319,6 +319,19 @@ export {
   shortHash,
 } from "./visual.js";
 
+// Claim Store
+export {
+  MemoryClaimStore,
+  ClaimType,
+  claimFromMarker,
+  claimsFromTrustEnhancers,
+  ingestMarker,
+  type StoredClaim,
+  type ClaimQuery,
+  type ClaimStoreStats,
+  type ClaimStoreBackend,
+} from "./claim-store.js";
+
 // Telemetry (OpenTelemetry integration)
 export {
   initTelemetry,
