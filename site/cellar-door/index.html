@@ -166,6 +166,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .logo-section img {
   max-width: 600px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -266,6 +267,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .idealist-hero img {
   max-width: 900px;
+  width: 100%;
   margin: 0 auto;
   opacity: 0.9;
 }
@@ -419,11 +421,17 @@ img { max-width: 100%; height: auto; display: block; }
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
 .prag-table {
   width: 100%;
   border-collapse: collapse;
   margin: 24px 0;
   font-size: 0.9rem;
+  min-width: 500px;
 }
 .prag-table th {
   background: #1e3a5f;
@@ -541,6 +549,7 @@ img { max-width: 100%; height: auto; display: block; }
   border-collapse: collapse;
   margin: 20px 0;
   font-size: 0.92rem;
+  min-width: 500px;
 }
 .bureau-table th {
   background: #1e3a5f;
@@ -661,6 +670,7 @@ img { max-width: 100%; height: auto; display: block; }
   border-collapse: collapse;
   margin: 16px 0;
   font-size: 0.82rem;
+  min-width: 500px;
 }
 .agent-body .agent-table th {
   background: #0f1f0f;
@@ -1050,7 +1060,7 @@ img { max-width: 100%; height: auto; display: block; }
       </div>
 
       <h2>EXIT Marker Schema</h2>
-      <table class="prag-table">
+      <div class="table-scroll"><table class="prag-table">
         <thead>
           <tr><th>Field</th><th>Type</th><th>Description</th></tr>
         </thead>
@@ -1066,10 +1076,10 @@ img { max-width: 100%; height: auto; display: block; }
           <tr><td><code>selfAttested</code></td><td>boolean</td><td>Whether status is self-reported</td></tr>
           <tr><td><code>proof</code></td><td>object</td><td>Ed25519 signature block</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <h2>All Eight Exit Types</h2>
-      <table class="prag-table">
+      <div class="table-scroll"><table class="prag-table">
         <thead>
           <tr><th>Type</th><th>Description</th><th>Example</th></tr>
         </thead>
@@ -1083,7 +1093,7 @@ img { max-width: 100%; height: auto; display: block; }
           <tr><td><code>constructive</code></td><td>Conditions forced departure</td><td>Constructive dismissal analog</td></tr>
           <tr><td><code>acquisition</code></td><td>Platform acquired/merged</td><td>M&amp;A transition event</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <h2>Three Departure Paths</h2>
       <div class="prag-card">
@@ -1223,7 +1233,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       </ol>
 
       <h2>3. Standards Alignment</h2>
-      <table class="bureau-table">
+      <div class="table-scroll"><table class="bureau-table">
         <thead>
           <tr><th>Framework</th><th>Relevant Provisions</th><th>EXIT Alignment</th></tr>
         </thead>
@@ -1233,7 +1243,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
           <tr><td>W3C VC Data Model</td><td>Sections 4, 5</td><td>EXIT markers are conformant Verifiable Credentials with extended agent-specific semantics</td></tr>
           <tr><td>ISO/IEC 42001</td><td>Clause 8.2</td><td>Contributes to AI management system documentation and operational controls</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <h2>4. Protocol Architecture</h2>
       <h3>4.1 Constitutional Primitives</h3>
@@ -1246,7 +1256,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
 
       <h3>4.2 EXIT Marker Specification</h3>
       <p>An EXIT marker is a compact JSON-LD document (~335–660 bytes) with the following required fields:</p>
-      <table class="bureau-table">
+      <div class="table-scroll"><table class="bureau-table">
         <thead>
           <tr><th>Field</th><th>Requirement</th><th>Description</th></tr>
         </thead>
@@ -1262,11 +1272,11 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
           <tr><td><code>selfAttested</code></td><td>REQUIRED</td><td>Boolean: is status self-reported?</td></tr>
           <tr><td><code>proof</code></td><td>REQUIRED</td><td>Ed25519 cryptographic signature</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <h3>4.2.1 Extension Modules</h3>
       <p>Six optional modules address specific enterprise and regulatory use cases:</p>
-      <table class="bureau-table">
+      <div class="table-scroll"><table class="bureau-table">
         <thead>
           <tr><th>Module</th><th>Name</th><th>Function</th></tr>
         </thead>
@@ -1278,7 +1288,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
           <tr><td>E</td><td>Metadata</td><td>Human-readable context: departure reasons, operational notes, domain-specific tags</td></tr>
           <tr><td>F</td><td>Cross-Domain Anchoring</td><td>Integration with external registries and immutable record systems</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <h3>4.3 Transition Paths</h3>
       <p>EXIT defines three transition paths accommodating different operational scenarios:</p>
@@ -1361,7 +1371,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       </ul>
 
       <h2>Marker Schema</h2>
-      <table class="agent-table">
+      <div class="table-scroll"><table class="agent-table">
         <thead>
           <tr><th>Field</th><th>Type</th><th>You Need To Know</th></tr>
         </thead>
@@ -1374,7 +1384,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
           <tr><td><code>selfAttested</code></td><td>boolean</td><td>Transparency flag. Verifiers know exactly what they're getting.</td></tr>
           <tr><td><code>proof</code></td><td>object</td><td>Ed25519 signature. Offline-verifiable.</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <h2>Integration</h2>
       <div class="agent-code">
@@ -1432,7 +1442,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
 
       <h2>Architecture Context</h2>
       <p>EXIT is one of three constitutional primitives:</p>
-      <table class="agent-table">
+      <div class="table-scroll"><table class="agent-table">
         <thead>
           <tr><th>Primitive</th><th>Function</th><th>Status</th></tr>
         </thead>
@@ -1441,11 +1451,11 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
           <tr><td><code>MANTLES</code></td><td>Authority delegation + capability tokens</td><td>Spec draft</td></tr>
           <tr><td><code>EXIT</code></td><td>Departure attestation + LINEAGE portability</td><td>SDK alpha</td></tr>
         </tbody>
-      </table>
+      </table></div>
       <p>Each primitive is independent. You can use EXIT without NAMES or MANTLES. Together they form a constitutional layer for agent sovereignty.</p>
 
       <h2>Endpoints</h2>
-      <table class="agent-table">
+      <div class="table-scroll"><table class="agent-table">
         <thead>
           <tr><th>Action</th><th>Method</th><th>Notes</th></tr>
         </thead>
@@ -1455,7 +1465,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
           <tr><td>Verify</td><td><code>verify(marker)</code></td><td>Offline. Requires issuer public key only.</td></tr>
           <tr><td>Resolve DID</td><td><code>resolve(did)</code></td><td>Standard DID resolution. Returns DID document.</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <div class="agent-note" style="margin-top:40px; opacity:0.6;">
         EXIT.protocol v0.1 · Cellar Door · cellardoor.network<br>
