@@ -145,7 +145,7 @@ console.log(result.valid); // true
 - **A: Lineage** — Predecessor, successor, continuity proofs (agent migration)
 - **B: State Snapshot** — Hash-referenced state at exit time
 - **C: Dispute Bundle** — Active disputes, evidence, challenge windows
-- **D: Economic** — Asset manifests, obligations, exit fees
+- **D: Economic** — Asset manifests, obligations, exit fees ⚠️ *[securities disclaimer applies](./src/types.ts)*
 - **E: Metadata** — Human-readable reason, narrative, tags
 - **F: Cross-Domain** — On-chain anchors, registry entries
 

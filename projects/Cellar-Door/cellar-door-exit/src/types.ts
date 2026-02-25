@@ -367,7 +367,23 @@ export interface ChallengeWindow {
 
 // ─── Module D: Economic ──────────────────────────────────────────────────────
 
-/** For exits involving assets or financial obligations. */
+/**
+ * For exits involving assets or financial obligations.
+ *
+ * ⚠️ **SECURITIES DISCLAIMER**: The contents of Module D asset manifests may
+ * constitute securities disclosures depending on the nature of the assets
+ * referenced. If `assetManifest` entries reference tokens, shares, investment
+ * contracts, or other instruments that could be classified as securities under
+ * the Howey test (SEC v. W.J. Howey Co., 1946) or equivalent international
+ * frameworks, additional regulatory obligations may apply to platforms that
+ * display, aggregate, or make decisions based on this data.
+ *
+ * Cellar Door EXIT does NOT provide legal, financial, or securities advice.
+ * This module is a data transport mechanism only. Consult qualified counsel
+ * before using Module D data in any context where securities law may apply.
+ *
+ * See: assessments/howey-module-d-v2.md for detailed analysis.
+ */
 export interface ModuleD {
   /** Assets being ported (type + amount + destination, as references). */
   assetManifest?: AssetReference[];
