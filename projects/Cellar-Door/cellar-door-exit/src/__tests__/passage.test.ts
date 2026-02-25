@@ -56,16 +56,14 @@ describe("Passage API (v0.2.0 rename)", () => {
   });
 
   it("quickDeparture creates valid marker", () => {
-    const result = quickDeparture({
-      origin: "https://platform.example.com",
-    });
+    const result = quickDeparture("https://platform.example.com");
     expect(result.marker.proof.proofValue).toBeTruthy();
-    expect(result.did).toMatch(/^did:key:z/);
+    expect(result.identity.did).toMatch(/^did:key:z/);
   });
 
-  it("quickPassageVerify verifies marker", () => {
+  it("quickPassageVerify verifies marker (takes JSON string)", () => {
     const { marker } = quickDeparture("https://test.com");
-    const result = quickPassageVerify(marker);
+    const result = quickPassageVerify(JSON.stringify(marker));
     expect(result.valid).toBe(true);
   });
 
