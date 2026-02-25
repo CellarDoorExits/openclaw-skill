@@ -228,7 +228,7 @@ The following mechanism design features from EXIT_SPEC v1.1 are **implemented** 
 | OpenTelemetry | ✅ Implemented | `src/telemetry.ts` — spans for sign/verify/ceremony |
 | Passage API | ✅ Implemented | `src/passage.ts` — renamed API surface (`createDepartureMarker`, etc.) |
 
-All 395 tests pass across 23 test files.
+All 399 tests pass across 23 test files.
 
 ### Algorithm Support
 

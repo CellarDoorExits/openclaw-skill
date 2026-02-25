@@ -476,7 +476,7 @@ The Passage Protocol reference implementation is written in TypeScript targeting
 
 ### 10.2 EXIT Package
 
-The EXIT package passes **291 tests** covering all specification test vectors (11 vectors per EXIT_SPEC v1.1 §17), ceremony state machine transitions across all three paths, commit-reveal commitment and verification, confidence scoring, tenure attestation, TSA timestamp anchoring, git ledger operations, visual hash door rendering, and the full-service convenience API.
+The EXIT package passes **322 tests** covering all specification test vectors (11 vectors per EXIT_SPEC v1.1 §17), ceremony state machine transitions across all three paths, commit-reveal commitment and verification, confidence scoring, tenure attestation, TSA timestamp anchoring, git ledger operations, visual hash door rendering, and the full-service convenience API.
 
 **Core API:**
 
