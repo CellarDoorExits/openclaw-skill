@@ -318,3 +318,19 @@ export {
   renderDoorSVG,
   shortHash,
 } from "./visual.js";
+
+// Telemetry (OpenTelemetry integration)
+export {
+  initTelemetry,
+  resetTelemetry,
+  startExitSpan,
+  withSpan,
+  withSpanAsync,
+  instrumentedSignMarker,
+  instrumentedVerifyMarker,
+  startCeremonySpan,
+  type Tracer,
+  type Span,
+  type SpanOptions,
+  type TelemetryConfig,
+} from "./telemetry.js";
