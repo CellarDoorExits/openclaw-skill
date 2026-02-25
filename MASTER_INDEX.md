@@ -1,8 +1,8 @@
 # MASTER INDEX — Hawthorn Knowledge Base
 
-**Updated:** 2026-02-24T09:11Z | **Author:** Hawthorn (auto-reindex) | **Status:** Living document
+**Updated:** 2026-02-25T22:05Z | **Author:** Hawthorn (auto-reindex) | **Status:** Living document
 
-**Total files:** 199 | **Text files (meaningful tokens):** ~549K tokens | **Binary/images:** ~9.5M tokens (excluded from context groupings)
+**Total files:** ~220 | **Text files (meaningful tokens):** ~590K tokens | **Binary/images:** ~9.5M tokens (excluded from context groupings)
 
 > Token counts = `wc -c / 4`. Context-window groups target ~30K tokens of **text** content each.
 > Binary files (images, icons, lockfiles) listed but excluded from groupings.
@@ -252,8 +252,12 @@
 | `cellar-door-exit/src/vc.ts` | 714 | `bb1fcdb` | Verifiable credentials |
 | `cellar-door-exit/src/dispute.ts` | 1,495 | `1824c2b` | Dispute resolution module |
 | `cellar-door-exit/src/visual.ts` | 4,373 | `44b73ba` | Visual representation |
+| `cellar-door-exit/src/signer.ts` | ~2,500 | — | Signer abstraction (Ed25519 + P-256, createSigner factory) |
+| `cellar-door-exit/src/telemetry.ts` | ~1,600 | — | OpenTelemetry integration (spans for sign/verify/ceremony) |
+| `cellar-door-exit/src/claim-store.ts` | ~2,300 | — | Claim store (MemoryClaimStore, claim factories, GDPR delete) |
+| `cellar-door-exit/src/passage.ts` | ~900 | — | Passage API rename surface (v0.2.0 aliases) |
 
-**Subtotal:** ~54,394 tokens *(split into two groups if needed)*
+**Subtotal:** ~61,694 tokens *(split into two groups if needed)*
 
 ---
 
@@ -290,8 +294,19 @@
 | `cellar-door-exit/src/__tests__/tsa.test.ts` | 1,910 | `5b60b79` | TSA tests |
 | `cellar-door-exit/src/__tests__/vc.test.ts` | 498 | `5b7de82` | VC tests |
 | `cellar-door-exit/src/__tests__/visual.test.ts` | 2,021 | `9e459a4` | Visual tests |
+| `cellar-door-exit/src/__tests__/signer.test.ts` | ~1,900 | — | Signer + P-256 tests (24 tests) |
+| `cellar-door-exit/src/__tests__/trust-enhancers.test.ts` | ~3,100 | — | Trust enhancer conduit tests (24 tests) |
+| `cellar-door-exit/src/__tests__/telemetry.test.ts` | ~2,000 | — | Telemetry/span tests (14 tests) |
+| `cellar-door-exit/src/__tests__/claim-store.test.ts` | ~2,500 | — | Claim store tests (28 tests) |
+| `cellar-door-exit/src/__tests__/passage.test.ts` | ~900 | — | Passage API rename tests (11 tests) |
+| `cellar-door-exit/docs/NON_BLOCKING_ENFORCEMENT.md` | ~1,100 | — | App-layer enforcement guide |
+| `cellar-door-exit/docs/HSM_INTEGRATION.md` | ~2,400 | — | HSM integration guide (AWS/Azure/GCP/YubiKey) |
+| `cellar-door-exit/SECURITY.md` | ~300 | — | FIPS notice + vulnerability reporting |
+| `cellar-door-exit/CONTRIBUTING.md` | ~300 | — | Contributing guide |
+| `cellar-door-exit/CODE_OF_CONDUCT.md` | ~150 | — | Code of conduct (Contributor Covenant v2.1) |
+| `cellar-door-exit/GOVERNANCE.md` | ~260 | — | Project governance |
 
-**Subtotal:** ~46,107 tokens
+**Subtotal:** ~61,047 tokens
 
 ---
 

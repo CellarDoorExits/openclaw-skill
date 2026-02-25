@@ -157,12 +157,25 @@ The `proof` object MUST contain:
 
 | Field | Type | Description |
 |---|---|---|
-| `type` | string | Signature algorithm. MUST be `"Ed25519Signature2020"` for v1.1 |
+| `type` | string | Signature algorithm. MUST be one of the supported types (see §3.5.1) |
 | `created` | string (ISO 8601) | When the proof was created |
 | `verificationMethod` | string | DID or key URI for verification |
 | `proofValue` | string | Base64-encoded signature |
 
 The data signed MUST be the canonical JSON form (§13.1) of the marker excluding the `proof` and `id` fields.
+
+#### 3.5.1 Supported Signature Algorithms
+
+| `proof.type` | Algorithm | Key Size | FIPS 140-2/3 | Notes |
+|---|---|---|---|---|
+| `"Ed25519Signature2020"` | Ed25519 (RFC 8032) | 32 bytes | ❌ Not approved | Default. Fast, compact. Widely used in DID/VC ecosystem. |
+| `"EcdsaP256Signature2019"` | ECDSA P-256 (FIPS 186-5) | 33 bytes (compressed) | ✅ Approved | Use when FIPS compliance is required. NIST curve secp256r1. |
+
+Implementations MUST support `Ed25519Signature2020`. Implementations SHOULD support `EcdsaP256Signature2019` for interoperability with FIPS-regulated environments.
+
+Verifiers MUST accept both algorithm types. Signers MAY use either algorithm. The `verificationMethod` field encodes the algorithm via the DID multicodec prefix (Ed25519: `0xed01`, P-256: `0x8024`).
+
+Additional algorithms MAY be added in future spec versions. Verifiers encountering an unknown `proof.type` MUST reject the marker with an "unsupported algorithm" error.
 
 ### 3.6 Exit Types
 
@@ -1608,6 +1621,28 @@ The canonical TypeScript type definitions are maintained in `src/types.ts`. The 
 ### Dispute Interfaces
 - `Dispute` — Individual dispute with `disputeExpiry`, `resolution`, `arbiterDid` fields
 - `ChallengeWindow` — Challenge window parameters
+
+### Trust Enhancer Interfaces (Conduit-Only)
+- `TrustEnhancers` — Optional container for trust-enhancing attachments. Validated for well-formedness; no opinion on truth.
+- `TimestampAttachment` — RFC 3161 TSA receipt (third-party proof of time)
+- `WitnessAttachment` — External witness countersignature (third-party attestation)
+- `IdentityClaimAttachment` — Opaque identity claim (scheme, value, issuer, expiry)
+
+The protocol acts as a **conduit only** for trust enhancers. It validates structure, not authenticity. Consuming applications decide what weight to assign.
+
+### Signer Interface (Algorithm Abstraction)
+- `Signer` — Abstract signer interface supporting multiple algorithms (see §3.5.1)
+- `Ed25519Signer` — Built-in Ed25519 implementation
+- `P256Signer` — Built-in ECDSA P-256 implementation (FIPS 140-2/3 compliant)
+- `createSigner(options?)` — Factory function for creating signers
+- `createVerifier(did, publicKey)` — Verify-only signer for consumption
+
+### Claim Store Interfaces
+- `ClaimStoreBackend` — Abstract storage backend for trust claims
+- `StoredClaim` — A stored claim with subject, type, payload, issuer, expiry
+- `MemoryClaimStore` — In-memory reference implementation
+- `claimFromMarker()` — Create a claim from an EXIT marker
+- `ingestMarker()` — Ingest a marker + trust enhancers into a claim store
 
 ### Anchoring Interfaces
 - `TSAReceipt` — RFC 3161 timestamp receipt (from `tsa.ts`)

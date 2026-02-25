@@ -36,7 +36,7 @@ These problems are not hypothetical. They are structural consequences of an ecos
 
 The EXIT Protocol defines a **departure ceremony** — a structured, state-machine-governed process by which an entity (AI agent, service, or participant) creates a verifiable record of leaving a digital system.
 
-The output of the ceremony is an **EXIT marker**: a JSON-LD document of approximately 300–500 bytes that records who departed, from where, when, how, and under what standing. The marker is cryptographically signed by the departing subject using Ed25519, content-addressed via SHA-256, and optionally co-signed by the origin platform or independent witnesses.
+The output of the ceremony is an **EXIT marker**: a JSON-LD document of approximately 300–500 bytes that records who departed, from where, when, how, and under what standing. The marker is cryptographically signed by the departing subject (Ed25519 default, ECDSA P-256 for FIPS compliance), content-addressed via SHA-256, and optionally co-signed by the origin platform or independent witnesses.
 
 ### 3.1 Core Design Principles
 
@@ -93,7 +93,10 @@ The core design asymmetry is intentional: **departure is a right; admission is a
 
 ### 5.1 Cryptographic Foundation
 
-- **Signing:** Ed25519 (EdDSA over Curve25519) for all marker signatures
+- **Signing:** Algorithm-agile via abstract `Signer` interface. Two built-in algorithms:
+  - **Ed25519** (EdDSA over Curve25519) — default, fast, compact signatures
+  - **ECDSA P-256** (FIPS 186-5, NIST curve secp256r1) — for FIPS 140-2/3 compliant deployments
+- **FIPS compliance:** The `Signer` interface accepts external implementations, enabling integration with FIPS-validated HSMs (AWS CloudHSM, Azure Managed HSM, YubiKey FIPS) without modifying protocol logic
 - **Hashing:** SHA-256 for content-addressed identifiers and integrity verification
 - **Canonicalization:** Deterministic JSON with recursively sorted keys (no whitespace)
 - **Encryption:** ECDH key agreement with XChaCha20-Poly1305 for marker confidentiality
@@ -146,7 +149,7 @@ The EXIT Protocol is implemented and tested, not merely specified.
 
 - EXIT Protocol: 291 tests passing
 - ENTRY Protocol: 77 tests passing
-- **Total: 368 tests** covering structural validation, cryptographic signing and verification, ceremony state transitions, module composition, trust mechanisms, ethics guardrails, admission policies, continuity verification, and edge cases.
+- **Total: 395 tests** covering structural validation, cryptographic signing and verification, ceremony state transitions, module composition, trust mechanisms, ethics guardrails, admission policies, continuity verification, and edge cases.
 
 ### 6.3 Repositories
 

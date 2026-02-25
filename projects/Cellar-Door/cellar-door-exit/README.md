@@ -217,8 +217,28 @@ The following mechanism design features from EXIT_SPEC v1.1 are **implemented** 
 | Guardrails module | ✅ Implemented | `src/guardrails.ts` |
 | Pre-rotation | ✅ Implemented | `src/pre-rotation.ts` |
 
-All 291 tests pass across 18 test files, covering all 11 specification test vectors.
+### v0.2.0 Additions
+
+| Feature | Status | Location |
+|---------|--------|----------|
+| ECDSA P-256 (FIPS) | ✅ Implemented | `src/signer.ts` — `P256Signer`, `createSigner({ algorithm: "P-256" })` |
+| Signer abstraction | ✅ Implemented | `src/signer.ts` — `Signer` interface for HSM/KMS/hardware tokens |
+| Trust enhancers | ✅ Implemented | `src/types.ts` — timestamps, witnesses, identity claims (conduit-only) |
+| Claim store | ✅ Implemented | `src/claim-store.ts` — `MemoryClaimStore`, `ingestMarker()` |
+| OpenTelemetry | ✅ Implemented | `src/telemetry.ts` — spans for sign/verify/ceremony |
+| Passage API | ✅ Implemented | `src/passage.ts` — renamed API surface (`createDepartureMarker`, etc.) |
+
+All 395 tests pass across 23 test files.
+
+### Algorithm Support
+
+| Algorithm | Proof Type | FIPS 140-2/3 | Default |
+|-----------|-----------|-------------|---------|
+| Ed25519 | `Ed25519Signature2020` | ❌ | ✅ |
+| ECDSA P-256 | `EcdsaP256Signature2019` | ✅ | |
+
+Use `createSigner({ algorithm: "P-256" })` for FIPS compliance. See [HSM Integration Guide](./docs/HSM_INTEGRATION.md) for AWS KMS, Azure Key Vault, GCP KMS, and YubiKey.
 
 ## License
 
-MIT
+Apache-2.0
