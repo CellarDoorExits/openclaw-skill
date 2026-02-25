@@ -2,11 +2,13 @@
  * cellar-door-exit — Signing and Verification
  */
 
-import { sign, verify, didFromPublicKey, publicKeyFromDid } from "./crypto.js";
+import { sign, verify, didFromPublicKey, publicKeyFromDid, verifyP256, algorithmFromDid } from "./crypto.js";
 import { canonicalize } from "./marker.js";
 import { validateMarker } from "./validate.js";
 import type { ExitMarker, DataIntegrityProof } from "./types.js";
 import { SigningError, VerificationError } from "./errors.js";
+import type { Signer } from "./signer.js";
+import { proofTypeForAlgorithm, algorithmFromProofType } from "./signer.js";
 
 /**
  * Sign a marker with an Ed25519 private key. Returns a new marker with proof attached.
@@ -85,7 +87,8 @@ export function verifyMarker(marker: ExitMarker): VerificationResult {
     return { valid: false, errors };
   }
 
-  if (marker.proof.type !== "Ed25519Signature2020") {
+  const alg = algorithmFromProofType(marker.proof.type);
+  if (!alg) {
     errors.push(`Unsupported proof type: ${marker.proof.type}`);
     return { valid: false, errors };
   }
@@ -103,7 +106,14 @@ export function verifyMarker(marker: ExitMarker): VerificationResult {
     const data = new TextEncoder().encode(canonical);
     const signature = new Uint8Array(Buffer.from(marker.proof.proofValue, "base64"));
 
-    if (!verify(data, signature, publicKey)) {
+    let valid: boolean;
+    if (alg === "P-256") {
+      valid = verifyP256(data, signature, publicKey);
+    } else {
+      valid = verify(data, signature, publicKey);
+    }
+
+    if (!valid) {
       errors.push("Signature verification failed");
     }
   } catch (e) {
@@ -111,4 +121,40 @@ export function verifyMarker(marker: ExitMarker): VerificationResult {
   }
 
   return { valid: errors.length === 0, errors };
+}
+
+/**
+ * Sign a marker using the Signer abstraction.
+ */
+export async function signMarkerWithSigner(marker: ExitMarker, signer: Signer): Promise<ExitMarker> {
+  try {
+    const did = signer.did();
+    const now = new Date().toISOString();
+
+    const { proof: _proof, ...rest } = marker;
+    const canonical = canonicalize(rest);
+    const data = new TextEncoder().encode(canonical);
+
+    const signature = await signer.sign(data);
+    const proofValue = Buffer.from(signature).toString("base64");
+
+    const proof: DataIntegrityProof = {
+      type: proofTypeForAlgorithm(signer.algorithm),
+      created: now,
+      verificationMethod: did,
+      proofValue,
+    };
+
+    return { ...marker, proof };
+  } catch (e) {
+    if (e instanceof SigningError) throw e;
+    throw new SigningError(`Failed to sign marker: ${(e as Error).message}`);
+  }
+}
+
+/**
+ * Verify a marker, auto-detecting algorithm from proof type.
+ */
+export async function verifyMarkerMultiAlg(marker: ExitMarker): Promise<VerificationResult> {
+  return verifyMarker(marker);
 }

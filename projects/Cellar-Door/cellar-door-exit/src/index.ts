@@ -67,7 +67,27 @@ export {
   verify,
   didFromPublicKey,
   publicKeyFromDid,
+  generateP256KeyPair,
+  signP256,
+  verifyP256,
+  didFromP256PublicKey,
+  publicKeyFromP256Did,
+  algorithmFromDid,
 } from "./crypto.js";
+
+// Signer abstraction
+export {
+  type SignatureAlgorithm,
+  type Signer,
+  type SignerOptions,
+  Ed25519Signer,
+  P256Signer,
+  createSigner,
+  createVerifier,
+  generateKeyPairForAlgorithm,
+  proofTypeForAlgorithm,
+  algorithmFromProofType,
+} from "./signer.js";
 
 export {
   createMarker,
@@ -76,7 +96,7 @@ export {
   addModule,
 } from "./marker.js";
 
-export { signMarker, verifyMarker, type VerificationResult } from "./proof.js";
+export { signMarker, verifyMarker, signMarkerWithSigner, verifyMarkerMultiAlg, type VerificationResult } from "./proof.js";
 
 export { validateMarker, type ValidationResult } from "./validate.js";
 
