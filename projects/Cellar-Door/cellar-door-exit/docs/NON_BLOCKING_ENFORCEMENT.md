@@ -82,7 +82,7 @@ function computeTrustLevel(marker) {
 1. **Don't block marker creation.** Let agents create markers freely. Filter on *consumption*, not *creation*.
 2. **Don't modify markers.** Markers are immutable once signed. If you need annotations, store them externally.
 3. **Don't aggregate trust scores across markers into a "reputation score."** That creates securities and FCRA risk. Evaluate each marker independently.
-4. **Don't use `blockedOrigins` without antitrust review.** Blocking markers from specific origins carries Sherman Act §1 / TFEU Art. 101 risk. See the antitrust analysis.
+4. **Don't block markers by origin platform.** Platforms MAY maintain internal security exclusion lists, but these are outside the scope of this specification.
 
 ## The Separation
 

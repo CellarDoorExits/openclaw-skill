@@ -209,7 +209,7 @@ An 11-lens legal analysis examined the protocol under: (1) Securities law (Howey
 ### 8.2 Key Findings
 
 - **Howey Test:** Module D asset manifests are documented as "declarations and references, not transfer instruments or bearer instruments" to avoid securities classification.
-- **Antitrust:** Coordinated use of `blockedOrigins` across platforms could violate Sherman Act §1. The ENTRY specification includes a normative antitrust warning. The protocol itself is procompetitive (reduces lock-in, enhances portability) but platform-side coordination using EXIT data requires care.
+- **Antitrust:** The protocol is procompetitive (reduces lock-in, enhances portability). Exclusion lists are intentionally not standardized to avoid antitrust liability; platforms MAY maintain internal security exclusion lists outside the scope of this specification.
 - **GDPR:** EXIT markers may contain personal data. The specification requires Data Protection Impact Assessments, supports field-level redaction, encryption at rest, and GDPR Art. 17 right-to-erasure via claim store deletion.
 - **Overall risk:** Medium, manageable with the design mitigations already incorporated.
 

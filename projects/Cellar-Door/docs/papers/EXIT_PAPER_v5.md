@@ -264,7 +264,7 @@ Admission policies are composable rule sets that determine whether an arriving e
 - **STRICT**: Voluntary departures only, less than 24 hours old, with lineage and state snapshot modules required.
 - **EMERGENCY_ONLY**: Accept only emergency exits—for systems serving as shelters for displaced agents.
 
-Policies may filter on blocked origins, allowed exit types, maximum departure age, and required EXIT modules. An antitrust warning accompanies the `blockedOrigins` mechanism: coordinating origin blocking across platforms may violate Sherman Act §1 / EU TFEU Art. 101.
+Policies may filter on allowed exit types, maximum departure age, and required EXIT modules. Exclusion lists are intentionally not standardized; platforms MAY maintain internal security exclusion lists outside the scope of this specification.
 
 ### 4.4 Passage Verification and Proof of Passage
 
