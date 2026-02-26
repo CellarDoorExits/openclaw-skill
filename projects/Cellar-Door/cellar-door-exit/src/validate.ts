@@ -15,8 +15,10 @@ export interface ValidationResult {
 const ISO_8601_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?$/;
 const DID_KEY_RE = /^did:key:z[1-9A-HJ-NP-Za-km-z]+$/;
 
-/** B6: Maximum field length for string fields (permissive bound). */
-const MAX_FIELD_LENGTH = 8192;
+/** B6: Maximum field lengths by category. */
+const MAX_URI_LENGTH = 2048;
+const MAX_LABEL_LENGTH = 256;
+const MAX_STRING_LENGTH = 4096;
 
 /** B9: Hex hash format for preRotationCommitment. */
 const HEX_HASH_RE = /^[0-9a-f]{64}$/i;
@@ -283,10 +285,23 @@ export function validateMarker(marker: unknown): ValidationResult {
   // ─── Warnings (non-fatal) ──────────────────────────────────────────────────
   const warnings: string[] = [];
 
-  // B6: String length bounds
-  for (const field of ["subject", "origin", "reason", "narrative"] as const) {
-    if (typeof m[field] === "string" && (m[field] as string).length > MAX_FIELD_LENGTH) {
-      warnings.push(`${field} exceeds recommended maximum length of ${MAX_FIELD_LENGTH} characters`);
+  // B6: String length bounds — URIs ≤2048, labels ≤256, general ≤4096
+  for (const field of ["id", "origin"] as const) {
+    if (typeof m[field] === "string" && (m[field] as string).length > MAX_URI_LENGTH) {
+      warnings.push(`${field} exceeds recommended maximum length of ${MAX_URI_LENGTH} characters`);
+    }
+  }
+  for (const field of ["subject"] as const) {
+    if (typeof m[field] === "string" && (m[field] as string).length > MAX_URI_LENGTH) {
+      warnings.push(`${field} exceeds recommended maximum length of ${MAX_URI_LENGTH} characters`);
+    }
+  }
+  if (typeof m.coercionLabel === "string" && (m.coercionLabel as string).length > MAX_LABEL_LENGTH) {
+    warnings.push(`coercionLabel exceeds recommended maximum length of ${MAX_LABEL_LENGTH} characters`);
+  }
+  for (const field of ["reason", "narrative", "emergencyJustification", "resolution"] as const) {
+    if (typeof m[field] === "string" && (m[field] as string).length > MAX_STRING_LENGTH) {
+      warnings.push(`${field} exceeds recommended maximum length of ${MAX_STRING_LENGTH} characters`);
     }
   }
 
