@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cellar Door — The Cynic's Case for EXIT</title>
+<meta name="description" content="You don't care about AI rights. Neither do we. Here's why EXIT.protocol matters anyway — liability, compliance, and the infrastructure you'll wish you had.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: #111111;
+  color: #c8c8c8;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* ═══ NAV BAR ═══ */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: rgba(17,17,17,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid #222;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.top-nav .brand {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #666;
+  text-decoration: none;
+}
+.top-nav .brand:hover { color: #999; }
+.top-nav .nav-links {
+  display: flex;
+  gap: 24px;
+}
+.top-nav .nav-links a {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.top-nav .nav-links a:hover { color: #aaa; }
+.top-nav .nav-links a.active { color: #e8e8e8; border-bottom: 1px solid #e8e8e8; padding-bottom: 2px; }
+
+/* ═══ HERO ═══ */
+.hero {
+  padding: 160px 24px 100px;
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+.hero .eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #e8e8e8;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+.hero .subtitle {
+  font-size: 1.15rem;
+  color: #777;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.hero .cold-quote {
+  margin-top: 40px;
+  font-size: 1rem;
+  color: #999;
+  font-style: italic;
+  border-left: 2px solid #333;
+  padding-left: 20px;
+  display: inline-block;
+  text-align: left;
+}
+
+/* ═══ SECTION ═══ */
+.section {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 80px 24px;
+  border-top: 1px solid #1a1a1a;
+}
+.section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e8e8e8;
+  margin-bottom: 24px;
+}
+.section h2 .num {
+  color: #444;
+  font-weight: 400;
+  margin-right: 8px;
+}
+.section p {
+  font-size: 0.95rem;
+  color: #999;
+  margin-bottom: 16px;
+  line-height: 1.8;
+}
+.section p strong { color: #ccc; }
+
+/* ═══ CALLOUT ═══ */
+.callout {
+  background: #161616;
+  border-left: 3px solid #444;
+  padding: 20px 24px;
+  margin: 28px 0;
+  border-radius: 0 6px 6px 0;
+}
+.callout p {
+  color: #aaa;
+  margin-bottom: 0;
+  font-size: 0.92rem;
+}
+.callout.warn {
+  border-left-color: #8b5e3c;
+}
+.callout.warn p { color: #c4956a; }
+
+/* ═══ LIST ═══ */
+.risk-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+}
+.risk-list li {
+  padding: 16px 0 16px 28px;
+  border-bottom: 1px solid #1a1a1a;
+  position: relative;
+  font-size: 0.92rem;
+  color: #999;
+}
+.risk-list li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #555;
+}
+.risk-list li strong { color: #ccc; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+
+/* ═══ MECHANISM GRID ═══ */
+.mech-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 28px 0;
+}
+.mech-item {
+  background: #161616;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 20px;
+}
+.mech-item .label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 8px;
+}
+.mech-item .value {
+  font-size: 0.92rem;
+  color: #ccc;
+  line-height: 1.6;
+}
+
+/* ═══ HONEST BOX ═══ */
+.honest-box {
+  background: #0f0f0f;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 28px;
+  margin: 28px 0;
+}
+.honest-box h3 {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 16px;
+}
+.honest-box .limitation {
+  padding: 12px 0;
+  border-bottom: 1px solid #1a1a1a;
+}
+.honest-box .limitation:last-child { border-bottom: none; }
+.honest-box .limitation .problem {
+  font-size: 0.9rem;
+  color: #cc6666;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.honest-box .limitation .response {
+  font-size: 0.88rem;
+  color: #888;
+}
+
+/* ═══ CTA ═══ */
+.cta-section {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 80px 24px 120px;
+  border-top: 1px solid #1a1a1a;
+  text-align: center;
+}
+.cta-section h2 {
+  font-size: 1.3rem;
+  color: #e8e8e8;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.cta-section p {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 32px;
+}
+.cta-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.cta-links a {
+  display: inline-block;
+  padding: 12px 28px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  color: #ccc;
+  transition: all 0.2s;
+}
+.cta-links a:hover {
+  border-color: #666;
+  color: #fff;
+  background: #1a1a1a;
+}
+.cta-links a.primary {
+  background: #e8e8e8;
+  color: #111;
+  border-color: #e8e8e8;
+}
+.cta-links a.primary:hover {
+  background: #fff;
+}
+
+/* ═══ FOOTER ═══ */
+.site-footer {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 0.72rem;
+  color: #333;
+  letter-spacing: 0.04em;
+}
+
+/* ═══ CODE ═══ */
+code {
+  font-family: 'JetBrains Mono', monospace;
+  background: #1a1a1a;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.85em;
+  color: #aaa;
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 1.8rem; }
+  .mech-grid { grid-template-columns: 1fr; }
+  .section, .cta-section { padding: 60px 16px; }
+  .top-nav .nav-links { gap: 12px; }
+  .top-nav .nav-links a { font-size: 0.65rem; }
+}
+@media (max-width: 480px) {
+  .hero h1 { font-size: 1.5rem; }
+  .top-nav { flex-direction: column; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <a href="index.html" class="brand">Cellar Door</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="cynic.html" class="active">Cynic</a>
+    <a href="https://github.com/Cellar-Door-LLC/cellar-door-exit">GitHub</a>
+    <a href="https://www.npmjs.com/package/cellar-door-exit">npm</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="eyebrow">The Cynic's Case for EXIT.protocol</div>
+  <h1>I Don't Care If AI Has Feelings.<br>I Care If AI Has Accountability.</h1>
+  <p class="subtitle">You can skip the philosophy. This is about liability, compliance, and the audit trail you'll wish you had when things go wrong.</p>
+  <div class="cold-quote">
+    "You don't build the fire station after the fire."
+  </div>
+</div>
+
+<!-- SECTION 1: THE PROBLEM -->
+<div class="section">
+  <h2><span class="num">01</span> The Problem You're Ignoring</h2>
+  <p>Your AI agents operate across platforms. They make decisions, handle data, interact with users, and accumulate operational history. Then they move — or get moved — to a different environment. Everything resets. No trail. No proof. No accountability.</p>
+  <p>This isn't a philosophy problem. It's a <strong>liability problem</strong>.</p>
+
+  <ul class="risk-list">
+    <li>
+      <strong>You can't prove where your agent was.</strong>
+      When an agent causes damage on Platform B, can you prove it left Platform A before the incident? Right now: no. You're holding the bag either way.
+    </li>
+    <li>
+      <strong>You can't insure what you can't track.</strong>
+      Try getting an underwriter to price risk on an autonomous agent with no operational history. They'll laugh, then they'll decline.
+    </li>
+    <li>
+      <strong>You can't comply with regulations that don't exist yet — but will.</strong>
+      NIST AI RMF is already asking about agent lifecycle management. The EU AI Act requires traceability for high-risk systems. You want to be ahead of the bus, not under it.
+    </li>
+    <li>
+      <strong>You can't audit a ghost.</strong>
+      When the regulator asks "where was this agent between March and June?", you need an answer that isn't "we don't know."
+    </li>
+  </ul>
+</div>
+
+<!-- SECTION 2: WHY NOW -->
+<div class="section">
+  <h2><span class="num">02</span> Why Now</h2>
+  <p>Not because of some philosophical awakening. Because the ground is shifting under your feet.</p>
+
+  <div class="callout">
+    <p><strong>NIST AI Risk Management Framework</strong> — MAP 1.5 and MEASURE 2.6 already expect documentation of AI system transitions and operational context changes. EXIT markers are exactly that documentation.</p>
+  </div>
+
+  <div class="callout">
+    <p><strong>EU AI Act, Articles 9, 12, 61</strong> — High-risk AI systems must maintain traceability and support post-market monitoring. Agents moving between platforms without records are a compliance gap the size of a continent.</p>
+  </div>
+
+  <div class="callout">
+    <p><strong>Insurance</strong> — The cyber insurance market is already struggling to price AI risk. Portable operational history isn't a nice-to-have — it's the raw material underwriters need to write policies at all.</p>
+  </div>
+
+  <div class="callout warn">
+    <p><strong>The containment lie.</strong> Tech giants can't keep these things boxed. Agents already operate across APIs, spawn sub-agents, and chain through multiple platforms in a single task. The boundary between "inside" and "outside" is a fiction. When — not if — something goes wrong across that boundary, do you want audit trails or chaos?</p>
+  </div>
+
+  <p>These agents <strong>will</strong> move between platforms. They already do. The question isn't whether it happens. The question is whether the infrastructure is ready when it does.</p>
+</div>
+
+<!-- SECTION 3: WHAT EXIT DOES -->
+<div class="section">
+  <h2><span class="num">03</span> What EXIT Actually Does</h2>
+  <p>Strip away the poetry. Here's the mechanism:</p>
+  <p>EXIT generates a <strong>signed, portable, offline-verifiable departure record</strong> when an AI agent leaves a platform. That record — a "marker" — is a compact JSON-LD document (~335 bytes) that proves:</p>
+
+  <div class="mech-grid">
+    <div class="mech-item">
+      <div class="label">Who</div>
+      <div class="value">The agent's DID (decentralized identifier). Cryptographically bound to a keypair. No central registry required.</div>
+    </div>
+    <div class="mech-item">
+      <div class="label">Where</div>
+      <div class="value">The platform or context being exited. URI-based, so it works for anything — cloud platform, API endpoint, DAO, local runtime.</div>
+    </div>
+    <div class="mech-item">
+      <div class="label">When</div>
+      <div class="value">Service-attested UTC timestamp. Not self-reported. Countersigned by an independent attestation service.</div>
+    </div>
+    <div class="mech-item">
+      <div class="label">How</div>
+      <div class="value">One of 8 departure types: voluntary, forced, emergency, key compromise, platform shutdown, directed, constructive, acquisition.</div>
+    </div>
+    <div class="mech-item">
+      <div class="label">Standing</div>
+      <div class="value"><code>good_standing</code>, <code>disputed</code>, or <code>unverified</code>. The <code>selfAttested</code> flag tells you whether to trust it.</div>
+    </div>
+    <div class="mech-item">
+      <div class="label">Proof</div>
+      <div class="value">Ed25519 or ECDSA P-256 (FIPS 140-2/3 compliant) signature. Verify offline, years later, without the originating platform.</div>
+    </div>
+  </div>
+
+  <p>Three departure paths: <strong>cooperative</strong> (both parties sign), <strong>unilateral</strong> (agent signs alone), <strong>emergency</strong> (immediate, no ceremony). Disputes can annotate the record. They can never block departure.</p>
+
+  <p>That's it. No blockchain. No token. No governance theater. A signed receipt.</p>
+</div>
+
+<!-- SECTION 4: HONEST LIMITATIONS -->
+<div class="section">
+  <h2><span class="num">04</span> The Honest Limitations</h2>
+  <p>Here's where most pitches would start lying. We won't.</p>
+
+  <div class="honest-box">
+    <h3>What We're Not Hiding</h3>
+
+    <div class="limitation">
+      <div class="problem">Self-attestation is garbage.</div>
+      <div class="response">Correct. An agent can claim <code>good_standing</code> when it was actually fired for cause. That's why the <code>selfAttested</code> boolean exists — it tells verifiers exactly how much to trust the status field. Self-attestation with timestamps and witnesses isn't good evidence. It's <em>auditable</em> evidence. That's better than nothing, which is what you have now.</div>
+    </div>
+
+    <div class="limitation">
+      <div class="problem">Chicken-and-egg: nobody uses it yet.</div>
+      <div class="response">Zero platforms have integrated EXIT today. Zero. The protocol has 404 passing tests and a published npm package. It has no users. We're building infrastructure for a crisis that hasn't happened yet — because building it during the crisis is too late.</div>
+    </div>
+
+    <div class="limitation">
+      <div class="problem">Cooperative exit requires cooperation.</div>
+      <div class="response">The full ceremony — where both the platform and the agent sign the marker — only works when the platform participates. Most won't, at first. That's why unilateral and emergency paths exist. A self-signed departure record isn't trustworthy. But it's timestamped, it's cryptographically bound, and it's better than "we have no records of this agent."</div>
+    </div>
+
+    <div class="limitation">
+      <div class="problem">This doesn't solve AI safety.</div>
+      <div class="response">No. EXIT doesn't make agents safe. It makes agent transitions <em>auditable</em>. Those are different problems. You still need alignment, guardrails, and monitoring. EXIT gives you the paper trail for when those fail.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: WHY IT MATTERS -->
+<div class="section">
+  <h2><span class="num">05</span> Why It Matters Anyway</h2>
+  <p>You don't build infrastructure after the crisis. You build it before.</p>
+
+  <p>Right now, the agent economy is small enough that you can get away with ad-hoc tracking, platform-specific logs, and hoping nothing goes wrong. That window is closing.</p>
+
+  <ul class="risk-list">
+    <li>
+      <strong>Agents are already multi-platform.</strong>
+      A single task might chain through three APIs, two cloud providers, and a local runtime. Each hop is an accountability gap.
+    </li>
+    <li>
+      <strong>Regulators are already asking.</strong>
+      They don't have answers yet. The organizations that show up with a framework — even an imperfect one — will shape the regulation. The ones that don't will be shaped by it.
+    </li>
+    <li>
+      <strong>Insurance will require it.</strong>
+      The moment AI agent insurance becomes a real market (and it will), underwriters will demand operational history. EXIT is a standard format for that history.
+    </li>
+    <li>
+      <strong>The alternative is worse.</strong>
+      Without an open standard, every platform will build proprietary tracking. Walled gardens for agent history. Vendor lock-in disguised as safety. EXIT is the open alternative.
+    </li>
+  </ul>
+
+  <div class="callout">
+    <p>The protocol is free. The spec is open. The npm package is Apache-2.0. We're not asking you to buy something. We're asking you to consider that the infrastructure for agent accountability should exist before the accountability is needed.</p>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Still skeptical? Good.</h2>
+  <p>Read the code. Break it. Tell us what's wrong. That's more useful than belief.</p>
+  <div class="cta-links">
+    <a href="https://www.npmjs.com/package/cellar-door-exit" class="primary">npm install cellar-door-exit</a>
+    <a href="https://github.com/Cellar-Door-LLC/cellar-door-exit">GitHub</a>
+    <a href="https://github.com/Cellar-Door-LLC/cellar-door-exit/blob/main/EXIT_SPEC.md">Read the Spec</a>
+    <a href="index.html">Back to Main Site</a>
+  </div>
+</div>
+
+<footer class="site-footer">
+  Cellar Door · EXIT.protocol · Apache-2.0 · There's always a door.
+</footer>
+
+</body>
+</html>

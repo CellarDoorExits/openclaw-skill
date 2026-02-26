@@ -58,20 +58,25 @@ export function getValidTransitions(state: CeremonyState): CeremonyState[] {
  * ```
  */
 export class CeremonyStateMachine {
-  state: CeremonyState = CeremonyState.Alive;
+  private _state: CeremonyState = CeremonyState.Alive;
   intent?: ExitIntent;
   marker?: ExitMarker;
   exitType?: ExitType;
 
+  /** Current ceremony state (read-only). */
+  get state(): CeremonyState {
+    return this._state;
+  }
+
   private transition(to: CeremonyState): void {
-    if (!TRANSITIONS[this.state].includes(to)) {
+    if (!TRANSITIONS[this._state].includes(to)) {
       throw new CeremonyError(
-        this.state,
+        this._state,
         to,
-        TRANSITIONS[this.state].map(s => s as string),
+        TRANSITIONS[this._state].map(s => s as string),
       );
     }
-    this.state = to;
+    this._state = to;
   }
 
   /**

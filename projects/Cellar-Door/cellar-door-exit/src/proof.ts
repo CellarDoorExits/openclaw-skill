@@ -102,6 +102,11 @@ export function verifyMarker(marker: ExitMarker): VerificationResult {
     return { valid: false, errors };
   }
 
+  // SPEC-004: Validate proof.created is valid ISO 8601
+  if (!marker.proof.created || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?$/.test(marker.proof.created) || isNaN(Date.parse(marker.proof.created))) {
+    errors.push("Proof missing or invalid created timestamp (must be ISO 8601)");
+  }
+
   // Subject-key binding: verificationMethod must match subject DID
   if (marker.subject && marker.proof.verificationMethod !== marker.subject) {
     errors.push("Proof verificationMethod does not match marker subject — possible attribution forgery");
@@ -185,6 +190,16 @@ export function verifyTrustEnhancers(marker: ExitMarker): VerificationResult {
   if (!marker.trustEnhancers) return { valid: true, errors };
 
   const te = marker.trustEnhancers;
+  const MAX_TRUST_ENHANCER_ITEMS = 100;
+
+  // INPUT-017: Cap trust enhancer array lengths
+  for (const arrayName of ["timestamps", "witnesses", "identityClaims"] as const) {
+    const arr = te[arrayName];
+    if (Array.isArray(arr) && arr.length > MAX_TRUST_ENHANCER_ITEMS) {
+      errors.push(`Trust enhancer ${arrayName} exceeds maximum of ${MAX_TRUST_ENHANCER_ITEMS} items (got ${arr.length})`);
+      return { valid: false, errors };
+    }
+  }
 
   // Timestamps (TimestampAttachment: tsaUrl, hash, timestamp, receipt, nonce?)
   if (te.timestamps) {

@@ -21,6 +21,11 @@ function isValidDid(s: string): boolean {
   return DID_KEY_RE.test(s) || s.startsWith("did:");
 }
 
+/** Reject strings containing null bytes or ASCII control characters (ADV-002). */
+function containsControlChars(s: string): boolean {
+  return /[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(s);
+}
+
 /**
  * Validate an ExitMarker against the schema.
  *
@@ -93,6 +98,13 @@ export function validateMarker(marker: unknown): ValidationResult {
     if (typeof p.type !== "string" || !p.type) errors.push("Proof missing type");
     if (typeof p.proofValue !== "string") errors.push("Proof missing proofValue");
     if (typeof p.verificationMethod !== "string") errors.push("Proof missing verificationMethod");
+  }
+
+  // ADV-002: Reject null bytes / control characters in critical string fields
+  for (const field of ["subject", "origin", "id"] as const) {
+    if (typeof m[field] === "string" && containsControlChars(m[field] as string)) {
+      errors.push(`${field} contains invalid control characters`);
+    }
   }
 
   // Validate DID formats where applicable

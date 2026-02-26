@@ -163,7 +163,7 @@ The `proof` object MUST contain:
 | `verificationMethod` | string | DID or key URI for verification |
 | `proofValue` | string | Base64-encoded signature |
 
-The data signed MUST be the canonical JSON form (§13.1) of the marker excluding the `proof` and `id` fields.
+The data signed MUST be the canonical JSON form (§13.1) of the marker excluding the `proof` and `id` fields. Implementations MUST prepend the domain separation string `exit-marker-v1.1:` to the canonical marker content before signing or verifying. This prevents cross-protocol signature replay attacks.
 
 #### 3.5.1 Supported Signature Algorithms
 

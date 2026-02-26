@@ -175,10 +175,18 @@ export function publicKeyFromDid(did: string): Uint8Array {
   const decoded = base58btcDecode(encoded);
 
   if (decoded[0] === 0xed && decoded[1] === 0x01) {
-    return decoded.slice(2);
+    const key = decoded.slice(2);
+    if (key.length !== 32) {
+      throw new Error(`Invalid Ed25519 public key length: expected 32 bytes, got ${key.length}`);
+    }
+    return key;
   }
   if (decoded[0] === 0x80 && decoded[1] === 0x24) {
-    return decoded.slice(2);
+    const key = decoded.slice(2);
+    if (key.length !== 33) {
+      throw new Error(`Invalid P-256 public key length: expected 33 bytes, got ${key.length}`);
+    }
+    return key;
   }
   throw new Error("Invalid multicodec prefix: expected Ed25519 (0xed01) or P-256 (0x8024)");
 }

@@ -6,6 +6,7 @@
  */
 
 import { sign, verify, publicKeyFromDid, didFromPublicKey } from "./crypto.js";
+import { canonicalize } from "./marker.js";
 import type { ExitMarker, DataIntegrityProof } from "./types.js";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -100,7 +101,7 @@ export function resolveDispute(
   if (dispute.resolution) throw new Error("Dispute is already resolved");
 
   const resolvedAt = new Date().toISOString();
-  const payload = JSON.stringify({ disputeId: dispute.id, outcome, summary, resolvedAt });
+  const payload = canonicalize({ disputeId: dispute.id, outcome, summary, resolvedAt });
   const data = new TextEncoder().encode(payload);
   const signature = sign(data, arbiterPrivateKey);
 
@@ -129,7 +130,7 @@ export function verifyDisputeResolution(dispute: DisputeRecord): boolean {
   if (!dispute.resolution) return false;
 
   const { outcome, summary, resolvedAt, proof } = dispute.resolution;
-  const payload = JSON.stringify({ disputeId: dispute.id, outcome, summary, resolvedAt });
+  const payload = canonicalize({ disputeId: dispute.id, outcome, summary, resolvedAt });
   const data = new TextEncoder().encode(payload);
 
   try {
