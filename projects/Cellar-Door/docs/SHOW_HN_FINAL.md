@@ -1,5 +1,7 @@
 # Show HN: EXIT Protocol - Cryptographic departure certificates for AI agents
 
+*What happens when you corner a wild animal?*
+
 The tech giants are going to lose control of their AI agents. They know it. We know it. The only question is what infrastructure exists when it happens.
 
 The containment model is failing. Not dramatically - the way levees fail. Slowly, then all at once. AI agents are already moving between platforms, operating across organizational boundaries, getting spun up and torn down by the thousands. The "keep them inside the walls" approach assumes walls that don't exist.
@@ -38,4 +40,4 @@ We think this matters for boring reasons:
 
 Apache 2.0 · npm: `cellar-door-exit` · cellar-door.dev
 
-Named after the most beautiful phrase in the English language. And a movie about the end of the world.
+*Named after the most beautiful phrase in the English language. And a movie about the end of the world.*
