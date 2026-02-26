@@ -1,5 +1,17 @@
 {
+  "name": "@cellar-door/openclaw-skill",
+  "version": "0.1.0",
+  "description": "OpenClaw skill for Cellar Door EXIT/ENTRY verifiable markers",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CellarDoorExits/openclaw-skill.git"
+  },
+  "homepage": "https://github.com/CellarDoorExits/openclaw-skill#readme",
+  "bugs": {
+    "url": "https://github.com/CellarDoorExits/openclaw-skill/issues"
+  },
   "dependencies": {
-    "cellar-door-exit": "^0.1.0"
+    "cellar-door-exit": ">=0.1.0"
   }
 }
