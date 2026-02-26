@@ -870,7 +870,15 @@ A stronger form of redaction where only explicitly revealed fields are shown; al
 - Revealed fields MUST be byte-identical to the original
 - The set of revealed fields SHOULD be the minimum necessary for the verifier's purpose
 
-### 10.4 GDPR Compliance
+### 10.4 Cross-Border Data Transfer (B10)
+
+Implementations deploying across jurisdictions SHOULD document applicable data transfer mechanisms (e.g., EU Standard Contractual Clauses, UK adequacy decisions) in their deployment documentation.
+
+### 10.5 FIPS Compliance Note (B16)
+
+The default encryption algorithm (XChaCha20-Poly1305) is not FIPS 140-2/3 approved. Deployments requiring FIPS compliance SHOULD implement AES-256-GCM as an alternative. A FIPS-compliant encryption profile is planned for v1.2.
+
+### 10.6 GDPR Compliance
 
 EXIT markers may contain personal data under GDPR Article 4(1). Implementers in EU jurisdictions MUST:
 

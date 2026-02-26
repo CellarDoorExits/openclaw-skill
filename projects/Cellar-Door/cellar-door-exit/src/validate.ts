@@ -280,5 +280,73 @@ export function validateMarker(marker: unknown): ValidationResult {
     }
   }
 
-  return { valid: errors.length === 0, errors };
+  // ─── Warnings (non-fatal) ──────────────────────────────────────────────────
+  const warnings: string[] = [];
+
+  // B6: String length bounds
+  for (const field of ["subject", "origin", "reason", "narrative"] as const) {
+    if (typeof m[field] === "string" && (m[field] as string).length > MAX_FIELD_LENGTH) {
+      warnings.push(`${field} exceeds recommended maximum length of ${MAX_FIELD_LENGTH} characters`);
+    }
+  }
+
+  // B7: ISO 8601 timezone permissiveness — accept with or without Z, treat missing Z as UTC
+  if (typeof m.timestamp === "string" && ISO_8601_RE.test(m.timestamp) && !m.timestamp.endsWith("Z")) {
+    warnings.push("timestamp missing 'Z' suffix — treating as UTC (B7)");
+  }
+
+  // B8: Validate selfAttested
+  if (m.selfAttested !== undefined && typeof m.selfAttested !== "boolean") {
+    warnings.push("selfAttested should be a boolean");
+  }
+
+  // B9: Validate coercionLabel format
+  if (m.coercionLabel !== undefined) {
+    if (typeof m.coercionLabel !== "string") {
+      warnings.push("coercionLabel should be a string");
+    }
+  }
+
+  // B9: Validate preRotationCommitment format
+  if (m.preRotationCommitment !== undefined) {
+    if (typeof m.preRotationCommitment !== "string") {
+      warnings.push("preRotationCommitment should be a string");
+    } else if (!HEX_HASH_RE.test(m.preRotationCommitment as string)) {
+      warnings.push("preRotationCommitment should be a 64-character hex SHA-256 hash");
+    }
+  }
+
+  // B15: Validate sunsetDate format when present
+  if (m.sunsetDate !== undefined) {
+    if (typeof m.sunsetDate !== "string" || !isValidISO8601(m.sunsetDate as string)) {
+      warnings.push("sunsetDate should be a valid ISO 8601 date string");
+    }
+  }
+
+  // B15: Validate completenessAttestation sub-fields when present
+  if (m.completenessAttestation !== undefined && typeof m.completenessAttestation === "object" && m.completenessAttestation !== null) {
+    const ca = m.completenessAttestation as Record<string, unknown>;
+    if (ca.attestedAt !== undefined && (typeof ca.attestedAt !== "string" || !isValidISO8601(ca.attestedAt as string))) {
+      warnings.push("completenessAttestation.attestedAt should be a valid ISO 8601 date");
+    }
+    if (ca.markerCount !== undefined && (typeof ca.markerCount !== "number" || !Number.isInteger(ca.markerCount) || (ca.markerCount as number) < 0)) {
+      warnings.push("completenessAttestation.markerCount should be a non-negative integer");
+    }
+    if (ca.signature !== undefined && typeof ca.signature !== "string") {
+      warnings.push("completenessAttestation.signature should be a string");
+    }
+  }
+
+  // B15: Cross-check ExitIntent subject against marker subject
+  // (This applies when the marker carries an intent field — e.g., from ceremony context)
+  if (m.intent !== undefined && typeof m.intent === "object" && m.intent !== null) {
+    const intent = m.intent as Record<string, unknown>;
+    if (typeof intent.subject === "string" && typeof m.subject === "string" && intent.subject !== m.subject) {
+      warnings.push("ExitIntent subject does not match marker subject");
+    }
+  }
+
+  const result: ValidationResult = { valid: errors.length === 0, errors };
+  if (warnings.length > 0) result.warnings = warnings;
+  return result;
 }
