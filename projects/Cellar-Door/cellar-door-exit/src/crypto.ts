@@ -196,6 +196,8 @@ export function generateP256KeyPair(): KeyPair {
 
 /**
  * Sign data with a P-256 private key (SHA-256 hash then ECDSA sign).
+ * Returns 64-byte compact signature (r||s, 32 bytes each).
+ * This is the canonical format — NOT DER-encoded.
  */
 export function signP256(data: Uint8Array, privateKey: Uint8Array): Uint8Array {
   const hash = sha256(data);
@@ -204,6 +206,7 @@ export function signP256(data: Uint8Array, privateKey: Uint8Array): Uint8Array {
 
 /**
  * Verify a P-256 ECDSA signature.
+ * Expects 64-byte compact signature (r||s), not DER.
  */
 export function verifyP256(data: Uint8Array, signature: Uint8Array, publicKey: Uint8Array): boolean {
   try {

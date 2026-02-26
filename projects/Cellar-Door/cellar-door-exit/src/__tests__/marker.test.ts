@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   generateKeyPair,
+  didFromPublicKey,
   createMarker,
   computeId,
   signMarker,
@@ -19,7 +20,7 @@ describe("ExitMarker", () => {
   it("creates a voluntary exit marker, signs it, and verifies it", () => {
     const { publicKey, privateKey } = generateKeyPair();
     const marker = createMarker({
-      subject: "did:key:zTestSubject",
+      subject: didFromPublicKey(publicKey),
       origin: "https://example.com",
       exitType: ExitType.Voluntary,
     });
@@ -40,7 +41,7 @@ describe("ExitMarker", () => {
   it("creates an emergency exit marker with justification", () => {
     const { publicKey, privateKey } = generateKeyPair();
     const marker = createMarker({
-      subject: "did:key:zEmergency",
+      subject: didFromPublicKey(publicKey),
       origin: "https://failing-system.org",
       exitType: ExitType.Emergency,
       emergencyJustification: "Platform unresponsive for 72+ hours",
@@ -59,7 +60,7 @@ describe("ExitMarker", () => {
   it("detects tampering with a signed marker", () => {
     const { publicKey, privateKey } = generateKeyPair();
     const marker = createMarker({
-      subject: "did:key:zTamperTest",
+      subject: didFromPublicKey(publicKey),
       origin: "https://example.com",
       exitType: ExitType.Voluntary,
     });
@@ -110,14 +111,15 @@ describe("CeremonyStateMachine", () => {
 
     expect(sm.state).toBe("alive");
 
-    sm.declareIntent("did:key:zSubject", "https://origin.com", ExitType.Voluntary, privateKey, publicKey);
+    const did = didFromPublicKey(publicKey);
+    sm.declareIntent(did, "https://origin.com", ExitType.Voluntary, privateKey, publicKey);
     expect(sm.state).toBe("intent");
 
     sm.snapshot();
     expect(sm.state).toBe("snapshot");
 
     const marker = createMarker({
-      subject: "did:key:zSubject",
+      subject: did,
       origin: "https://origin.com",
       exitType: ExitType.Voluntary,
     });
@@ -139,12 +141,13 @@ describe("CeremonyStateMachine", () => {
     const { publicKey, privateKey } = generateKeyPair();
     const sm = new CeremonyStateMachine();
 
-    sm.declareIntent("did:key:zEmergency", "https://dying.org", ExitType.Emergency, privateKey, publicKey);
+    const did = didFromPublicKey(publicKey);
+    sm.declareIntent(did, "https://dying.org", ExitType.Emergency, privateKey, publicKey);
     // Emergency stays in ALIVE, goes to FINAL on sign
     expect(sm.state).toBe("alive");
 
     const marker = createMarker({
-      subject: "did:key:zEmergency",
+      subject: did,
       origin: "https://dying.org",
       exitType: ExitType.Emergency,
       emergencyJustification: "Platform is dying",
@@ -343,7 +346,7 @@ describe("New ExitType values (v1.1)", () => {
     it(`creates, validates, signs, and verifies a ${label} marker`, () => {
       const { publicKey, privateKey } = generateKeyPair();
       const marker = createMarker({
-        subject: `did:key:z${label}Test`,
+        subject: didFromPublicKey(publicKey),
         origin: "https://example.com",
         exitType: type,
       });

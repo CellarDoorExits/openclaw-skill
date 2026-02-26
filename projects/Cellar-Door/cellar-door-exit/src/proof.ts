@@ -10,7 +10,11 @@ import { SigningError, VerificationError } from "./errors.js";
 import type { Signer } from "./signer.js";
 import { proofTypeForAlgorithm, algorithmFromProofType } from "./signer.js";
 
+const DOMAIN_PREFIX = "exit-marker-v1.1:";
+
 /**
+ * @deprecated Use {@link signMarkerWithSigner} instead. This function hardcodes Ed25519.
+ *
  * Sign a marker with an Ed25519 private key. Returns a new marker with proof attached.
  *
  * @param marker - The EXIT marker to sign.
@@ -30,10 +34,10 @@ export function signMarker(marker: ExitMarker, privateKey: Uint8Array, publicKey
     const did = didFromPublicKey(publicKey);
     const now = new Date().toISOString();
 
-    // Create the data to sign: canonical form of marker without proof
-    const { proof: _proof, ...rest } = marker;
+    // Create the data to sign: canonical form of marker without proof or id
+    const { proof: _proof, id: _id, ...rest } = marker;
     const canonical = canonicalize(rest);
-    const data = new TextEncoder().encode(canonical);
+    const data = new TextEncoder().encode(DOMAIN_PREFIX + canonical);
 
     const signature = sign(data, privateKey);
     const proofValue = Buffer.from(signature).toString("base64");
@@ -98,12 +102,25 @@ export function verifyMarker(marker: ExitMarker): VerificationResult {
     return { valid: false, errors };
   }
 
+  // Subject-key binding: verificationMethod must match subject DID
+  if (marker.subject && marker.proof.verificationMethod !== marker.subject) {
+    errors.push("Proof verificationMethod does not match marker subject — possible attribution forgery");
+    return { valid: false, errors };
+  }
+
+  // Algorithm cross-check: proof.type must match DID multicodec
+  const didAlg = algorithmFromDid(marker.proof.verificationMethod);
+  if (didAlg !== alg) {
+    errors.push(`Algorithm mismatch: proof type indicates ${alg} but DID uses ${didAlg}`);
+    return { valid: false, errors };
+  }
+
   // Signature verification
   try {
     const publicKey = publicKeyFromDid(marker.proof.verificationMethod);
-    const { proof: _proof, ...rest } = marker;
+    const { proof: _proof, id: _id, ...rest } = marker;
     const canonical = canonicalize(rest);
-    const data = new TextEncoder().encode(canonical);
+    const data = new TextEncoder().encode(DOMAIN_PREFIX + canonical);
     const signature = new Uint8Array(Buffer.from(marker.proof.proofValue, "base64"));
 
     let valid: boolean;
@@ -131,9 +148,9 @@ export async function signMarkerWithSigner(marker: ExitMarker, signer: Signer): 
     const did = signer.did();
     const now = new Date().toISOString();
 
-    const { proof: _proof, ...rest } = marker;
+    const { proof: _proof, id: _id, ...rest } = marker;
     const canonical = canonicalize(rest);
-    const data = new TextEncoder().encode(canonical);
+    const data = new TextEncoder().encode(DOMAIN_PREFIX + canonical);
 
     const signature = await signer.sign(data);
     const proofValue = Buffer.from(signature).toString("base64");
