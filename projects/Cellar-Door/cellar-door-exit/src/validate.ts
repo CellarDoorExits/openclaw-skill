@@ -61,6 +61,16 @@ export function validateMarker(marker: unknown): ValidationResult {
     return { valid: false, errors: ["Marker must be an object"] };
   }
 
+  // ADV-003: Reject oversized markers (8KB limit)
+  try {
+    const serialized = JSON.stringify(m);
+    if (new TextEncoder().encode(serialized).byteLength > 8192) {
+      return { valid: false, errors: ["Marker exceeds maximum size of 8192 bytes"] };
+    }
+  } catch {
+    return { valid: false, errors: ["Marker cannot be serialized to JSON"] };
+  }
+
   // @context
   if (m["@context"] !== EXIT_CONTEXT_V1) {
     errors.push(`Invalid @context: expected "${EXIT_CONTEXT_V1}"`);

@@ -15,4 +15,4 @@ For production deployments requiring certified cryptography, use the `Signer` in
 
 ## Reporting Vulnerabilities
 
-Open a GitHub issue with the "security" label, or email security@cellar-door.dev. We will respond within 48 hours.
+Open a GitHub issue with the "security" label, or email hawthornhollows@gmail.com. We will respond within 48 hours.
