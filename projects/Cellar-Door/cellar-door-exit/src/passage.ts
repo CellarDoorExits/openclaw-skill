@@ -33,7 +33,7 @@ import { createMarker } from "./marker.js";
 import { signMarker, verifyMarker } from "./proof.js";
 import { generateKeyPair, didFromPublicKey } from "./crypto.js";
 import { quickExit, quickVerify, generateIdentity } from "./convenience.js";
-import { departAndAnchor, departAndVerify } from "./anchor.js";
+import { departAndAnchor, departAndVerify } from "./full-service.js";
 import type {
   ExitMarker,
   DataIntegrityProof,
