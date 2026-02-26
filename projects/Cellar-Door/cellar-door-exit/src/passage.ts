@@ -1,8 +1,23 @@
 /**
  * cellar-door-exit — Passage API (v0.2.0)
  *
- * Renamed API surface using "Passage" terminology throughout.
- * The old names remain as deprecated aliases for backward compatibility.
+ * ## Vocabulary: Exit vs Passage
+ *
+ * - **Exit** = one-way departure only. The subject leaves an origin.
+ *   Functions that handle only the departure side use Exit/Departure naming.
+ *
+ * - **Passage** = the full journey: EXIT from one platform + ENTRY to another.
+ *   Functions that handle the complete transfer between platforms use Passage naming.
+ *   "Transfer" is NOT used — always say "Passage" for the full journey.
+ *
+ * Examples:
+ *   createDepartureMarker  → Exit only (creates an unsigned departure marker)
+ *   signDepartureMarker    → Exit only (signs a departure marker)
+ *   verifyDeparture        → Exit only (verifies a departure marker)
+ *   createPassage          → Passage (full-service: depart + anchor for receiving platform)
+ *   verifyPassage          → Passage (full-service: verify anchored departure)
+ *
+ * The old names (createMarker, signMarker, etc.) remain as deprecated aliases.
  *
  * EXIT + ENTRY = PASSAGE. Two ceremonies, one protocol.
  *

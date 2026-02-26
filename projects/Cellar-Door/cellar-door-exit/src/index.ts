@@ -103,7 +103,7 @@ export {
 } from "./marker.js";
 
 /** @deprecated Use `signDepartureMarker` from passage API instead */
-export { signMarker, verifyMarker, signMarkerWithSigner, verifyMarkerMultiAlg, type VerificationResult } from "./proof.js";
+export { signMarker, verifyMarker, signMarkerWithSigner, verifyMarkerMultiAlg, verifyTrustEnhancers, type VerificationResult } from "./proof.js";
 
 export { validateMarker, type ValidationResult } from "./validate.js";
 

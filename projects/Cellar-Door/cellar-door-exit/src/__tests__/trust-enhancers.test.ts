@@ -7,7 +7,7 @@
 
 import { describe, it, expect } from "vitest";
 import { validateMarker } from "../validate.js";
-import { signMarker, verifyMarker } from "../proof.js";
+import { signMarker, verifyMarker, verifyTrustEnhancers } from "../proof.js";
 import { generateKeyPair, didFromPublicKey } from "../crypto.js";
 import type { ExitMarker, TrustEnhancers, TimestampAttachment, WitnessAttachment, IdentityClaimAttachment } from "../types.js";
 
@@ -295,6 +295,79 @@ describe("Trust Enhancers (Conduit-Only)", () => {
       const signed = signMarker(marker, privateKey, publicKey);
       const result = verifyMarker(signed);
       expect(result.valid).toBe(true);
+    });
+  });
+
+  describe("verifyTrustEnhancers()", () => {
+    it("returns valid for marker without trust enhancers", () => {
+      const marker = makeBaseMarker();
+      delete (marker as any).trustEnhancers;
+      const result = verifyTrustEnhancers(marker);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toEqual([]);
+    });
+
+    it("returns valid for well-formed trust enhancers", () => {
+      const marker = makeBaseMarker();
+      marker.trustEnhancers = {
+        timestamps: [{
+          tsaUrl: "https://freetsa.org/tsr",
+          hash: "a".repeat(64),
+          timestamp: "2026-02-25T12:00:00Z",
+          receipt: Buffer.from("receipt").toString("base64"),
+        }],
+        witnesses: [{
+          witnessDid: "did:key:z6MkWitness",
+          attestation: "observed",
+          timestamp: "2026-02-25T12:00:00Z",
+          signature: Buffer.from("sig").toString("base64"),
+          signatureType: "Ed25519Signature2020",
+        }],
+        identityClaims: [{
+          scheme: "did:web",
+          value: "did:web:example.com",
+          issuedAt: "2026-02-25T12:00:00Z",
+        }],
+      };
+      const result = verifyTrustEnhancers(marker);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toEqual([]);
+    });
+
+    it("reports missing timestamp fields", () => {
+      const marker = makeBaseMarker();
+      marker.trustEnhancers = {
+        timestamps: [{ tsaUrl: "", hash: "", timestamp: "", receipt: "" } as any],
+      };
+      const result = verifyTrustEnhancers(marker);
+      expect(result.valid).toBe(false);
+      expect(result.errors.length).toBeGreaterThanOrEqual(4);
+    });
+
+    it("reports missing witness fields", () => {
+      const marker = makeBaseMarker();
+      marker.trustEnhancers = {
+        witnesses: [{ witnessDid: "", attestation: "", timestamp: "", signature: "", signatureType: "" } as any],
+      };
+      const result = verifyTrustEnhancers(marker);
+      expect(result.valid).toBe(false);
+      expect(result.errors.length).toBeGreaterThanOrEqual(5);
+    });
+
+    it("reports invalid identity claim dates", () => {
+      const marker = makeBaseMarker();
+      marker.trustEnhancers = {
+        identityClaims: [{
+          scheme: "did:web",
+          value: "did:web:example.com",
+          issuedAt: "not-a-date",
+          expiresAt: "also-bad",
+        }],
+      };
+      const result = verifyTrustEnhancers(marker);
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes("invalid issuedAt"))).toBe(true);
+      expect(result.errors.some(e => e.includes("invalid expiresAt"))).toBe(true);
     });
   });
 });

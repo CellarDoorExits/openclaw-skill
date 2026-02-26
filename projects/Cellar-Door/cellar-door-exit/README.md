@@ -1,199 +1,110 @@
-# cellar-door-exit
+# cellar-door-exit 𓉸
 
-**Verifiable EXIT markers for agents, platforms, and DAOs.**
+**Right of Passage** — verifiable EXIT markers for AI agents, platforms, and DAOs.
 
-EXIT is a cryptographic primitive: the authenticated declaration of departure. When an agent leaves a context, a user leaves a platform, or a participant leaves a DAO — EXIT produces a signed, portable, offline-verifiable proof that the departure happened, when it happened, and how things stood.
+## The Problem
 
-## Install
+Your AI agent worked for months on Platform A. It built reputation, completed tasks, earned trust. Now it needs to move to Platform B. How does Platform B know any of that happened? How does the agent prove it wasn't fired for cause?
+
+Today: it can't. There's no portable, verifiable proof of departure. No vehicle history report for AI agents. Every move starts from zero.
+
+## The Solution
+
+EXIT markers — signed, portable, offline-verifiable proof of departure. A departure **ceremony** that produces a cryptographic record of *when* an agent left, *how* things stood, and *why*.
+
+Think of it as a vehicle history report, but for AI agents. Except the agent signs it, not the dealer.
+
+## Quick Start
 
 ```bash
 npm install cellar-door-exit
 ```
 
-Or clone and build:
+```typescript
+import { quickExit, quickVerify, toJSON } from "cellar-door-exit";
 
-```bash
-git clone <repo>
-cd cellar-door-exit
-npm install
-npm run build
+// Create + sign a departure marker in one line
+const { marker } = quickExit("did:web:platform.example");
+console.log(toJSON(marker));
+
+// Verify it
+const result = quickVerify(toJSON(marker));
+console.log(result.valid); // true
+```
+
+That's it. Signed, verifiable proof of departure in 3 lines.
+
+## How It Works
+
+EXIT is a **ceremony**, not a single event. Three paths, depending on cooperation:
+
+```
+Full cooperative:  ALIVE → INTENT → SNAPSHOT → OPEN → FINAL → DEPARTED
+Unilateral:        ALIVE → INTENT → SNAPSHOT → FINAL → DEPARTED
+Emergency:         ALIVE → FINAL → DEPARTED
+```
+
+Every EXIT marker has **7 mandatory fields** (~335 bytes unsigned):
+
+| Field | Purpose |
+|-------|---------|
+| `id` | Content-addressed identifier |
+| `subject` | Who is leaving (DID) |
+| `origin` | What is being left (URI) |
+| `timestamp` | When (ISO 8601 UTC) |
+| `exitType` | `voluntary` · `forced` · `emergency` + 5 more |
+| `status` | `good_standing` · `disputed` · `unverified` |
+| `proof` | Cryptographic signature |
+
+Contests don't block exit. A dispute changes `status` — it never prevents departure.
+
+## API
+
+**80% of users need two functions:**
+
+```typescript
+import { quickExit, quickVerify } from "cellar-door-exit";
+
+const { marker, identity } = quickExit(origin, opts?);
+const result = quickVerify(jsonString);
+```
+
+**Full control:**
+
+```typescript
+import { generateIdentity, createMarker, signMarker, verifyMarker } from "cellar-door-exit";
+
+const { did, publicKey, privateKey } = generateIdentity();
+let marker = createMarker({ subject: did, origin, exitType, status });
+marker = signMarker(marker, privateKey, publicKey);
+const result = verifyMarker(marker);
+```
+
+**Passage API** (for full EXIT + ENTRY transfers between platforms):
+
+```typescript
+import { createDepartureMarker, verifyPassage } from "cellar-door-exit";
 ```
 
 ## CLI
 
-The `exit` command-line tool creates, signs, verifies, and inspects EXIT markers.
-
-### Generate a keypair
-
 ```bash
-exit keygen
+exit keygen                          # Generate DID + keypair
+exit create --origin <uri> --sign    # Create signed EXIT marker
+exit verify marker.json              # Verify a marker
+exit inspect marker.json             # Pretty-print all fields
 ```
 
-```json
-{
-  "did": "did:key:z6Mk...",
-  "publicKey": "98175d...",
-  "privateKey": "7aeee1..."
-}
-```
+## Modules
 
-### Create a signed EXIT marker
+Six optional modules extend the core 7-field schema:
 
-```bash
-# Auto-generate identity and sign
-exit create --origin "did:web:platform.example" --sign
-
-# With explicit subject and reason
-exit create --origin "did:web:platform.example" \
-  --subject "did:key:z6Mk..." \
-  --type voluntary \
-  --status good_standing \
-  --reason "Moving on" \
-  --sign --key ./my-private-key.hex
-```
-
-Options:
-- `--origin <uri>` — What is being exited (required)
-- `--subject <did>` — Who is exiting (auto-generated if omitted)
-- `--type <voluntary|forced|emergency>` — Nature of departure (default: voluntary)
-- `--status <good_standing|disputed|unverified>` — Standing (default: good_standing)
-- `--reason <text>` — Human-readable reason
-- `--sign` — Cryptographically sign the marker
-- `--key <path>` — Private key file (hex or base64)
-
-### Verify a marker
-
-```bash
-exit verify marker.json
-```
-
-```
-✓ VALID
-  Subject: did:key:z6Mk...
-  Origin:  did:web:platform.example
-  Type:    voluntary
-  Status:  good_standing
-```
-
-### Inspect a marker
-
-```bash
-exit inspect marker.json
-```
-
-Pretty-prints all fields, modules, proof details, and verification status.
-
-## Quick Start
-
-**→ [Getting Started Guide](docs/GETTING_STARTED.md)** — 5-minute walkthrough from zero to verified marker.
-
-## Library API
-
-### One-liner (convenience)
-
-```typescript
-import { quickExit, quickVerify, toJSON } from "cellar-door-exit";
-
-// Create identity + marker + sign in one call
-const { marker, identity } = quickExit("did:web:platform.example");
-console.log(toJSON(marker));
-
-// Verify from JSON string
-const result = quickVerify(jsonString);
-console.log(result.valid); // true
-```
-
-### Step-by-step (full control)
-
-```typescript
-import {
-  generateIdentity, createMarker, signMarker, verifyMarker,
-  ExitType, ExitStatus,
-} from "cellar-door-exit";
-
-// Generate identity (DID + keypair in one call)
-const { did, publicKey, privateKey } = generateIdentity();
-
-// Create and sign a marker
-let marker = createMarker({
-  subject: did,
-  origin: "did:web:platform.example",
-  exitType: ExitType.Voluntary,
-  status: ExitStatus.GoodStanding,
-});
-marker = signMarker(marker, privateKey, publicKey);
-
-// Verify
-const result = verifyMarker(marker);
-console.log(result.valid); // true
-```
-
-## Core Schema: 7 Fields
-
-| Field | What | Why mandatory |
-|-------|------|---------------|
-| `id` | Globally unique marker identifier | Reference, deduplication |
-| `subject` | Who is leaving (DID / agent URI) | An exit with no subject is meaningless |
-| `origin` | What is being left (URI) | Scopes the departure |
-| `timestamp` | When (ISO 8601 UTC) | Ordering, replay detection |
-| `exitType` | `voluntary` · `forced` · `emergency` | Interpretation depends on why |
-| `status` | `good_standing` · `disputed` · `unverified` | Minimal reputation portability |
-| `proof` | Cryptographic signature | Without it, it's just an unsigned log entry |
-
-## Optional Modules
-
-- **A: Lineage** — Predecessor, successor, continuity proofs (agent migration)
+- **A: Lineage** — Predecessor/successor chains for agent migration
 - **B: State Snapshot** — Hash-referenced state at exit time
 - **C: Dispute Bundle** — Active disputes, evidence, challenge windows
-- **D: Economic** — Asset manifests, obligations, exit fees ⚠️ *[securities disclaimer applies](./src/types.ts)*
+- **D: Economic** — Asset manifests, obligations, exit fees ⚠️ *securities disclaimer applies*
 - **E: Metadata** — Human-readable reason, narrative, tags
 - **F: Cross-Domain** — On-chain anchors, registry entries
-
-## The Ceremony
-
-EXIT is a ceremony, not a single event. Three paths:
-
-| Path | Steps | When |
-|------|-------|------|
-| **Full cooperative** | ALIVE → INTENT → SNAPSHOT → OPEN → FINAL → DEPARTED | Both parties cooperate |
-| **Unilateral** | ALIVE → INTENT → SNAPSHOT → FINAL → DEPARTED | Subject exits alone |
-| **Emergency** | ALIVE → FINAL → DEPARTED | No time for negotiation |
-
-Contests don't block exit. A dispute changes the `status` field — it never prevents the marker from being created.
-
-## Demo Scenarios
-
-Three scripted scenarios demonstrate EXIT in action:
-
-### Scenario 1: Voluntary Exit
-
-An agent registers with a platform, decides to leave, and goes through the full cooperative ceremony.
-
-```bash
-npm run demo:voluntary
-```
-
-Shows: identity generation → intent → negotiation → signing → departure → verification.
-
-### Scenario 2: Emergency Exit
-
-An agent detects platform shutdown and triggers the emergency path — ALIVE → FINAL → DEPARTED in milliseconds.
-
-```bash
-npm run demo:emergency
-```
-
-Shows: emergency detection → minimal marker → fast signing → survival.
-
-### Scenario 3: Successor Handoff
-
-An original agent exits with key rotation, designating a successor via Module A (Lineage). The successor verifies the chain.
-
-```bash
-npm run demo:successor
-```
-
-Shows: key rotation binding → lineage module → unilateral exit → successor verification → continuity proof.
 
 ## Design Principles
 
@@ -201,43 +112,29 @@ Shows: key rotation binding → lineage module → unilateral exit → successor
 2. **Always available.** Works with zero cooperation from the origin.
 3. **Offline-verifiable.** Check a marker years later without the origin being live.
 4. **Agent-native.** Designed for autonomous agents first.
-5. **Minimal core.** 7 fields. ~335 bytes (unsigned). Everything else is optional.
+5. **Minimal core.** 7 fields. ~335 bytes unsigned. Everything else is optional.
 6. **Irreversible.** No undo. Return is a new JOIN.
 
-## Implementation Status
-
-The following mechanism design features from EXIT_SPEC v1.1 are **implemented** in `src/modules/trust.ts`:
-
-| Feature | Status | Location |
-|---------|--------|----------|
-| Commit-reveal scheme | ✅ Implemented | `createCommitment()`, `verifyReveal()` |
-| Confidence scoring | ✅ Implemented | `computeConfidenceScore()` |
-| Tenure weight / attestation | ✅ Implemented | `createTenureAttestation()`, `verifyTenureAttestation()` |
-| Coercion labeling | ✅ Implemented | `src/ethics.ts` |
-| Guardrails module | ✅ Implemented | `src/guardrails.ts` |
-| Pre-rotation | ✅ Implemented | `src/pre-rotation.ts` |
-
-### v0.2.0 Additions
-
-| Feature | Status | Location |
-|---------|--------|----------|
-| ECDSA P-256 (FIPS) | ✅ Implemented | `src/signer.ts` — `P256Signer`, `createSigner({ algorithm: "P-256" })` |
-| Signer abstraction | ✅ Implemented | `src/signer.ts` — `Signer` interface for HSM/KMS/hardware tokens |
-| Trust enhancers | ✅ Implemented | `src/types.ts` — timestamps, witnesses, identity claims (conduit-only) |
-| Claim store | ✅ Implemented | `src/claim-store.ts` — `MemoryClaimStore`, `ingestMarker()` |
-| OpenTelemetry | ✅ Implemented | `src/telemetry.ts` — spans for sign/verify/ceremony |
-| Passage API | ✅ Implemented | `src/passage.ts` — renamed API surface (`createDepartureMarker`, etc.) |
-
-All 399 tests pass across 24 test files.
-
-### Algorithm Support
+## Security
 
 | Algorithm | Proof Type | FIPS 140-2/3 | Default |
-|-----------|-----------|-------------|---------|
+|-----------|-----------|--------------|---------|
 | Ed25519 | `Ed25519Signature2020` | ❌ | ✅ |
 | ECDSA P-256 | `EcdsaP256Signature2019` | ✅ | |
 
-Use `createSigner({ algorithm: "P-256" })` for FIPS compliance. See [HSM Integration Guide](./docs/HSM_INTEGRATION.md) for AWS KMS, Azure Key Vault, GCP KMS, and YubiKey.
+Use `createSigner({ algorithm: "P-256" })` for FIPS compliance. See the [HSM Integration Guide](./docs/HSM_INTEGRATION.md) for AWS KMS, Azure Key Vault, GCP KMS, and YubiKey.
+
+All 404 tests pass across 24 test files.
+
+## Links
+
+- **Spec:** [EXIT_SPEC v1.1](./EXIT_SPEC.md)
+- **Paper:** [Cellar Door: Right of Passage](./docs/PAPER.md)
+- **Website:** [cellar-door.dev](https://cellar-door.dev)
+- **npm:** [cellar-door-exit](https://www.npmjs.com/package/cellar-door-exit)
+- **Getting Started:** [5-minute guide](./docs/GETTING_STARTED.md)
+- **Contributing:** [CONTRIBUTING.md](./CONTRIBUTING.md)
+- **Security:** [SECURITY.md](./SECURITY.md)
 
 ## License
 

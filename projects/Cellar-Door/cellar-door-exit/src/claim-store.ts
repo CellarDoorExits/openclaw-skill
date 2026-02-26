@@ -194,7 +194,7 @@ export class MemoryClaimStore implements ClaimStoreBackend {
     hash.update(claim.issuer);
     hash.update(claim.issuedAt);
     hash.update(JSON.stringify(claim.payload));
-    return `claim:${hash.digest("hex").slice(0, 16)}`;
+    return `claim:${hash.digest("hex").slice(0, 32)}`;
   }
 
   private validateClaim(claim: StoredClaim): void {

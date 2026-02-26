@@ -4,6 +4,7 @@ import {
   didFromPublicKey,
   createMarker,
   computeId,
+  canonicalize,
   signMarker,
   verifyMarker,
   validateMarker,
@@ -367,4 +368,30 @@ describe("New ExitType values (v1.1)", () => {
       expect(result.errors).toHaveLength(0);
     });
   }
+
+  describe("NFC normalization", () => {
+    it("produces identical canonical output for NFC and NFD forms", () => {
+      // é as single codepoint (NFC) vs e + combining acute (NFD)
+      const nfc = "caf\u00E9";
+      const nfd = "cafe\u0301";
+      expect(nfc).not.toBe(nfd); // different byte representations
+      expect(nfc.normalize("NFC")).toBe(nfd.normalize("NFC")); // same after NFC
+
+      const marker1 = createMarker({
+        subject: "did:key:z6MkTest",
+        origin: `https://${nfc}.example.com`,
+        exitType: ExitType.Voluntary,
+      });
+      const marker2 = createMarker({
+        subject: "did:key:z6MkTest",
+        origin: `https://${nfd}.example.com`,
+        exitType: ExitType.Voluntary,
+        timestamp: marker1.timestamp,
+      });
+
+      const { proof: _p1, id: _id1, ...rest1 } = marker1;
+      const { proof: _p2, id: _id2, ...rest2 } = marker2;
+      expect(canonicalize(rest1)).toBe(canonicalize(rest2));
+    });
+  });
 });

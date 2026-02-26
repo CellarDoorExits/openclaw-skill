@@ -175,3 +175,53 @@ export async function signMarkerWithSigner(marker: ExitMarker, signer: Signer): 
 export async function verifyMarkerMultiAlg(marker: ExitMarker): Promise<VerificationResult> {
   return verifyMarker(marker);
 }
+
+/**
+ * Verify well-formedness of trust enhancers (conduit-only validation).
+ * Does NOT verify truth of claims — only structural validity.
+ */
+export function verifyTrustEnhancers(marker: ExitMarker): VerificationResult {
+  const errors: string[] = [];
+  if (!marker.trustEnhancers) return { valid: true, errors };
+
+  const te = marker.trustEnhancers;
+
+  // Timestamps (TimestampAttachment: tsaUrl, hash, timestamp, receipt, nonce?)
+  if (te.timestamps) {
+    for (let i = 0; i < te.timestamps.length; i++) {
+      const ts = te.timestamps[i];
+      if (!ts.tsaUrl) errors.push(`Trust enhancer timestamps[${i}] missing tsaUrl`);
+      if (!ts.hash) errors.push(`Trust enhancer timestamps[${i}] missing hash`);
+      if (!ts.timestamp) errors.push(`Trust enhancer timestamps[${i}] missing timestamp`);
+      if (ts.timestamp && isNaN(Date.parse(ts.timestamp))) errors.push(`Trust enhancer timestamps[${i}] invalid timestamp: ${ts.timestamp}`);
+      if (!ts.receipt) errors.push(`Trust enhancer timestamps[${i}] missing receipt`);
+    }
+  }
+
+  // Witnesses (WitnessAttachment: witnessDid, attestation, timestamp, signature, signatureType)
+  if (te.witnesses) {
+    for (let i = 0; i < te.witnesses.length; i++) {
+      const w = te.witnesses[i];
+      if (!w.witnessDid) errors.push(`Trust enhancer witnesses[${i}] missing witnessDid`);
+      if (!w.attestation) errors.push(`Trust enhancer witnesses[${i}] missing attestation`);
+      if (!w.signature) errors.push(`Trust enhancer witnesses[${i}] missing signature`);
+      if (!w.signatureType) errors.push(`Trust enhancer witnesses[${i}] missing signatureType`);
+      if (!w.timestamp) errors.push(`Trust enhancer witnesses[${i}] missing timestamp`);
+      if (w.timestamp && isNaN(Date.parse(w.timestamp))) errors.push(`Trust enhancer witnesses[${i}] invalid timestamp: ${w.timestamp}`);
+    }
+  }
+
+  // Identity claims (IdentityClaimAttachment: scheme, value, issuedAt, expiresAt?, issuer?, proof?)
+  if (te.identityClaims) {
+    for (let i = 0; i < te.identityClaims.length; i++) {
+      const c = te.identityClaims[i];
+      if (!c.scheme) errors.push(`Trust enhancer identityClaims[${i}] missing scheme`);
+      if (!c.value) errors.push(`Trust enhancer identityClaims[${i}] missing value`);
+      if (!c.issuedAt) errors.push(`Trust enhancer identityClaims[${i}] missing issuedAt`);
+      if (c.issuedAt && isNaN(Date.parse(c.issuedAt))) errors.push(`Trust enhancer identityClaims[${i}] invalid issuedAt: ${c.issuedAt}`);
+      if (c.expiresAt && isNaN(Date.parse(c.expiresAt))) errors.push(`Trust enhancer identityClaims[${i}] invalid expiresAt: ${c.expiresAt}`);
+    }
+  }
+
+  return { valid: errors.length === 0, errors };
+}
