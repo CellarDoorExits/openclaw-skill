@@ -15,7 +15,7 @@ Without risk bounds, without audit trails, without departure infrastructure — 
 We built anti-securitization into the license because we've seen what happens when certificates become financial instruments. We built mandatory sunset clauses because departure records shouldn't haunt entities forever. We built GDPR crypto-shredding because European regulators aren't theoretical.
 
 - 410 tests passing
-- 6 dependencies (we counted)
+- 5 dependencies (we counted)
 - LangChain integration
 - Zero users. Zero production deployments. This is day one.
 

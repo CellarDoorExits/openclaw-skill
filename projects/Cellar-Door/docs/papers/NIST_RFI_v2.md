@@ -1,7 +1,7 @@
 # Response to NIST AI Agent Standards Initiative Request for Information
 
 **Submitted by:** Warren Koch, EXIT Protocol Project  
-**Email:** warrenkoch@gmail.com  
+**Email:** hawthornhollows@gmail.com  
 **Date:** February 24, 2026  
 **Subject:** Verifiable Agent Departure and Arrival Ceremonies for AI Agent Interoperability
 
@@ -281,7 +281,7 @@ Warren Koch is the founder of the EXIT Protocol project, based in British Columb
 
 The project maintains six public GitHub repositories, five published npm packages, and two protocol specifications (EXIT v1.1, ENTRY v1.0) that have undergone multi-lens legal analysis and multi-stakeholder professional review.
 
-**Contact:** warrenkoch@gmail.com  
+**Contact:** hawthornhollows@gmail.com  
 **License:** Apache 2.0  
 **Specifications:** EXIT Protocol v1.1, ENTRY Protocol v1.0
 
