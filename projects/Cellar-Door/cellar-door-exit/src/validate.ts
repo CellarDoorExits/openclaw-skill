@@ -125,6 +125,15 @@ export function validateMarker(marker: unknown): ValidationResult {
     }
   }
 
+  // Warn (not error) if expires is missing — backward compat (§8.5)
+  if (m.expires !== undefined) {
+    if (typeof m.expires !== "string" || !isValidISO8601(m.expires as string)) {
+      errors.push("expires must be a valid ISO-8601 date string");
+    }
+  }
+  // Note: missing `expires` is non-compliant per §8.5 but treated as a warning
+  // for backward compatibility. Implementations SHOULD auto-populate defaults.
+
   // Validate sequenceNumber if present
   if (m.sequenceNumber !== undefined) {
     if (typeof m.sequenceNumber !== "number" || !Number.isInteger(m.sequenceNumber) || m.sequenceNumber < 0) {

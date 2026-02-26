@@ -83,6 +83,13 @@ export function createMarker(opts: CreateMarkerOpts): ExitMarker {
     marker.emergencyJustification = opts.emergencyJustification;
   }
 
+  // Auto-populate expires if not provided (§8.5 mandatory sunset)
+  if (!marker.expires) {
+    const defaultDays = opts.exitType === ExitType.Voluntary ? 730 : 365;
+    const expiresDate = new Date(new Date(timestamp).getTime() + defaultDays * 86_400_000);
+    marker.expires = expiresDate.toISOString();
+  }
+
   // Compute content-addressed ID if not provided
   if (!marker.id) {
     marker.id = `urn:exit:${computeId(marker)}`;

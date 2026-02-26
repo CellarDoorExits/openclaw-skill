@@ -3,6 +3,10 @@
  *
  * Encryption, redaction, and minimal disclosure for GDPR compliance.
  * Uses @noble/ciphers (xchacha20-poly1305) + ECDH key agreement via x25519.
+ *
+ * Per EXIT_SPEC v1.1 §10.1: Implementations that store or transmit markers
+ * containing personal data (GDPR Art. 4(1)) MUST encrypt those markers.
+ * Encryption is MANDATORY for markers with personal data, not optional.
  */
 
 import { sha256 } from "@noble/hashes/sha256";

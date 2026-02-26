@@ -173,8 +173,10 @@ export interface ExitMarker {
   // ─── Ethics & Guardrail Fields ─────────────────────────────────────────
   /** Coercion label attached by ethics analysis. */
   coercionLabel?: CoercionLabel;
-  /** Sunset/expiry date (ISO 8601). After this date the marker is considered expired. */
+  /** Sunset/expiry date (ISO 8601). After this date the marker is considered expired. @deprecated Use `expires` instead. */
   sunsetDate?: string;
+  /** Expiry date (ISO 8601 UTC). All markers MUST include this field. If not specified by the issuer, implementations MUST apply a default: 730 days for voluntary exits, 365 days for involuntary exits. */
+  expires?: string;
   /** Optional completeness attestation — subject attests "these are ALL my markers". Purely opt-in. */
   completenessAttestation?: CompletenessAttestation;
 

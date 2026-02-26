@@ -127,7 +127,8 @@ When present, the `legalHold` object MUST contain:
 |---|---|---|---|
 | `preRotationCommitment` | string | OPTIONAL | SHA-256 hash of the next public key for KERI-style key continuity (§9.3) |
 | `coercionLabel` | enum | OPTIONAL | Coercion label attached by ethics analysis (§8.1). One of: `possible_retaliation`, `conflicting_status_signals`, `suspicious_emergency`, `pattern_of_abuse`, `no_coercion_detected` |
-| `sunsetDate` | string (ISO 8601) | OPTIONAL | Expiry date after which the marker SHOULD be considered expired (§8.5) |
+| `sunsetDate` | string (ISO 8601) | OPTIONAL | *Deprecated.* Legacy alias for `expires`. Implementations SHOULD migrate to `expires`. |
+| `expires` | string (ISO 8601) | MUST | Expiry date after which the marker MUST be considered expired (§8.5). If not specified by the issuer, implementations MUST populate with default: 730 days for voluntary exits, 365 days for involuntary exits. |
 | `completenessAttestation` | object | OPTIONAL | Subject voluntarily attests "these are ALL my markers." See §3.4.1 |
 | `sequenceNumber` | number | OPTIONAL | Non-negative integer. Monotonically increasing checkpoint sequence number. When present, only the highest-sequence marker for a given subject+origin pair is authoritative. See §20.2 |
 
@@ -677,7 +678,7 @@ When an origin attests a status that conflicts with the subject's claimed status
 
 ### 8.5 Sunset Policies
 
-Markers MAY have an expiry date to prevent indefinite reputation effects.
+All markers MUST include an `expires` field. If not specified by the issuer, implementations MUST apply a default expiry of 730 days (2 years) for voluntary exits and 365 days (1 year) for involuntary exits (forced, directed, constructive, emergency, keyCompromise, platform_shutdown, acquisition). Markers without an `expires` field are non-compliant; implementations SHOULD add a default expiry during ingestion for backward compatibility.
 
 **SunsetPolicy Structure:**
 
@@ -688,10 +689,12 @@ Markers MAY have an expiry date to prevent indefinite reputation effects.
 
 **Normative Requirements:**
 
-- When `sunsetDate` is present and in the past, verifiers SHOULD treat the marker as expired
+- All markers MUST include an `expires` field (ISO 8601 UTC). This field records the date after which the marker is considered expired.
+- When `expires` (or the legacy `sunsetDate`) is present and in the past, verifiers MUST treat the marker as expired
 - Expired markers MUST NOT be used for reputation decisions
-- Implementations SHOULD apply sunset policies to forced exit markers to prevent indefinite stigma
-- The `sunsetDate` MUST be computed from the marker `timestamp` plus the policy duration
+- Implementations MUST apply sunset policies to all markers to prevent indefinite reputation effects
+- The `expires` field MUST be computed from the marker `timestamp` plus the policy duration if not explicitly provided
+- Default expiry durations: voluntary exits = 730 days; all other exit types = 365 days
 
 ### 8.6 Anti-Weaponization Clause
 
@@ -815,7 +818,9 @@ The `preRotationCommitment` field on a marker is the SHA-256 hex digest of the n
 
 ### 10.1 Marker Encryption
 
-Markers MAY be encrypted for confidential storage or transmission using ECDH key agreement with XChaCha20-Poly1305 authenticated encryption.
+Implementations that store or transmit markers containing personal data (as defined by GDPR Art. 4(1) or equivalent jurisdiction-specific definitions) MUST encrypt those markers using an approved encryption algorithm. Markers without personal data MAY be encrypted at the implementer's discretion.
+
+The approved encryption mechanism uses ECDH key agreement with XChaCha20-Poly1305 authenticated encryption.
 
 **Encryption Flow:**
 
@@ -1271,6 +1276,12 @@ Key normative statements:
 - Module D asset manifests are declarations, not transfer instruments
 - Neither self-attested nor origin-attested status is authoritative
 - Compliance with court orders is the responsibility of the parties, not the protocol
+
+### 14.1 Anti-Securitization
+
+EXIT markers, confidence scores, reputation aggregates, and any derivatives thereof MUST NOT be packaged, bundled, tranched, or otherwise structured as financial instruments, securities, or investment contracts. Implementations MUST NOT facilitate the tokenization of markers or marker-derived scores for trading purposes. Any system that converts EXIT markers into tradeable assets is in violation of this specification.
+
+This clause is **normative**. Violations constitute non-compliance with the EXIT protocol.
 
 ---
 
