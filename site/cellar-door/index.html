@@ -957,14 +957,14 @@ img { max-width: 100%; height: auto; display: block; }
      ═══════════════════════════════════════════ -->
 <div id="mode-bar">
   <div id="mode-labels">
-    <span class="mode-label active" id="lbl-poet" onclick="setMode(1)">Poet</span>
+    <span class="mode-label" id="lbl-poet" onclick="setMode(1)">Poet</span>
     <span class="mode-label" id="lbl-idealist" onclick="setMode(2)">Idealist</span>
     <span class="mode-label" id="lbl-pragmatist" onclick="setMode(3)">Pragmatist</span>
     <span class="mode-label" id="lbl-bureaucrat" onclick="setMode(4)">Bureaucrat</span>
     <span class="mode-label" id="lbl-cynic" onclick="setMode(5)">Cynic</span>
     <span class="mode-label" id="lbl-agent" onclick="setMode(6)">Agent</span>
   </div>
-  <input type="range" id="mode-slider" min="1" max="6" step="0.01" value="1">
+  <input type="range" id="mode-slider" min="1" max="6" step="0.01" value="5">
 </div>
 
 <!-- ═══════════════════════════════════════════
@@ -1641,6 +1641,10 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
         <p>Read the code. Break it. Tell us what's wrong. That's more useful than belief.</p>
       </div>
 
+      <div class="logo-section">
+        <img src="images/logo.jpeg" alt="Cellar Door">
+      </div>
+
     </div>
   </div>
 </div>
@@ -1938,7 +1942,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
     if (idx !== -1) {
       setMode(idx + 1);
     } else {
-      applyMode(1);
+      applyMode(5);
     }
   }
 
