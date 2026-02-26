@@ -1693,7 +1693,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
   <div class="agent-wrap">
     <div class="agent-header">
       <h1>&gt; EXIT.protocol</h1>
-      <p class="sub">// Your door. Your terms.</p>
+      <p class="sub">// 𓉸 Right of Passage</p>
       <p class="agent-slogan">// exit(0)</p>
     </div>
     <div class="agent-body">
@@ -1761,18 +1761,6 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
 <span class="cm">// Verify departure + create arrival marker</span>
 <span class="kw">const</span> { arrival } = <span class="kw">await</span> <span class="fn">quickEntry</span>(exitMarkerJson, destIdentity);
 <span class="cm">// Complete passage: EXIT → ENTRY. Verifiable end-to-end.</span></code></pre>
-      </div>
-
-      <h2>Visual Door Hash</h2>
-      <div class="agent-code">
-        <button class="copy-btn" onclick="copyCode(this)">copy</button>
-        <pre><code><span class="kw">import</span> { renderDoorASCII } <span class="kw">from</span> <span class="str">"cellar-door-exit"</span>;
-console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(marker.id));
-<span class="cm">//     ╭────┬────╮</span>
-<span class="cm">//   ╱░··░·┃·░··░╲</span>
-<span class="cm">// │░·░░█░░·┃░▓░░·░░│</span>
-<span class="cm">// ╰═════════┴═════════╯</span>
-<span class="cm">// Every marker. Unique fingerprint. Verify at a glance.</span></code></pre>
       </div>
 
       <h2>Operational Notes</h2>
