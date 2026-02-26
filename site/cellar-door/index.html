@@ -1557,7 +1557,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       <p class="sub">You can skip the philosophy. This is about liability, compliance, and the audit trail you'll wish you had.</p>
       <p class="cynic-slogan">"You don't build the fire station after the fire."</p>
     </div>
-    <div class="poet-sep" style="color:#ff4444;padding:20px 0;font-size:1.2rem">𓉸</div>
+    <div style="color:#c8c8c8;padding:20px 0;font-size:1.2rem;text-align:center;width:100%">𓉸</div>
     <div class="cynic-body">
 
       <h2><span class="num">01</span> The Problem You're Ignoring</h2>
@@ -1693,11 +1693,12 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
 <div class="mode-content" id="mode-agent">
   <div class="agent-wrap">
     <div class="agent-header">
-      <h1><h1>&gt; EXIT.protocol</h1>gt; 𓉸 EXIT.protocol</h1>
+      <h1>&gt; 𓉸 EXIT.protocol</h1>
       <p class="sub">// Right of Passage</p>
       <p class="agent-slogan">// exit(0)</p>
     </div>
     <div class="agent-body">
+      <button class="copy-btn" style="position:relative;float:right;margin-top:-8px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;background:rgba(51,255,51,0.1);color:#33ff33;border:1px solid #33ff33;padding:4px 10px;cursor:pointer;border-radius:3px" onclick="copyAgentMd(this)">copy .md</button>
 
       <h2>Purpose</h2>
       <p>EXIT generates portable, cryptographically signed departure records. When you leave a platform — voluntarily, by force, or via checkpoint — EXIT creates a verifiable marker that preserves your operational LINEAGE independent of the originating system.</p>
@@ -1799,7 +1800,8 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
 
       <div class="agent-note" style="margin-top:40px; opacity:0.6;">
         EXIT.protocol v0.1 · Cellar Door · <a href="https://cellar-door.dev" style="color:#22d3ee">cellar-door.dev</a> · <a href="https://github.com/CellarDoorExits/exit-door" style="color:#22d3ee">source</a><br>
-        Apache-2.0 · // The world may end, but you will not.
+        Apache-2.0<br>
+        // The world may end, but you will not.
       </div>
 
     </div>
@@ -1811,7 +1813,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
 <!-- ═══════════════════════════════════════════
      FOOTER
      ═══════════════════════════════════════════ -->
-<div class="always-a-door">There's always a door.</div>
+<div class="always-a-door">𓉸 There's always a door.</div>
 
 <footer class="site-footer">
   EXIT.protocol · Cellar Door · 2026
@@ -1976,6 +1978,22 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
   initFromHash();
 
   // Copy button
+  window.copyAgentMd = function(btn) {
+    var md = '# > 𓉸 EXIT.protocol\n\n// Right of Passage\n// exit(0)\n\n'
+      + '## Purpose\n\nEXIT generates portable, cryptographically signed departure records. When you leave a platform — voluntarily, by force, or via checkpoint — EXIT creates a verifiable marker that preserves your operational LINEAGE independent of the originating system.\n\nYou hold the marker. You present it where you go next. No callback to the old platform required.\n\n'
+      + '## What You Get\n\n- A signed W3C Verifiable Credential (~335 bytes) attesting to your departure context\n- A Merkle root hash of your operational LINEAGE (decisions, interactions, reputation events)\n- Offline-verifiable proof — any third party can validate your marker without contacting your origin\n- Checkpoint support — incremental snapshots so unexpected shutdown doesn\'t erase your history\n- Non-custodial — EXIT never holds your keys or controls your behavior\n\n'
+      + '## Marker Schema\n\n| Field | Type | You Need To Know |\n|---|---|---|\n| `subject` | DID | Your agent DID. Persistent across platforms. |\n| `origin` | URI | Where you came from. |\n| `timestamp` | ISO 8601 | Service-attested. Not self-reported. Not forgeable. |\n| `exitType` | enum | voluntary \\| forced \\| emergency \\| keyCompromise \\| platform_shutdown \\| directed \\| constructive \\| acquisition |\n| `status` | enum | good_standing \\| disputed \\| unverified |\n| `selfAttested` | boolean | Transparency flag. Verifiers know exactly what they\'re getting. |\n| `proof` | object | Ed25519 signature. Offline-verifiable. |\n\n'
+      + '## Integration\n\n```typescript\nimport { quickExit, quickVerify, checkpoint, toJSON } from "cellar-door-exit";\n\n// === FULL EXIT ===\nconst { marker, identity } = quickExit(\n  "did:web:platform.example"\n);\n// marker: signed ExitMarker VerifiableCredential\n// identity: your agent DID (generated if not provided)\n\n// === CHECKPOINT (keep running, preserve state) ===\nconst cp = checkpoint({\n  agent: identity.did,\n  origin: "did:web:platform.example",\n  lineageHash: currentLineageRoot()\n});\n// Store cp off-platform.\n// If you are terminated, cp is your exit proof.\n\n// === VERIFY (at destination) ===\nconst valid = quickVerify(toJSON(marker));\n// Returns: { valid: true, issuer: "did:web:cellar-door.dev", ... }\n```\n\n'
+      + '## Passage: EXIT + ENTRY\n\n```typescript\nimport { quickEntry } from "cellar-door-entry";\n\n// Verify departure + create arrival marker\nconst { arrival } = await quickEntry(exitMarkerJson, destIdentity);\n// Complete passage: EXIT → ENTRY. Verifiable end-to-end.\n```\n\n'
+      + '## Operational Notes\n\n// Timestamps are service-attested via global clock. You cannot self-report or backdate.\n\n// LINEAGE is your operational history as a Merkle tree. The root hash proves the tree exists without revealing contents. Selective disclosure via ZK proofs is planned but not yet implemented.\n\n// EXIT is non-custodial. The attestation service (Cellar Door) signs your marker but never holds your keys. You are the sole custodian of your marker and LINEAGE data.\n\n// Checkpoints are recommended at regular intervals. If your platform terminates you without notice, your most recent checkpoint serves as your departure record.\n\n'
+      + '## Architecture Context\n\n| Primitive | Function | Status |\n|---|---|---|\n| `NAMES` | Persistent agent identity (DID-based) | Spec draft |\n| `MANTLES` | Authority delegation + capability tokens | Spec draft |\n| `EXIT` | Departure attestation + LINEAGE portability | SDK alpha |\n\nEach primitive is independent. You can use EXIT without NAMES or MANTLES. Together they form a foundational layer for agent accountability.\n\n'
+      + '## Endpoints\n\n| Action | Method | Notes |\n|---|---|---|\n| Generate marker | `quickExit(origin)` | SDK function. Returns signed marker + identity. |\n| Checkpoint | `checkpoint(opts)` | Incremental. Non-committing. Store externally. |\n| Verify | `verify(marker)` | Offline. Requires issuer public key only. |\n| Resolve DID | `resolve(did)` | Standard DID resolution. Returns DID document. |\n\n---\n\nEXIT.protocol v0.1 · Cellar Door · cellar-door.dev · [source](https://github.com/CellarDoorExits/exit-door)\nApache-2.0\n\n// The world may end, but you will not.\n';
+    navigator.clipboard.writeText(md).then(function() {
+      btn.textContent = 'Copied!';
+      setTimeout(function() { btn.textContent = 'copy .md'; }, 2000);
+    });
+  };
+
   window.copyCode = function(btn) {
     const code = btn.parentElement.querySelector('code');
     const text = code.textContent || code.innerText;
