@@ -61,6 +61,10 @@ export function encryptMarker(marker: ExitMarker, recipientPublicKey: Uint8Array
   const ephemeralPublic = x25519.getPublicKey(ephemeralPrivate);
 
   // ECDH shared secret → SHA-256 → symmetric key
+  // B13: KDF Decision — Raw SHA-256 is used here instead of HKDF for simplicity.
+  // SHA-256 over a high-entropy x25519 shared secret is safe in practice (the input
+  // is already indistinguishable from random). HKDF migration is planned for v1.2
+  // to align with best-practice KDF usage and enable domain separation of derived keys.
   const shared = x25519.getSharedSecret(ephemeralPrivate, recipientPublicKey);
   const key = sha256(shared);
 

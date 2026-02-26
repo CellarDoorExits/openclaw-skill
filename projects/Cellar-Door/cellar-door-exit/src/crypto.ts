@@ -63,15 +63,12 @@ export function sign(data: Uint8Array, privateKey: Uint8Array): Uint8Array {
 /**
  * Verify an Ed25519 signature.
  *
- * @param data - The original signed data.
- * @param signature - The 64-byte Ed25519 signature.
- * @param publicKey - The Ed25519 public key (32 bytes).
- * @returns `true` if the signature is valid; `false` otherwise.
- *
- * @example
- * ```ts
- * const valid = verify(data, signature, publicKey);
- * ```
+ * **ZIP-215 Decision (B12):** This uses @noble/ed25519's default non-strict (ZIP-215)
+ * verification intentionally. ZIP-215 accepts a wider set of valid signatures than
+ * RFC 8032 strict mode, which is required for consensus compatibility — all nodes
+ * in a distributed system must agree on signature validity. Strict mode can cause
+ * consensus splits where some implementations accept signatures others reject.
+ * This matches the behavior of libsodium and most blockchain implementations.
  */
 export function verify(
   data: Uint8Array,

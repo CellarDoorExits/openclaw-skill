@@ -16,7 +16,7 @@ import { CeremonyError } from "./errors.js";
 
 const TRANSITIONS: Record<CeremonyState, CeremonyState[]> = {
   [CeremonyState.Alive]: [CeremonyState.Intent, CeremonyState.Final], // Final for emergency
-  [CeremonyState.Intent]: [CeremonyState.Snapshot],
+  [CeremonyState.Intent]: [CeremonyState.Snapshot, CeremonyState.Final], // Final for emergency escape from INTENT
   [CeremonyState.Snapshot]: [CeremonyState.Open, CeremonyState.Final], // Final for unilateral
   [CeremonyState.Open]: [CeremonyState.Contested, CeremonyState.Final],
   [CeremonyState.Contested]: [CeremonyState.Final],
@@ -120,7 +120,7 @@ export class CeremonyStateMachine {
   ): ExitIntent {
     const timestamp = new Date().toISOString();
     const intentData = { subject, origin, timestamp, exitType };
-    const data = new TextEncoder().encode(canonicalize(intentData));
+    const data = new TextEncoder().encode("exit-intent-v1:" + canonicalize(intentData));
     const sig = sign(data, privateKey);
 
     return {
@@ -198,7 +198,7 @@ export class CeremonyStateMachine {
     if (!this.marker) throw new CeremonyError(this.state, "witness", ["sign a marker first"]);
 
     const { proof: _proof, ...rest } = this.marker;
-    const data = new TextEncoder().encode(canonicalize(rest));
+    const data = new TextEncoder().encode("exit-witness-v1:" + canonicalize(rest));
     const sig = sign(data, witnessKey);
 
     return {
