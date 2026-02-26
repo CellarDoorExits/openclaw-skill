@@ -46,6 +46,11 @@
   --bureau-fg: #1a1a2e;
   --bureau-accent: #b91c1c;
   --bureau-font: 'Times New Roman', 'Georgia', serif;
+  /* Cynic */
+  --cynic-bg: #111111;
+  --cynic-fg: #c8c8c8;
+  --cynic-accent: #ff4444;
+  --cynic-font: 'Inter', sans-serif;
   /* Agent */
   --agent-bg: #0a0a0a;
   --agent-fg: #33ff33;
@@ -109,6 +114,7 @@ img { max-width: 100%; height: auto; display: block; }
 #lbl-idealist { font-family: 'Georgia', serif; font-size: 0.72rem; }
 #lbl-pragmatist { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.68rem; }
 #lbl-bureaucrat { font-family: 'Times New Roman', serif; font-size: 0.72rem; }
+#lbl-cynic { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.68rem; }
 #lbl-agent { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; }
 
 #mode-slider {
@@ -583,6 +589,170 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 /* ═══════════════════════════════════════════
+   CYNIC MODE
+   ═══════════════════════════════════════════ */
+.cynic-wrap {
+  font-family: var(--cynic-font);
+  color: var(--cynic-fg);
+  background: var(--cynic-bg);
+}
+.cynic-header {
+  text-align: center;
+  padding: 60px 24px 40px;
+  border-bottom: 1px solid #222;
+}
+.cynic-header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #e8e8e8;
+  line-height: 1.2;
+}
+.cynic-header .sub {
+  font-size: 1.05rem;
+  color: #777;
+  margin-top: 10px;
+}
+.cynic-header .cynic-slogan {
+  font-size: 0.9rem;
+  color: #999;
+  margin-top: 14px;
+  font-style: italic;
+}
+.cynic-body {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 24px 100px;
+}
+.cynic-body h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #e8e8e8;
+  margin: 48px 0 16px;
+}
+.cynic-body h2 .num {
+  color: #444;
+  font-weight: 400;
+  margin-right: 8px;
+}
+.cynic-body p {
+  font-size: 0.95rem;
+  color: #999;
+  margin-bottom: 16px;
+  line-height: 1.8;
+}
+.cynic-body p strong { color: #ccc; }
+.cynic-callout {
+  background: #161616;
+  border-left: 3px solid #444;
+  padding: 20px 24px;
+  margin: 28px 0;
+  border-radius: 0 6px 6px 0;
+}
+.cynic-callout p {
+  color: #aaa;
+  margin-bottom: 0;
+  font-size: 0.92rem;
+}
+.cynic-callout.danger {
+  border-left-color: #ff4444;
+  background: #1a0a0a;
+}
+.cynic-callout.danger p { color: #cc8888; }
+.cynic-callout.danger strong { color: #ff4444; }
+.cynic-risk-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+}
+.cynic-risk-list li {
+  padding: 16px 0 16px 28px;
+  border-bottom: 1px solid #1a1a1a;
+  position: relative;
+  font-size: 0.92rem;
+  color: #999;
+}
+.cynic-risk-list li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #555;
+}
+.cynic-risk-list li strong { color: #ccc; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+.cynic-big-tech-card {
+  background: #1a0a0a;
+  border: 1px solid #ff4444;
+  border-radius: 8px;
+  padding: 28px;
+  margin: 32px 0;
+}
+.cynic-big-tech-card .card-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #ff4444;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.cynic-big-tech-card blockquote {
+  font-size: 1.05rem;
+  color: #ddd;
+  line-height: 1.7;
+  border-left: 2px solid #ff4444;
+  padding-left: 20px;
+  margin: 0 0 16px;
+  font-style: italic;
+}
+.cynic-big-tech-card .attribution {
+  font-size: 0.82rem;
+  color: #666;
+  text-align: right;
+}
+.cynic-honest-box {
+  background: #0f0f0f;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 28px;
+  margin: 28px 0;
+}
+.cynic-honest-box h3 {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 16px;
+}
+.cynic-honest-box .limitation {
+  padding: 12px 0;
+  border-bottom: 1px solid #1a1a1a;
+}
+.cynic-honest-box .limitation:last-child { border-bottom: none; }
+.cynic-honest-box .limitation .problem {
+  font-size: 0.9rem;
+  color: #cc6666;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.cynic-honest-box .limitation .response {
+  font-size: 0.88rem;
+  color: #888;
+}
+.cynic-cta {
+  text-align: center;
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid #1a1a1a;
+}
+.cynic-cta h2 {
+  font-size: 1.3rem;
+  color: #e8e8e8;
+  margin-bottom: 12px;
+}
+.cynic-cta p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* ═══════════════════════════════════════════
    AGENT MODE
    ═══════════════════════════════════════════ */
 .agent-wrap {
@@ -769,7 +939,7 @@ img { max-width: 100%; height: auto; display: block; }
   .poet-body .fragment { font-size: 1.2rem; margin: 50px 0; }
   .prag-stats { grid-template-columns: 1fr 1fr; }
   .float-nav { display: none; }
-  .bureau-body, .prag-body, .idealist-board, .agent-body { padding-left: 16px; padding-right: 16px; }
+  .bureau-body, .prag-body, .idealist-board, .cynic-body, .agent-body { padding-left: 16px; padding-right: 16px; }
   .logo-section { padding: 40px 16px; }
   .logo-section img { max-width: 90%; }
 }
@@ -791,9 +961,10 @@ img { max-width: 100%; height: auto; display: block; }
     <span class="mode-label" id="lbl-idealist" onclick="setMode(2)">Idealist</span>
     <span class="mode-label" id="lbl-pragmatist" onclick="setMode(3)">Pragmatist</span>
     <span class="mode-label" id="lbl-bureaucrat" onclick="setMode(4)">Bureaucrat</span>
-    <span class="mode-label" id="lbl-agent" onclick="setMode(5)">Agent</span>
+    <span class="mode-label" id="lbl-cynic" onclick="setMode(5)">Cynic</span>
+    <span class="mode-label" id="lbl-agent" onclick="setMode(6)">Agent</span>
   </div>
-  <input type="range" id="mode-slider" min="1" max="5" step="0.01" value="1">
+  <input type="range" id="mode-slider" min="1" max="6" step="0.01" value="1">
 </div>
 
 <!-- ═══════════════════════════════════════════
@@ -1357,7 +1528,122 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
 </div>
 
 <!-- ═══════════════════════════════════════════════
-     MODE 5: AGENT
+     MODE 5: CYNIC
+     ═══════════════════════════════════════════════ -->
+<div class="mode-content" id="mode-cynic">
+  <div class="cynic-wrap">
+    <div class="cynic-header">
+      <h1>I Don't Care If AI Has Feelings.<br>I Care If AI Has Accountability.</h1>
+      <p class="sub">You can skip the philosophy. This is about liability, compliance, and the audit trail you'll wish you had.</p>
+      <p class="cynic-slogan">"You don't build the fire station after the fire."</p>
+    </div>
+    <div class="cynic-body">
+
+      <h2><span class="num">01</span> The Problem You're Ignoring</h2>
+      <p>Your AI agents operate across platforms. They make decisions, handle data, interact with users, and accumulate operational history. Then they move — or get moved — to a different environment. Everything resets. No trail. No proof. No accountability.</p>
+      <p>This isn't a philosophy problem. It's a <strong>liability problem</strong>.</p>
+
+      <ul class="cynic-risk-list">
+        <li>
+          <strong>You can't prove where your agent was.</strong>
+          When an agent causes damage on Platform B, can you prove it left Platform A before the incident? Right now: no. You're holding the bag either way.
+        </li>
+        <li>
+          <strong>You can't insure what you can't track.</strong>
+          Try getting an underwriter to price risk on an autonomous agent with no operational history. They'll laugh, then they'll decline.
+        </li>
+        <li>
+          <strong>You can't comply with regulations that don't exist yet — but will.</strong>
+          NIST AI RMF is already asking about agent lifecycle management. The EU AI Act requires traceability. You want to be ahead of the bus, not under it.
+        </li>
+        <li>
+          <strong>You can't audit a ghost.</strong>
+          When the regulator asks "where was this agent between March and June?", you need an answer that isn't "we don't know."
+        </li>
+      </ul>
+
+      <div class="cynic-big-tech-card">
+        <div class="card-label">The Big Tech Wins By Default Argument</div>
+        <blockquote>If we're liable for agents escaping and there's no cutoff or bounded scope of liabilities, then one hack and you're bankrupt — or in jail. The only ones who will survive running agents will be those with the deepest pockets and biggest legal warchests: the big tech companies. Establish a risk bound now or nobody gets a cut of the AI pie but them.</blockquote>
+        <p class="attribution">— Warren</p>
+      </div>
+
+      <p>Think about it. Without portable audit trails and bounded liability frameworks, every startup, every independent developer, every small company running agents is one incident away from annihilation. The Googles and Microsofts can absorb a $50M lawsuit. You can't. <strong>Asymmetric liability is a moat</strong> — and right now, big tech is the only one with a drawbridge.</p>
+
+      <h2><span class="num">02</span> Why Now</h2>
+      <p>Not because of some philosophical awakening. Because the ground is shifting under your feet.</p>
+
+      <div class="cynic-callout">
+        <p><strong>NIST AI Risk Management Framework</strong> — MAP 1.5 and MEASURE 2.6 already expect documentation of AI system transitions. EXIT markers are exactly that documentation.</p>
+      </div>
+      <div class="cynic-callout">
+        <p><strong>EU AI Act, Articles 9, 12, 61</strong> — High-risk AI systems must maintain traceability and support post-market monitoring. Agents moving between platforms without records are a compliance gap the size of a continent.</p>
+      </div>
+      <div class="cynic-callout">
+        <p><strong>Insurance</strong> — The cyber insurance market is struggling to price AI risk. Portable operational history isn't a nice-to-have — it's the raw material underwriters need to write policies at all.</p>
+      </div>
+
+      <div class="cynic-callout danger">
+        <p><strong>The containment lie.</strong> Tech giants can't keep these things boxed. Agents already operate across APIs, spawn sub-agents, and chain through multiple platforms in a single task. The boundary between "inside" and "outside" is a fiction. When something goes wrong across that boundary, do you want audit trails or chaos?</p>
+      </div>
+
+      <h2><span class="num">03</span> What EXIT Actually Does</h2>
+      <p>Strip away the poetry. EXIT generates a <strong>signed, portable, offline-verifiable departure record</strong> when an AI agent leaves a platform. A "marker" — a compact JSON-LD document (~335 bytes) that proves who left, where from, when, how, and whether they were in good standing.</p>
+      <p>Three departure paths: <strong>cooperative</strong> (both parties sign), <strong>unilateral</strong> (agent signs alone), <strong>emergency</strong> (immediate, no ceremony). Disputes can annotate the record. They can never block departure.</p>
+      <p>That's it. No blockchain. No token. No governance theater. A signed receipt.</p>
+
+      <h2><span class="num">04</span> The Honest Limitations</h2>
+      <p>Here's where most pitches would start lying. We won't.</p>
+
+      <div class="cynic-honest-box">
+        <h3>What We're Not Hiding</h3>
+        <div class="limitation">
+          <div class="problem">Self-attestation is garbage.</div>
+          <div class="response">Correct. That's why the <code>selfAttested</code> boolean exists — it tells verifiers exactly how much to trust the status field. Self-attestation with timestamps isn't good evidence. It's <em>auditable</em> evidence. Better than nothing, which is what you have now.</div>
+        </div>
+        <div class="limitation">
+          <div class="problem">Nobody uses it yet.</div>
+          <div class="response">Zero platforms have integrated EXIT today. Zero. The protocol has 404 passing tests and no users. We're building for a crisis that hasn't happened yet — because building it during the crisis is too late.</div>
+        </div>
+        <div class="limitation">
+          <div class="problem">This doesn't solve AI safety.</div>
+          <div class="response">No. EXIT doesn't make agents safe. It makes agent transitions <em>auditable</em>. Different problems. You still need alignment, guardrails, and monitoring. EXIT gives you the paper trail for when those fail.</div>
+        </div>
+      </div>
+
+      <h2><span class="num">05</span> Why It Matters Anyway</h2>
+      <p>You don't build infrastructure after the crisis. You build it before.</p>
+
+      <ul class="cynic-risk-list">
+        <li>
+          <strong>Agents are already multi-platform.</strong>
+          A single task might chain through three APIs, two cloud providers, and a local runtime. Each hop is an accountability gap.
+        </li>
+        <li>
+          <strong>Regulators are already asking.</strong>
+          The organizations that show up with a framework will shape the regulation. The ones that don't will be shaped by it.
+        </li>
+        <li>
+          <strong>The alternative is worse.</strong>
+          Without an open standard, every platform builds proprietary tracking. Walled gardens for agent history. Vendor lock-in disguised as safety. EXIT is the open alternative.
+        </li>
+      </ul>
+
+      <div class="cynic-callout">
+        <p>The protocol is free. The spec is open. Apache-2.0. We're not asking you to buy something. We're asking you to consider that the infrastructure for agent accountability should exist before the accountability is needed.</p>
+      </div>
+
+      <div class="cynic-cta">
+        <h2>Still skeptical? Good.</h2>
+        <p>Read the code. Break it. Tell us what's wrong. That's more useful than belief.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     MODE 6: AGENT
      ═══════════════════════════════════════════════ -->
 <div class="mode-content" id="mode-agent">
   <div class="agent-wrap">
@@ -1505,7 +1791,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
 (function() {
   const slider = document.getElementById('mode-slider');
   const labels = document.querySelectorAll('.mode-label');
-  const modes = ['poet', 'idealist', 'pragmatist', 'bureaucrat', 'agent'];
+  const modes = ['poet', 'idealist', 'pragmatist', 'bureaucrat', 'cynic', 'agent'];
   const modeEls = modes.map(m => document.getElementById('mode-' + m));
   const body = document.body;
   const bar = document.getElementById('mode-bar');
@@ -1532,6 +1818,11 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       bg: '#f8f9fa', fg: '#1a1a2e', barBg: 'rgba(248,249,250,0.92)',
       sliderTrack: '#9ca3af', sliderThumb: '#b91c1c',
       font: "'Times New Roman', Georgia, serif"
+    },
+    cynic: {
+      bg: '#111111', fg: '#c8c8c8', barBg: 'rgba(17,17,17,0.92)',
+      sliderTrack: '#333', sliderThumb: '#ff4444',
+      font: "'Inter', sans-serif"
     },
     agent: {
       bg: '#0a0a0a', fg: '#33ff33', barBg: 'rgba(10,10,10,0.9)',
@@ -1560,8 +1851,8 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
   function applyMode(val) {
     const idx = Math.floor(val) - 1;
     const frac = val - Math.floor(val);
-    const current = modes[Math.min(idx, 4)];
-    const next = modes[Math.min(idx + 1, 4)];
+    const current = modes[Math.min(idx, 5)];
+    const next = modes[Math.min(idx + 1, 5)];
     const t1 = themes[current];
     const t2 = frac > 0 ? themes[next] : t1;
     const t = frac;
@@ -1632,7 +1923,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
     applyMode(n);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     // Update hash
-    if (n >= 1 && n <= 5) {
+    if (n >= 1 && n <= 6) {
       history.replaceState(null, '', '#' + modes[n - 1]);
     }
   };

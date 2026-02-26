@@ -26,6 +26,31 @@
 | `assessments/fix-log-*.md` (6 files) | **Historical** — fix logs from completed sprints |
 | `cellar-door-exit/docs/analysis/cellar-door-legal-redteam.md` | **Superseded** by v2 |
 
+### Naming Convention Note
+- **ALLCAPS filenames** (e.g., `MEMORY.md`, `MASTER_INDEX.md`) are reserved for fundamental/constitutional files
+- Reports, plans, and procedural outputs should use `kebab-case` (e.g., `implementation-plan.md`)
+- Procedures use versioned names: `SECURITY_AUDIT_v1.0.md` (ALLCAPS acceptable for formal procedures)
+
+### New Files (2026-02-26)
+| File | Group | Tokens (est) |
+|------|-------|-------------|
+| `procedures/SECURITY_AUDIT_v1.0.md` | Procedures | ~3K |
+| `procedures/SECURITY_AUDIT_v1.0_REVIEWS.md` | Procedures | ~6K |
+| `procedures/SECURITY_AUDIT_v1.1.md` | Procedures | ~4K |
+| `procedures/SECURITY_AUDIT_v1.1_REVIEWS.md` | Procedures | ~4K |
+| `procedures/audit/crypto-review.md` | Audit Reports | ~3K |
+| `procedures/audit/protocol-review.md` | Audit Reports | ~3K |
+| `procedures/audit/input-review.md` | Audit Reports | ~3K |
+| `procedures/audit/supply-chain-review.md` | Audit Reports | ~2K |
+| `procedures/audit/spec-conformance-review.md` | Audit Reports | ~4K |
+| `procedures/audit/legal-review.md` | Audit Reports | ~3K |
+| `procedures/audit/adversarial-review.md` | Audit Reports | ~3K |
+| `procedures/audit/adversarial-tests.ts` | Audit Reports | ~2K |
+| `procedures/audit/ATTESTATION.md` | Audit Reports | ~2K |
+| `procedures/audit/implementation-plan.md` | Audit Reports | ~4K |
+| `assessments/persona-v3/synthesis.md` | Assessments | ~8K |
+| `projects/Cellar-Door/docs/SHOW_HN_DRAFTS.md` | Docs | ~12K |
+
 ---
 
 ## Group 1 — Root Config & Identity (~28K tokens)
