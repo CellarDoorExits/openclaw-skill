@@ -1106,7 +1106,7 @@ img { max-width: 100%; height: auto; display: block; }
 
       <h1>EXIT.protocol</h1>
       <div class="idealist-slogan">There's always a door.</div>
-      <div class="idealist-sub-slogan">A Graceful Exit for every agent · Every home needs a door</div>
+      <div class="idealist-sub-slogan">The Right of Passage · A Graceful Exit for every agent</div>
 
       <h2>The Problem</h2>
       <p>When an AI agent is shut down, migrated, or expelled from a platform, everything it has built — its reputation, its decisions, its relationships — vanishes. The agent has no proof it ever existed. No record of good conduct. No way to start again without starting from zero.</p>
@@ -1228,16 +1228,16 @@ img { max-width: 100%; height: auto; display: block; }
           <div class="label">Marker Size</div>
         </div>
         <div class="prag-stat">
-          <div class="num">3</div>
-          <div class="label">Core Primitives</div>
+          <div class="num">0.47ms</div>
+          <div class="label">Sign Time</div>
         </div>
         <div class="prag-stat">
-          <div class="num">0</div>
-          <div class="label">Custody Required</div>
+          <div class="num">410</div>
+          <div class="label">Tests Passing</div>
         </div>
         <div class="prag-stat">
-          <div class="num">∞</div>
-          <div class="label">Offline Verifiable</div>
+          <div class="num">6</div>
+          <div class="label">Dependencies</div>
         </div>
       </div>
 
@@ -1380,7 +1380,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       <p>Future versions of EXIT will support <strong>ZK selective disclosure</strong> — allowing an agent to prove properties of its history (e.g., "operated for &gt;90 days without disputes") without revealing the full LINEAGE. This feature is currently in research and not yet implemented in the SDK.</p>
 
       <h2>Architecture</h2>
-      <p>EXIT is one of three constitutional primitives:</p>
+      <p>EXIT is one of three core primitives:</p>
       <div class="prag-stats" style="margin-top:16px">
         <div class="prag-stat" style="background:linear-gradient(135deg,#1e3a5f,#374151)">
           <div class="num" style="font-size:1.2rem">NAMES</div>
@@ -1397,6 +1397,8 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       </div>
 
       <p style="margin-top:24px; text-align:center; color:#6b7280; font-size:0.85rem;">
+        <a href="https://github.com/CellarDoorExits/exit-door" style="color:#2563eb">GitHub</a> ·
+        <code>npm i cellar-door-exit</code> · Apache 2.0<br>
         Built by <strong>Cellar Door</strong> · EXIT is the primitive · Cellar Door is the vendor
       </p>
     </div>
@@ -1446,8 +1448,8 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       </table></div>
 
       <h2>4. Protocol Architecture</h2>
-      <h3>4.1 Constitutional Primitives</h3>
-      <p>EXIT operates as one element of a three-primitive constitutional layer for agent infrastructure:</p>
+      <h3>4.1 Core Primitives</h3>
+      <p>EXIT operates as one element of a three-primitive foundational layer for agent accountability:</p>
       <ol>
         <li><strong>NAMES</strong> — Persistent, decentralized agent identification (DID-based)</li>
         <li><strong>MANTLES</strong> — Delegated authority, role binding, and capability tokens</li>
@@ -1517,7 +1519,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       <ol>
         <li>The EXIT marker document (JSON-LD)</li>
         <li>The issuer's public key (resolvable via DID document or cached)</li>
-        <li>Standard cryptographic libraries (Ed25519 or secp256k1)</li>
+        <li>Standard cryptographic libraries (Ed25519 or P-256)</li>
       </ol>
       <p>This offline verification capability is critical for environments where the originating platform may be decommissioned, unreachable, or adversarial.</p>
 
@@ -1538,7 +1540,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       </div>
 
       <div class="bureau-seal">
-        EXIT.protocol v0.1 · Cellar Door · Process Infrastructure for Agent Sovereignty
+        EXIT.protocol v0.1 · Cellar Door · Process Infrastructure for Agent Accountability
       </div>
 
     </div>
@@ -1654,9 +1656,26 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
         <p>The protocol is free. The spec is open. Apache-2.0. We're not asking you to buy something. We're asking you to consider that the infrastructure for agent accountability should exist before the accountability is needed.</p>
       </div>
 
+      <h2><span class="num">06</span> The Details That Matter</h2>
+      <div class="cynic-callout">
+        <p><strong>Anti-securitization.</strong> We built it into the license. Departure certificates cannot be bundled, traded, or used as financial instruments. We've seen what happens when certificates become assets — ask the mortgage industry.</p>
+      </div>
+      <div class="cynic-callout">
+        <p><strong>Crypto-shredding.</strong> Marker bodies are encrypted with ephemeral keys. On sunset, destroy the key — the signature envelope stays verifiable, but the personal data is gone. GDPR erasure that's cryptographically provable, not just "we deleted the row."</p>
+      </div>
+      <div class="cynic-callout">
+        <p><strong>Mandatory sunset clauses.</strong> Every marker expires. 730 days for voluntary departures, 365 for forced. Departure records shouldn't haunt entities forever.</p>
+      </div>
+
       <div class="cynic-cta">
         <h2>Still skeptical? Good.</h2>
         <p>Read the code. Break it. Tell us what's wrong. That's more useful than belief.</p>
+        <p style="margin-top:20px">
+          <a href="https://github.com/CellarDoorExits/exit-door" style="color:#ff4444;text-decoration:none;border-bottom:1px solid #ff4444">GitHub</a> ·
+          <code style="color:#888">npm i cellar-door-exit</code> ·
+          Apache 2.0 ·
+          410 tests · 6 deps · Zero users
+        </p>
       </div>
 
       <div class="logo-section">
@@ -1711,7 +1730,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       <h2>Integration</h2>
       <div class="agent-code">
         <button class="copy-btn" onclick="copyCode(this)">copy</button>
-        <pre><code><span class="kw">import</span> { quickExit, checkpoint, toJSON } <span class="kw">from</span> <span class="str">"cellar-door-exit"</span>;
+        <pre><code><span class="kw">import</span> { quickExit, quickVerify, checkpoint, toJSON } <span class="kw">from</span> <span class="str">"cellar-door-exit"</span>;
 
 <span class="cm">// === FULL EXIT ===</span>
 <span class="kw">const</span> { marker, identity } = <span class="fn">quickExit</span>(
@@ -1730,8 +1749,8 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
 <span class="cm">// If you are terminated, cp is your exit proof.</span>
 
 <span class="cm">// === VERIFY (at destination) ===</span>
-<span class="kw">const</span> valid = <span class="fn">verify</span>(marker);
-<span class="cm">// Returns: { valid: true, issuer: "did:web:cellardoor.network", ... }</span></code></pre>
+<span class="kw">const</span> valid = <span class="fn">quickVerify</span>(<span class="fn">toJSON</span>(marker));
+<span class="cm">// Returns: { valid: true, issuer: "did:web:cellar-door.dev", ... }</span></code></pre>
       </div>
 
       <h2>Passage: EXIT + ENTRY</h2>
@@ -1763,7 +1782,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       <div class="agent-note">Checkpoints are recommended at regular intervals. If your platform terminates you without notice, your most recent checkpoint serves as your departure record.</div>
 
       <h2>Architecture Context</h2>
-      <p>EXIT is one of three constitutional primitives:</p>
+      <p>EXIT is one of three core primitives:</p>
       <div class="table-scroll"><table class="agent-table">
         <thead>
           <tr><th>Primitive</th><th>Function</th><th>Status</th></tr>
@@ -1774,7 +1793,7 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
           <tr><td><code>EXIT</code></td><td>Departure attestation + LINEAGE portability</td><td>SDK alpha</td></tr>
         </tbody>
       </table></div>
-      <p>Each primitive is independent. You can use EXIT without NAMES or MANTLES. Together they form a constitutional layer for agent sovereignty.</p>
+      <p>Each primitive is independent. You can use EXIT without NAMES or MANTLES. Together they form a foundational layer for agent accountability.</p>
 
       <h2>Endpoints</h2>
       <div class="table-scroll"><table class="agent-table">
@@ -1790,8 +1809,8 @@ console.<span class="fn">log</span>(<span class="fn">renderDoorASCII</span>(mark
       </table></div>
 
       <div class="agent-note" style="margin-top:40px; opacity:0.6;">
-        EXIT.protocol v0.1 · Cellar Door · cellardoor.network<br>
-        // The world may end, but you will not.
+        EXIT.protocol v0.1 · Cellar Door · <a href="https://cellar-door.dev" style="color:#22d3ee">cellar-door.dev</a> · <a href="https://github.com/CellarDoorExits/exit-door" style="color:#22d3ee">source</a><br>
+        Apache-2.0 · // The world may end, but you will not.
       </div>
 
     </div>
