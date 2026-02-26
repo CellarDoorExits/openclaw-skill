@@ -513,7 +513,7 @@ All paths under `projects/Cellar-Door/integrations/`.
 | `site/paper/index.html` | 14,580 | `215d355` | Paper page |
 | `site/policy/index.html` | 5,474 | `f5b29aa` | Policy page |
 | `site/pragmatic/index.html` | 4,549 | `9f69da3` | Pragmatic pitch page |
-| ~~`cellar-door-exit/websites/`~~ | — | — | **REMOVED** — 3 deprecated site variants (pragmatic/idealist/policy) consolidated into mono-site; preserved in git history |
+| ~~`cellar-door-exit/websites/`~~ | — | — | **REMOVED 2026-02-26** — 3 deprecated site variants (pragmatic/idealist/policy) consolidated into mono-site at `cellar-door.dev`; removed from public `CellarDoorExits/exit-door` repo; preserved in git history |
 
 **Subtotal:** ~79,442 tokens
 
