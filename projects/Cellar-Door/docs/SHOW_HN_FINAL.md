@@ -1,4 +1,5 @@
 # Show HN: EXIT Protocol - Cryptographic departure certificates for AI agents
+<!-- VERSION: 1.0 — Signed off 2026-02-26. Do not edit without good reason. -->
 
 *What happens when you corner a wild animal?*
 
