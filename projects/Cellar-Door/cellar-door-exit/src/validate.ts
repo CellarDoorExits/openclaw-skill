@@ -8,10 +8,18 @@ import type { ExitMarker } from "./types.js";
 export interface ValidationResult {
   valid: boolean;
   errors: string[];
+  /** Non-fatal warnings (B6, B7, B8, B9, B15). Do not affect `valid`. */
+  warnings?: string[];
 }
 
 const ISO_8601_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?$/;
 const DID_KEY_RE = /^did:key:z[1-9A-HJ-NP-Za-km-z]+$/;
+
+/** B6: Maximum field length for string fields (permissive bound). */
+const MAX_FIELD_LENGTH = 8192;
+
+/** B9: Hex hash format for preRotationCommitment. */
+const HEX_HASH_RE = /^[0-9a-f]{64}$/i;
 
 function isValidISO8601(s: string): boolean {
   return ISO_8601_RE.test(s) && !isNaN(Date.parse(s));

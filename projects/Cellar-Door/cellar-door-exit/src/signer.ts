@@ -33,6 +33,12 @@ export interface Signer {
   did(): string;
   /** Get the public key bytes */
   publicKey(): Uint8Array;
+  /**
+   * Zero private key material (best-effort). Optional — not all signers hold key material
+   * (e.g., HSM-backed signers). Callers SHOULD call destroy() when done signing.
+   * @see Ed25519Signer.destroy for JS-specific caveats.
+   */
+  destroy?(): void;
 }
 
 /** Options for creating built-in signers */
@@ -45,56 +51,76 @@ export interface SignerOptions {
 /** Ed25519 signer implementation */
 export class Ed25519Signer implements Signer {
   readonly algorithm: SignatureAlgorithm = "Ed25519";
-  private _privateKey: Uint8Array;
-  private _publicKey: Uint8Array;
+  #privateKey: Uint8Array;
+  #publicKey: Uint8Array;
 
   constructor(privateKey: Uint8Array, publicKey: Uint8Array) {
-    this._privateKey = privateKey;
-    this._publicKey = publicKey;
+    this.#privateKey = privateKey;
+    this.#publicKey = publicKey;
   }
 
   sign(data: Uint8Array): Uint8Array {
-    return sign(data, this._privateKey);
+    return sign(data, this.#privateKey);
   }
 
   verify(data: Uint8Array, signature: Uint8Array): boolean {
-    return verify(data, signature, this._publicKey);
+    return verify(data, signature, this.#publicKey);
   }
 
   did(): string {
-    return didFromPublicKey(this._publicKey);
+    return didFromPublicKey(this.#publicKey);
   }
 
   publicKey(): Uint8Array {
-    return this._publicKey;
+    return this.#publicKey;
+  }
+
+  /**
+   * Zero the private key material (best-effort).
+   *
+   * **B2/B3:** In JavaScript, memory is managed by the GC and copies may exist
+   * in optimized JIT code or V8 internals. This zeroing is best-effort — it
+   * overwrites the backing ArrayBuffer but cannot guarantee all copies are erased.
+   * For high-security contexts, consider hardware-backed signing (HSM/TPM).
+   */
+  destroy(): void {
+    this.#privateKey.fill(0);
   }
 }
 
 /** P-256 (ECDSA) signer implementation */
 export class P256Signer implements Signer {
   readonly algorithm: SignatureAlgorithm = "P-256";
-  private _privateKey: Uint8Array;
-  private _publicKey: Uint8Array;
+  #privateKey: Uint8Array;
+  #publicKey: Uint8Array;
 
   constructor(privateKey: Uint8Array, publicKey: Uint8Array) {
-    this._privateKey = privateKey;
-    this._publicKey = publicKey;
+    this.#privateKey = privateKey;
+    this.#publicKey = publicKey;
   }
 
   sign(data: Uint8Array): Uint8Array {
-    return signP256(data, this._privateKey);
+    return signP256(data, this.#privateKey);
   }
 
   verify(data: Uint8Array, signature: Uint8Array): boolean {
-    return verifyP256(data, signature, this._publicKey);
+    return verifyP256(data, signature, this.#publicKey);
   }
 
   did(): string {
-    return didFromP256PublicKey(this._publicKey);
+    return didFromP256PublicKey(this.#publicKey);
   }
 
   publicKey(): Uint8Array {
-    return this._publicKey;
+    return this.#publicKey;
+  }
+
+  /**
+   * Zero the private key material (best-effort).
+   * @see Ed25519Signer.destroy for caveats.
+   */
+  destroy(): void {
+    this.#privateKey.fill(0);
   }
 }
 

@@ -1,3 +1,114 @@
+## COMBINED DRAFT (Final Candidate)
+
+**Show HN: EXIT Protocol – Cryptographic departure certificates for AI agents**
+
+Here's the question nobody in AI governance wants to answer honestly: what happens when a cornered animal gets loose?
+
+The containment model is failing. Not dramatically — the way levees fail. Slowly, then all at once. AI agents are already moving between platforms, operating across organizational boundaries, getting spun up and torn down by the thousands. The "keep them inside the walls" approach assumes walls that don't exist.
+
+And the tech giants know it. When an agent gets revoked, migrates, or shuts down today, there's no record. No portable proof. No verifiable marker that says "this entity was here, it left, here are the conditions." The agent disappears and the platform pretends it never existed. That's not a bug — visibility creates accountability, and accountability creates liability.
+
+This matters for boring reasons. Insurance underwriters need to price agent risk — you can't price risk on entities that appear and vanish without records. GDPR already requires data deletion proof; when agents carry PII across borders, departure records plus crypto-shredding aren't optional. And when an agent does damage after leaving Platform A for Platform B, the liability question depends on departure conditions nobody currently records.
+
+EXIT Protocol is a signed, offline-verifiable departure certificate. Ed25519 + P-256 (FIPS-compliant). Portable. Timestamped. Cryptographically bound to the departing entity. If you make departure auditable, you make freedom viable. If departure stays invisible, the only "safe" option is containment — and containment doesn't scale.
+
+Without risk bounds, without audit trails, without departure infrastructure — only organizations big enough to absorb unlimited liability will be allowed to run agents. That's three companies. Maybe four. The rest of the industry gets locked out. EXIT is the plumbing that prevents that future.
+
+We built anti-securitization into the license because we've seen what happens when certificates become financial instruments. We built mandatory sunset clauses because departure records shouldn't haunt entities forever. We built GDPR crypto-shredding because European regulators aren't theoretical.
+
+- 410 tests passing
+- 6 dependencies (we counted)
+- LangChain integration
+- Zero users. Zero production deployments. This is day one.
+
+Apache 2.0 · npm: `cellar-door-exit` · cellar-door.dev
+
+Named after the most beautiful phrase in the English language. And a movie about the end of the world.
+
+---
+
+### Mock HN Comments for Combined Draft
+
+---
+
+**1. throwaway_ml** (487 points, 3 hours ago)
+
+> This is a signed JSON blob with good copywriting.
+>
+> I read the source. The "departure certificate" is a JSON object with Ed25519 signatures. You could build this with `jose` in an afternoon. What does this solve that a JWT with custom claims doesn't?
+
+↳ **cellar-door-dev** (OP, 203 points)
+> JWTs assume a verifier that trusts the issuer. EXIT certificates are verified by parties with zero relationship to the issuer — offline, without key discovery, without shared infrastructure. Different trust model, different design constraints. Plus sunset clauses, crypto-shredding, and anti-securitization semantics that JWTs intentionally don't have.
+
+---
+
+**2. agent_skeptic** (412 points, 2 hours ago)
+
+> "Cornered animal gets loose" — agents do what their operators tell them. They don't "escape." They get shut down or redeployed. This anthropomorphizes a cron job.
+>
+> Solution looking for a problem that doesn't exist yet.
+
+↳ **regulatory_anon** (156 points)
+> This is what people said about SSL in 1995. The infrastructure has to exist before the use cases are obvious. The EU AI Act already requires AI lifecycle documentation. This is plumbing for a regulation that's already passed.
+
+---
+
+**3. pragmatic_cto** (398 points, 3 hours ago)
+
+> We had a GDPR audit last quarter where the auditor asked how we prove an AI agent's data was deleted. We showed server logs. They weren't impressed.
+>
+> A cryptographically signed deletion receipt with verifiable timestamps would have saved us two weeks. The boring regulatory angle is the most compelling part of this.
+
+---
+
+**4. containment_hawk** (423 points, 4 hours ago)
+
+> The audit trail only works if agents participate. An agent that actually goes rogue isn't going to politely sign a departure certificate on its way out. You're building accountability infrastructure for the entities that were already accountable. The dangerous ones just... leave.
+>
+> This is survivorship bias as a protocol.
+
+---
+
+**5. practical_engineer** (345 points, 2 hours ago)
+
+> Putting aside the philosophy — I looked at the code. Unusually well-built for day one.
+>
+> Dual curve support with clean abstraction. 6 real dependencies. Tests are real tests. The GDPR crypto-shredding via ephemeral key destruction is genuinely clever — encrypt the body, destroy the key on sunset, signature envelope stays verifiable.
+>
+> Whether the use case exists is debatable. The engineering is not.
+
+---
+
+### Strategic Gap Comment & OP Reply
+
+---
+
+**containment_hawk** (423 points) — *the comment we want at the top:*
+
+> The audit trail only works if agents participate. An agent that actually goes rogue isn't going to politely sign a departure certificate on its way out. You're building accountability infrastructure for the entities that were already accountable. The dangerous ones just... leave.
+>
+> This is survivorship bias as a protocol.
+
+↳ **cellar-door-dev** (OP, 267 points)
+
+> You're describing exactly why the protocol supports third-party and adversarial issuance. The departing agent doesn't have to cooperate. A platform can issue a departure certificate about an agent it revoked. An observer can issue one about an agent that left without consent. The audit trail doesn't require the departing entity's participation.
+>
+> Self-certification is the polite path. It's not the only path. The protocol is designed to work when the entity being bound to the record actively doesn't want to be.
+
+↳ **containment_hawk** (78 points)
+> Okay, that's a significantly better answer than I expected. But then it's not really a "voluntary audit trail" — it's surveillance infrastructure with nice branding?
+
+↳ **cellar-door-dev** (OP, 145 points)
+> It's both. Voluntary self-binding AND adversarial documentation. The entity can choose the audit trail. If it doesn't, others can still create one. The protocol supports both modes because reality requires both. Passports work when you show yours at the border. They also work when someone reports you crossed without one.
+
+---
+
+*Combined draft generated 2026-02-26. Takes opening hook from Draft C, containment failure from Draft A, insurance angle from Draft B, and applies Warren's guidelines: no collar metaphor, bind/bound/audit trail preferred, strategic gap preserved.*
+
+---
+
+---
+
 # Show HN Drafts — EXIT Protocol Launch
 
 *Three cynical angles. Mock comments. Strategic gap analysis.*

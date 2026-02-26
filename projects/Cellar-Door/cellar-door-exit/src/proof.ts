@@ -76,7 +76,7 @@ export interface VerificationResult {
  * if (result.valid) console.log("Marker is authentic!");
  * ```
  */
-export function verifyMarker(marker: ExitMarker): VerificationResult {
+export function verifyMarker(marker: ExitMarker, options?: { verbose?: boolean }): VerificationResult {
   const errors: string[] = [];
 
   // Schema validation
@@ -139,7 +139,29 @@ export function verifyMarker(marker: ExitMarker): VerificationResult {
       errors.push("Signature verification failed");
     }
   } catch (e) {
-    errors.push(`Signature verification error: ${(e as Error).message}`);
+    errors.push(
+      options?.verbose
+        ? `Signature verification error: ${(e as Error).message}`
+        : "Verification failed"
+    );
+  }
+
+  // B11: When not verbose, replace detailed crypto errors with generic message
+  if (!options?.verbose) {
+    const genericErrors: string[] = [];
+    for (const err of errors) {
+      if (
+        err === "Signature verification failed" ||
+        err.startsWith("Signature verification error:")
+      ) {
+        if (!genericErrors.includes("Verification failed")) {
+          genericErrors.push("Verification failed");
+        }
+      } else {
+        genericErrors.push(err);
+      }
+    }
+    return { valid: genericErrors.length === 0, errors: genericErrors };
   }
 
   return { valid: errors.length === 0, errors };

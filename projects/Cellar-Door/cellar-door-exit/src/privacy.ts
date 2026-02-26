@@ -4,6 +4,10 @@
  * Encryption, redaction, and minimal disclosure for GDPR compliance.
  * Uses @noble/ciphers (xchacha20-poly1305) + ECDH key agreement via x25519.
  *
+ * **B16: FIPS Compliance Note:** The default encryption algorithm (XChaCha20-Poly1305) is
+ * not FIPS 140-2/3 approved. Deployments requiring FIPS compliance SHOULD implement
+ * AES-256-GCM as an alternative. A FIPS-compliant encryption profile is planned for v1.2.
+ *
  * Per EXIT_SPEC v1.1 §10.1: Implementations that store or transmit markers
  * containing personal data (GDPR Art. 4(1)) MUST encrypt those markers.
  * Encryption is MANDATORY for markers with personal data, not optional.
