@@ -1,6 +1,7 @@
 #!/bin/bash
+# 𓉸 Cellar Door — Verify any marker's cryptographic signature
 # Usage: verify.sh <marker.json>
-# Verifies the cryptographic signature of an EXIT or ENTRY marker.
+# Works for both EXIT markers and ENTRY (arrival) markers.
 set -euo pipefail
 
 MARKER="${1:?Usage: verify.sh <marker.json>}"
@@ -9,41 +10,45 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PKG_DIR="$SCRIPT_DIR/.."
 
 if [ ! -d "$PKG_DIR/node_modules/cellar-door-exit" ]; then
-  npm install --prefix "$PKG_DIR" cellar-door-exit >/dev/null 2>&1
+  npm install --prefix "$PKG_DIR" cellar-door-exit cellar-door-entry >/dev/null 2>&1
 fi
 
-# Use CLI for EXIT markers (has proof field), JS for ENTRY records
 node -e "
 const fs = require('fs');
 const json = fs.readFileSync(process.argv[1], 'utf8');
 const marker = JSON.parse(json);
 
-if (marker['@context'] && marker['@context'].includes('entry')) {
-  // ENTRY record — check structural validity and exit link
-  const ok = marker.id && marker.subject && marker.destination && marker.exitMarkerId && marker.exitVerified;
-  if (ok) {
-    console.log('✓ VALID ENTRY record');
-    console.log('  Subject:     ' + marker.subject);
-    console.log('  Origin:      ' + marker.origin);
-    console.log('  Destination: ' + marker.destination);
-    console.log('  Exit Link:   ' + marker.exitMarkerId);
+// Detect marker type by context field
+const context = marker['@context'] || '';
+const isEntry = context.includes('entry') || marker.departureRef !== undefined;
+
+if (isEntry) {
+  // ENTRY (arrival) marker — use cellar-door-entry verification
+  const { verifyArrivalMarker } = require('cellar-door-entry');
+  const result = verifyArrivalMarker(marker);
+  if (result.valid) {
+    console.log('✓ VALID ENTRY marker');
+    console.log('  Subject:       ' + marker.subject);
+    console.log('  Destination:   ' + marker.destination);
+    console.log('  Departure Ref: ' + marker.departureRef);
   } else {
-    console.error('✗ INVALID ENTRY record — missing required fields');
+    console.error('✗ INVALID ENTRY marker');
+    result.errors.forEach(e => console.error('  - ' + e));
     process.exit(1);
   }
 } else {
-  // EXIT marker — cryptographic verification
-  const { quickVerify } = require('$PKG_DIR/node_modules/cellar-door-exit/dist/index.cjs');
+  // EXIT marker — use cellar-door-exit verification
+  const { quickVerify } = require('cellar-door-exit');
   const result = quickVerify(json);
   if (result.valid) {
-    console.log('✓ VALID');
+    console.log('✓ VALID EXIT marker');
     console.log('  Subject: ' + marker.subject);
     console.log('  Origin:  ' + marker.origin);
     console.log('  Type:    ' + marker.exitType);
     console.log('  Status:  ' + marker.status);
   } else {
-    console.error('✗ INVALID');
-    console.error('  Errors: ' + JSON.stringify(result.errors));
+    console.error('✗ INVALID EXIT marker');
+    result.errors.forEach(e => console.error('  - ' + e));
     process.exit(1);
   }
 }
