@@ -12,6 +12,7 @@
     "url": "https://github.com/CellarDoorExits/openclaw-skill/issues"
   },
   "dependencies": {
-    "cellar-door-exit": ">=0.1.0"
+    "cellar-door-exit": "^0.2.0",
+    "cellar-door-entry": "^0.1.0"
   }
 }
