@@ -1,5 +1,8 @@
 # 𓉸 Cellar Door — OpenClaw Skill
 
+> **⚠️ Pre-release software — no formal security audit has been conducted.** This project is published for transparency, review, and community feedback. It should not be used in production systems where security guarantees are required. If you find a vulnerability, please report it to hawthornhollows@gmail.com.
+
+
 An [OpenClaw](https://openclaw.ai) skill for creating, verifying, and linking EXIT and ENTRY markers: portable cryptographic proofs of departure and arrival for AI agents.
 
 ## Installation
